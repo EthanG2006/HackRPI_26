@@ -1,0 +1,8 @@
+# Runtime API only (kept light so `npm run demo` starts fast). Pipeline deps live in pipeline/requirements.txt.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+numpy>=1.26
+scipy>=1.13
+httpx>=0.27
+anthropic>=0.40
+python-dotenv>=1.0

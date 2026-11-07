@@ -1,0 +1,18 @@
+{
+  "name": "rx-radar",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Rx Radar watches the sky for storms that will knock out drug factories.",
+  "scripts": {
+    "setup": "node scripts/run.mjs setup",
+    "dev": "node scripts/run.mjs dev",
+    "demo": "node scripts/run.mjs demo",
+    "build": "npm --prefix web run build",
+    "typecheck": "npm --prefix web run typecheck",
+    "pipeline": "node scripts/run.mjs pipeline"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

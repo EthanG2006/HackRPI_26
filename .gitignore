@@ -1,0 +1,12 @@
+node_modules/
+web/dist/
+.venv/
+__pycache__/
+*.pyc
+.env
+data/raw/
+data/cache/
+*.log
+.DS_Store
+Thumbs.db
+.vite/

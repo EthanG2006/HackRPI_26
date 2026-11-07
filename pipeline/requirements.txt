@@ -1,0 +1,16 @@
+-r ../server/requirements.txt
+pandas>=2.2
+pyarrow>=16
+scikit-learn>=1.5
+lightgbm>=4.3
+shap>=0.46
+networkx>=3.3
+rapidfuzz>=3.9
+shapely>=2.0
+pyshp>=2.3
+geopandas>=1.0
+pyogrio>=0.9
+openpyxl>=3.1
+requests>=2.32
+pillow>=10
+tqdm>=4.66
