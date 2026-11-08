@@ -6,6 +6,9 @@ import { capitalRegionHospitals, hospitalForQuestion } from '../lib/hospitals';
 import { cachedAnswer } from '../copilot/actions';
 import { supplyOutlook } from '../lab/supplyOutlook';
 import { frameSummary } from './frameMetrics';
+import { calibrateScenario, amp } from '../sim/realism';
+import { runHazard } from '../sim/lab/hazards';
+import { HAZARDS } from '../sim/lab/hazardMeta';
 import type { Hospital, ScenarioFile } from '../types';
 const json=(p:string)=>JSON.parse(readFileSync('web/public/data/'+p,'utf8'));
 const hospitals:Hospital[]=json('hospitals.json').hospitals;
@@ -54,3 +57,24 @@ console.log('Passed central versus downside supply-outlook checks.');
 goBeat(5);assert.equal(useApp.getState().layers.storm,false);
 goBeat(2);assert.equal(useApp.getState().layers.storm,true);assert.equal(useApp.getState().layers.wind,true);assert.equal(useApp.getState().layers.svi,false);
 console.log('Passed presenter transitions between supply sharing and the storm replay.');
+
+// Realism calibration: never falls before impact, confirmed at impact, alert well above the archived 52%.
+const drugsFile = json('drugs.json');
+const cal = calibrateScenario(sc, new Map(drugsFile.map((d: { id: string; baselineRisk: number }) => [d.id, d.baselineRisk])));
+assert.equal(amp(0), 0); assert.ok(amp(.2) < amp(.5) && amp(.5) < amp(.8));
+assert.equal(cal.predictionSnapshots!.at(-1)!.outages[0].pDisrupt, 1);
+assert.ok(cal.alert!.prob > .85);
+const cove = cal.hazard.filter(h => h.plantId === 'baxter-north-cove').map(h => h.p);
+assert.ok(cove.every((p, i) => !i || p >= cove[i - 1]) && cove.at(-1) === 1);
+console.log('Passed replay realism calibration checks.');
+
+// Every disaster type's first preset runs and threatens at least one plant.
+for (const kind of ['earthquake', 'wildfire', 'flood', 'tornado', 'winter'] as const) {
+  const p = HAZARDS[kind].presets[0];
+  const r = runHazard({ req: { track: p.track, category: 3, forwardSpeedKt: 10, members: 200, hazard: { kind, intensity: p.intensity, extent: p.extent, durationH: p.durationH } },
+    plants: json('plants.json'), drugs: drugsFile, hospitals: hospitals.slice(0, 200), phys: {} as never, errors: {} as never, terrain: {} as never });
+  assert.equal(r.hazardKind, kind);
+  assert.ok(r.plantHazards!.some(h => h.pDisrupt > .3), `${kind} preset should threaten a plant`);
+  assert.equal(r.hazardSnapshots!.length, r.series!.hours.length);
+}
+console.log('Passed earthquake, wildfire, flood, tornado and ice-storm engine checks.');

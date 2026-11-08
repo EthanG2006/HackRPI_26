@@ -4,6 +4,7 @@ import { useReplayClock } from './lib/clock';
 import MapView from './map/MapView';
 import LayerLegend from './map/LayerLegend';
 import WhatIfPanel from './map/WhatIfPanel';
+import LogisticsPanel from './logistics/LogisticsPanel';
 import GlobeIntro from './intro/GlobeIntro';
 import TopBar from './panels/TopBar';
 import RightPanel from './panels/RightPanel';
@@ -42,6 +43,7 @@ export default function App() {
       <RightPanel />
       <EquityLab />
       <WhatIfPanel />
+      <LogisticsPanel />
       <ImpactCounters />
       <Timeline />
       <AlertToast />

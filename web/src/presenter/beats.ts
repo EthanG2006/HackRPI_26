@@ -19,7 +19,7 @@ export function switchScenario(id: ScenarioId) {
   const sc = s.scenarios[id];
   s.set({ scenarioId: id, introDone: true, beat: 0, time: sc ? Date.parse(sc.start) : Date.now(),
     playing: false, alertFiredAt: null, shockwaveAt: null, selectedDrugId: null,
-    selectedPlantId: null, selectedHospitalId: null, highlight: null, equityOpen: false, abmPlaying: false,
+    selectedPlantId: null, selectedHospitalId: null, highlight: null, equityOpen: false, abmPlaying: false, executedActions: [],
     copilotOpen: false, page: null, paletteOpen: false, rightPanel: id === 'whatif' ? 'whatif' : 'drugs',
     camera: sc?.camera ?? { longitude: -86, latitude: 30, zoom: 3.5, duration: 800 } });
   s.setLayers({storm:true,wind:true,radar:id!=='whatif',rain:id!=='whatif',network:true,hospitals:true,plants:true,gauges:id!=='whatif',svi:false,nri:false});

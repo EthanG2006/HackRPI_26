@@ -25,6 +25,7 @@ import type {
   LabConfig,
   LabFieldId,
   StormFix,
+  HazardConfig,
 } from './types';
 import { CATEGORY_VMAX, DEFAULT_LAB } from './sim/lab/params';
 
@@ -44,7 +45,7 @@ export type LayerId =
   | 'nri'; // FEMA NRI choropleth
 
 export type PageId = 'model-card' | 'sources' | 'under-the-hood' | 'audit' | 'climate' | 'impact' | null;
-export type RightPanelId = 'drugs' | 'drug' | 'hospital' | 'equity' | 'whatif';
+export type RightPanelId = 'drugs' | 'drug' | 'hospital' | 'equity' | 'whatif' | 'logistics';
 
 /** Replay clock: at 1x one wall-clock second advances this many simulated milliseconds (15 minutes). */
 export const SIM_MS_PER_WALL_MS_AT_1X = 900;
@@ -67,6 +68,7 @@ export interface WhatIfState {
   hour: number | null; // playback hour; null = storm totals
   labPlaying: boolean;
   auto: boolean; // re-run automatically when a setting changes
+  hazard: HazardConfig; // disaster type; 'hurricane' uses the storm physics above
 }
 
 export interface AppState {
@@ -132,6 +134,9 @@ export interface AppState {
 
   // ---- what-if ----
   whatif: WhatIfState;
+
+  // ---- supply network command: dispatched reroute actions (at = performance.now() when dispatched) ----
+  executedActions: { id: string; at: number }[];
 
   // ---- backend status ----
   api: { online: boolean; anthropic: boolean; checkedAt: number };
@@ -245,7 +250,9 @@ export const useApp = create<AppState>()((set, get) => ({
   abmPlaying: false,
 
   whatif: { drawing: false, track: [], category: 4, forwardSpeedKt: 12, running: false, result: null,
-    lab: DEFAULT_LAB, fixes: null, presetId: null, field: 'p64', hour: null, labPlaying: false, auto: true },
+    lab: DEFAULT_LAB, fixes: null, presetId: null, field: 'p64', hour: null, labPlaying: false, auto: true, hazard: { kind: 'hurricane', intensity: 0, extent: 0, durationH: 0 } },
+
+  executedActions: [],
 
   api: { online: false, anthropic: false, checkedAt: 0 },
   audit: loadAudit(),
@@ -333,7 +340,7 @@ export function activeScenario(s: AppState): ScenarioFile | null {
   const day0 = s.whatif.startTime ?? new Date().toISOString();
   return assembled = {
     id: 'whatif',
-    name: 'What-if storm',
+    name: s.whatif.hazard.kind === 'hurricane' ? 'What-if storm' : `What-if ${s.whatif.hazard.kind === 'flood' ? 'flood' : s.whatif.hazard.kind}`,
     subtitle: `Category ${s.whatif.category} · ${r.members.toLocaleString()} ensemble tracks · ${Math.round(r.elapsedMs)} ms (${r.engine})`,
     start:day0,
     end:new Date(Date.parse(day0)+90*86400000).toISOString(),

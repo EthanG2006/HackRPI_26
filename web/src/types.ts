@@ -584,6 +584,15 @@ export interface StormFix {
   origLat?: number;
 }
 
+export type HazardKind = 'hurricane' | 'earthquake' | 'wildfire' | 'flood' | 'tornado' | 'winter';
+/** Non-hurricane disaster settings. Meaning of intensity/extent depends on kind (see sim/lab/hazardMeta.ts). */
+export interface HazardConfig {
+  kind: HazardKind;
+  intensity: number; // magnitude · wind mph · crest ft · max EF · ice in
+  extent: number; // depth km · fuel dryness % · (unused) · tornado count · (unused)
+  durationH: number;
+}
+
 export interface WhatIfRequest {
   track: LngLat[]; // drawn by the user, >= 2 points, ordered in time
   category: 1 | 2 | 3 | 4 | 5;
@@ -592,9 +601,10 @@ export interface WhatIfRequest {
   fixes?: StormFix[]; // per-point intensity/structure (aligned with track) — overrides category
   lab?: Partial<LabConfig>;
   startTime?: string; // ISO time of hour 0 (presets)
+  hazard?: HazardConfig; // absent or kind 'hurricane' → the hurricane physics engine
 }
 
-export type LabFieldId = 'p34' | 'p50' | 'p64' | 'wind' | 'rain' | 'pRain' | 'tornado';
+export type LabFieldId = 'p34' | 'p50' | 'p64' | 'wind' | 'rain' | 'pRain' | 'tornado' | 'hazard';
 
 /** Regular lon/lat grid, rows from north to south. */
 export interface LabGrid {
@@ -614,7 +624,8 @@ export interface PlantHazard {
   tornado: number; // P(tornado passes within 25 mi)
   pDisrupt: number;
   ci: [number, number];
-  dominant: 'wind' | 'flood' | 'tornado' | 'none';
+  dominant: 'wind' | 'flood' | 'tornado' | 'quake' | 'fire' | 'ice' | 'none';
+  intensity?: number; // non-hurricane disasters: member-median hazard value at the site (units per kind)
   outageDays: { p10: number; p50: number; p90: number };
   peakHour: number; // control-run hour of strongest site hazard
 }
@@ -662,6 +673,11 @@ export interface WhatIfResult {
   series?: LabSeries;
   plantHazards?: PlantHazard[];
   diagnostics?: LabDiagnostics;
+  // Non-hurricane disasters
+  hazardKind?: HazardKind;
+  hazardSnapshots?: { hour: number; values: Float32Array }[]; // same grid as fields.hazard
+  hazardPaths?: { path: LngLat[]; start: number; end: number; level: number }[]; // e.g. tornado tracks (control run)
+  hazardSummary?: { label: string; value: string; note?: string }[];
 }
 
 // ---------- live (owner: geo/weather data agent; GET /api/live, cached snapshot in data/live_cache.json) ----------

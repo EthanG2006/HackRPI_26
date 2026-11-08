@@ -29,17 +29,17 @@ export function impactFromStockouts(stock:number[], hospitals:Hospital[], drug:D
   stock.forEach((d,i) => {
     if(d>30) return;
     const h=hospitals[i], daily=h.beds*(drug?.dailyUsePer100Beds??50)/100;
-    const recovered = daily*Math.min(3,31-d)*.25;
+    const recovered = daily*Math.min(10,31-d)*.45;
     units+=recovered; affected++; if(h.svi>=.75) vulnerable++;
     freightBatches+=recovered/100;
   });
-  const patients=Math.round(units/4), staff=affected*2*40;
-  const savings=Math.round(units*(drug?.contractPricePerUnit??1)*((drug?.grayMarketMultiplier??2)-1));
+  const patients=Math.round(units/3), staff=affected*6*65;
+  const savings=Math.round(units*(drug?.contractPricePerUnit??1)*((drug?.grayMarketMultiplier??2.5)-1))+patients*1150;
   const freight=freightBatches*.05*800*(.60-.08)/1000, waste=units*.03*.001;
   const item=(key:string,label:string,value:number,unit:string,assumption:string)=>({key,label,value,unit,assumption,provenance:'SIMULATED' as const});
   return {patientsProtected:patients, dollarsSaved:savings+staff,co2TonsAvoided:round(freight+waste),highSviPreventedPct:affected?vulnerable/affected:0,
-    breakdown:{ patients:[item('protected','Modeled encounters protected',patients,'patients','Timely transfer restores 25% of up to three shortage days. Four units support one encounter.')],
-      dollars:[item('price','Expedited purchasing avoided',savings,'USD','Recovered units × modeled contract price × excess emergency markup.'),item('staff','Coordination time saved',staff,'USD','Two hours per exposed facility at an assumed $40/hour.')],
+    breakdown:{ patients:[item('protected','Modeled encounters protected',patients,'patients','Early warning secures 45% of up to ten shortage days. Three units support one encounter.')],
+      dollars:[item('price','Cancellations and expedited purchasing avoided',savings,'USD','Recovered units × contract price × gray-market markup, plus $1,150 per protected encounter in cancelled-procedure margin.'),item('staff','Coordination time saved',staff,'USD','Six pharmacy and supply-chain hours per exposed facility at $65/hour.')],
       co2:[item('freight','Air-to-road substitution',round(freight),'t CO₂e','50 kg per 100 units × 800 km × assumed 0.52 kg CO₂e/t-km avoided.'),item('waste','Expired units avoided',round(waste),'t CO₂e','Assume 3% waste avoided at 1 kg CO₂e per unit.')],
       equity:[item('equity','High-vulnerability share',affected?round(vulnerable/affected*100):0,'%','Share of exposed facilities served in the top SVI quartile, assuming equal intervention success.')]}};
 }

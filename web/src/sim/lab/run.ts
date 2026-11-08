@@ -20,17 +20,17 @@ export interface LabInput {
 
 /** Expert-informed priors for plant fragility (logit scale). Order matches HazardModelFile.featureOrder. */
 export const FRAGILITY_PRIORS = [
-  { key: 'intercept', mean: -5.2, sd: 0.5, why: 'Weather rarely stops a hardened pharmaceutical plant; a few-in-a-thousand base rate.' },
-  { key: 'wind', mean: 2.6, sd: 0.6, why: 'Per 50 kt of site wind above 50 kt: roof/cladding damage and multi-day grid loss begin near Cat 1–2.' },
-  { key: 'rain', mean: 0.6, sd: 0.3, why: 'General rainfall (log scale) adds modest risk: access roads, staff, utilities.' },
-  { key: 'rainRiver', mean: 2.4, sd: 0.6, why: 'Rain near a river drives inundation, the North Cove (Helene 2024) failure mode.' },
-  { key: 'sfha', mean: 0.8, sd: 0.4, why: 'Inside a FEMA Special Flood Hazard Area, the same rain floods more often.' },
-  { key: 'tornado', mean: 1.5, sd: 0.5, why: 'Probability of a tornado within 25 mi; a direct hit is rare but severe (Rocky Mount 2023).' },
+  { key: 'intercept', mean: -3.4, sd: 0.4, why: 'Calibrated to Maria 2017 and Helene 2024: a direct hit stops nearly every sterile plant, even hardened ones.' },
+  { key: 'wind', mean: 4.2, sd: 0.5, why: 'Per 50 kt of site wind above 50 kt: roof/cladding damage, cleanroom breach and weeks of grid loss (Maria: 11 months to restore power).' },
+  { key: 'rain', mean: 0.9, sd: 0.3, why: 'General rainfall (log scale): access roads, staff who cannot reach the site, water and steam utilities.' },
+  { key: 'rainRiver', mean: 3.2, sd: 0.5, why: 'Rain near a river drives inundation, the North Cove (Helene 2024) failure mode that removed 60% of US IV fluid.' },
+  { key: 'sfha', mean: 1.2, sd: 0.4, why: 'Inside a FEMA Special Flood Hazard Area, the same rain floods more often.' },
+  { key: 'tornado', mean: 3.0, sd: 0.5, why: 'Probability of a tornado within 25 mi; Rocky Mount 2023 destroyed 50,000 pallets of injectables in minutes.' },
 ] as const;
 
 const SOIL = { dry: 0.75, normal: 1, wet: 1.35 } as const;
 
-function rng(seed: number) {
+export function rng(seed: number) {
   let a = seed >>> 0 || 1;
   const uni = () => {
     a = (a + 0x6d2b79f5) >>> 0;
@@ -260,7 +260,7 @@ export function runLab(input: LabInput): WhatIfResult {
         const dom = contrib.flood >= contrib.wind && contrib.flood >= contrib.tornado ? 'flood' : contrib.tornado > contrib.wind ? 'tornado' : 'wind';
         domCount[k][dom]++;
         // Days to first restart (lognormal) and ramp back to full output; calibrated to documented events.
-        const med = dom === 'flood' ? 35 : dom === 'tornado' ? 75 : Math.max(2, 3 + 30 * w * w - cfg.backupPowerDays);
+        const med = dom === 'flood' ? 60 : dom === 'tornado' ? 90 : Math.max(4, 6 + 45 * w * w - cfg.backupPowerDays);
         const sd = dom === 'flood' ? 0.45 : dom === 'tornado' ? 0.4 : 0.6;
         restart[k][m] = med * Math.exp(sd * normal());
         ramp[k][m] = restart[k][m] * (dom === 'flood' ? 2.5 : dom === 'tornado' ? 1.5 : 1);
@@ -339,7 +339,9 @@ const r1 = (x: number) => Math.round(x * 10) / 10;
  * National supply = 1 − Σ share × lost fraction, plus up to 10% surge from unaffected makers after two weeks.
  * Hospitals stock out when the cumulative deficit exceeds their days on hand (same buffers as the replay model).
  */
-function labCascade(drugs: Drug[], plants: Plant[], hospitals: Hospital[], restart: Float32Array[], ramp: Float32Array[], M: number, dom: { wind: number; flood: number; tornado: number }[]) {
+const DRIVERS: Record<string, string> = { flood: 'Plant flooding (rain near river)', wind: 'Plant wind damage / grid loss', tornado: 'Tornado strike risk', quake: 'Earthquake shaking damage', fire: 'Wildfire, smoke and power shutoffs', ice: 'Ice storm grid failure and frozen utilities' };
+
+export function labCascade(drugs: Drug[], plants: Plant[], hospitals: Hospital[], restart: Float32Array[], ramp: Float32Array[], M: number, dom: Record<string, number>[]) {
   const D = 90;
   const buffers = hospitals.map((h) => 2.5 + Math.min(5, Math.log1p(Math.max(1, h.beds)) / 1.45) - 1.3 * +h.rural - 0.7 * +(h.svi >= 0.75));
   const hospitalStockouts: WhatIfResult['hospitalStockouts'] = {};
@@ -354,7 +356,7 @@ function labCascade(drugs: Drug[], plants: Plant[], hospitals: Hospital[], resta
     }
     loss.fill(0);
     let shortMembers = 0;
-    const why = { wind: 0, flood: 0, tornado: 0 };
+    const why: Record<string, number> = {};
     for (let m = 0; m < M; m++) {
       let longShort = 0, run = 0;
       for (const { i, share } of makers) {
@@ -372,7 +374,7 @@ function labCascade(drugs: Drug[], plants: Plant[], hospitals: Hospital[], resta
       }
       if (longShort >= 7) shortMembers++;
     }
-    for (const { i } of makers) { why.wind += dom[i].wind; why.flood += dom[i].flood; why.tornado += dom[i].tornado; }
+    for (const { i } of makers) for (const [k, v] of Object.entries(dom[i])) why[k] = (why[k] ?? 0) + v;
     const pShort = shortMembers / M, risk = base + (1 - base) * pShort;
     const band: Band = { p10: [], p50: [], p90: [] }, deficits: Record<'p10' | 'p50' | 'p90', number[]> = { p10: [], p50: [], p90: [] };
     const hist = new Uint32Array(201), cum = { p10: 0, p50: 0, p90: 0 };
@@ -399,14 +401,14 @@ function labCascade(drugs: Drug[], plants: Plant[], hospitals: Hospital[], resta
     const atRisk = stock.p50.filter((v) => v < 999).length;
     let first = 999;
     for (const v of stock.p50) first = Math.min(first, v);
-    const tot = why.wind + why.flood + why.tornado || 1, weather = risk - base;
+    const tot = Object.values(why).reduce((a, b) => a + b, 0) || 1, weather = risk - base;
     const ci = Math.sqrt((pShort * (1 - pShort)) / M) * 1.2816;
     risks.push({
       drugId: drug.id, risk: r3(risk), ci: [r3(base + (1 - base) * clamp(pShort - ci, 0, 1)), r3(base + (1 - base) * clamp(pShort + ci, 0, 1))],
       supplyCurve: band, hospitalsAtRisk: atRisk, firstStockoutDay: first < 999 ? first : undefined,
       shap: [
         { feature: 'baseline', label: 'Baseline supply fragility', value: r3(base) },
-        ...(['flood', 'wind', 'tornado'] as const).filter((k) => why[k] > 0).map((k) => ({ feature: k, label: k === 'flood' ? 'Plant flooding (rain near river)' : k === 'wind' ? 'Plant wind damage / grid loss' : 'Tornado strike risk', value: r3((weather * why[k]) / tot) })),
+        ...Object.keys(why).filter((k) => why[k] > 0).map((k) => ({ feature: k, label: DRIVERS[k] ?? k, value: r3((weather * why[k]) / tot) })),
       ],
     });
   }

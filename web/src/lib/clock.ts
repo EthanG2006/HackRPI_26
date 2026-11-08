@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { SIM_MS_PER_WALL_MS_AT_1X, activeScenario, useApp } from '../store';
 
-// The store ticks ~8×/s (React work); per-frame drawing extrapolates from the last tick so motion stays fluid.
+// The store ticks ~20×/s (React work); per-frame drawing extrapolates from the last tick so motion stays fluid.
 let tickWall = 0, tickTime = NaN;
 
 /** Replay time for per-frame visuals: exact when paused or after a seek, extrapolated between ticks while playing. */
@@ -20,7 +20,7 @@ export function useReplayClock(): void {
       const s = useApp.getState();
       const dt = Math.min(250, now - last);
       if (!s.playing) last = now;
-      if (s.playing && dt >= 125 && s.ready) {
+      if (s.playing && dt >= 50 && s.ready) {
         last = now;
         const sc = activeScenario(s);
         const end = sc ? Date.parse(sc.end) : Infinity;

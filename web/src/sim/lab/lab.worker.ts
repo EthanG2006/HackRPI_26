@@ -1,5 +1,6 @@
 // Storm Lab worker: caches the catalog, terrain and physics constants; runs one simulation per request.
 import { runLab } from './run';
+import { runHazard } from './hazards';
 import { loadTerrain } from './terrain';
 import { DEFAULT_ERRORS, physFrom } from './params';
 import type { Drug, HazardModelFile, Hospital, NhcErrorsFile, ParamEntry, Plant, WhatIfRequest, WhatIfResult } from '../../types';
@@ -33,7 +34,7 @@ function loadConsts(base: string) {
 function buffers(r: WhatIfResult): Transferable[] {
   const out: ArrayBuffer[] = [];
   for (const g of Object.values(r.fields ?? {})) if (g) out.push(g.values.buffer as ArrayBuffer);
-  for (const s of [...(r.rainSnapshots ?? []), ...(r.windSnapshots ?? [])]) out.push(s.values.buffer as ArrayBuffer);
+  for (const s of [...(r.rainSnapshots ?? []), ...(r.windSnapshots ?? []), ...(r.hazardSnapshots ?? [])]) out.push(s.values.buffer as ArrayBuffer);
   return [...new Set(out)];
 }
 
@@ -45,7 +46,8 @@ ctx.onmessage = async (e: MessageEvent) => {
   }
   try {
     const [terrain, c] = await Promise.all([loadTerrain(msg.base), loadConsts(msg.base)]);
-    const result = runLab({ req: msg.req, ...catalog, ...c, terrain });
+    const input = { req: msg.req, ...catalog, ...c, terrain };
+    const result = msg.req.hazard && msg.req.hazard.kind !== 'hurricane' ? runHazard(input) : runLab(input);
     ctx.postMessage({ id: msg.id, result }, buffers(result));
   } catch (err) {
     ctx.postMessage({ id: msg.id, error: (err as Error).message || 'The simulation failed.' });

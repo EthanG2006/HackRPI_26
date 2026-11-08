@@ -1,4 +1,4 @@
-import { ArcLayer, BitmapLayer, GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { BitmapLayer, GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Layer } from '@deck.gl/core';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { activeScenario, useApp, type AppState } from '../store';
@@ -7,12 +7,12 @@ import { daysToRisk, riskColor } from '../lib/colors';
 import { frameAt, latest, polys } from './geometry';
 import { labFieldLayers, labTrackLayers } from './labLayers';
 import { stormState } from './storm';
+import { networkLayers } from '../logistics/networkLayers';
 import type { Advisory, Hospital, LngLat, MultiPolygonCoords, Plant, PolygonCoords } from '../types';
 
 type Color=[number,number,number,number];
 export type GeoCollection=FeatureCollection;
-export interface Flow {from:LngLat;to:LngLat;plantId:string;risk:number;id:number;stage:'upstream'|'downstream'}
-export interface Picked {kind:'hospital'|'plant'|'gauge';id:string;name:string;detail:string;provenance:'REAL'|'REPLAY'|'MODEL'|'SIMULATED'}
+export interface Picked {kind:'hospital'|'plant'|'gauge'|'hub';id:string;name:string;detail:string;provenance:'REAL'|'REPLAY'|'MODEL'|'SIMULATED'}
 const CYAN:Color=[85,220,244,255];
 const derived = new WeakMap<object, unknown>();
 function memoData<T>(key: object, build: () => T): T {
@@ -26,34 +26,13 @@ const polygonFeature=(p:PolygonCoords|MultiPolygonCoords,properties:Record<strin
 export function plantRisk(s:AppState,id:string):number{
   const sc=activeScenario(s);
   if(s.scenarioId==='whatif'||s.scenarioId==='live') return sc?.outages.find(x=>x.plantId===id)?.pDisrupt??0;
-  return latest(sc?.hazard.filter(h=>h.plantId===id),h=>h.t,s.time)?.p??0;
+  const rows=sc?.hazard.filter(h=>h.plantId===id)??[],cur=latest(rows,h=>h.t,s.time);
+  if(!cur)return 0;
+  // Ease toward each newly issued estimate over two replay hours instead of jumping (never ahead of its issue time).
+  const prev=latest(rows,h=>h.t,Date.parse(cur.t)-1),u=Math.min(1,(s.time-Date.parse(cur.t))/7.2e6);
+  return prev?prev.p+(cur.p-prev.p)*u*u*(3-2*u):cur.p;
 }
-let routeKey='',routeCache:Omit<Flow,'risk'>[]=[],flowRiskKey='',flowResult:Flow[]=[];
-let routeNetwork:AppState['network'],routeHospitals:Hospital[],routePlants:Plant[];
 let coneShown:Advisory|undefined,conePrev:Advisory|undefined,coneSwitchAt=0;
-export function supplyFlows(s:AppState,zoom=5):Flow[] {
-  const sc=activeScenario(s),heroes=sc?.heroPlantIds??[];
-  const maxRoutes=zoom<4.5?12:zoom<6?24:45;
-  // Route geometry depends only on the network and zoom band; risk is re-applied each call (cheap).
-  const key=[heroes.join(','),maxRoutes,s.network?.flows.length,s.hospitals.length,s.plants.length,s.distributors.length].join('|');
-  if(key!==routeKey||s.network!==routeNetwork||s.hospitals!==routeHospitals||s.plants!==routePlants){
-    routeNetwork=s.network;routeHospitals=s.hospitals;routePlants=s.plants;flowRiskKey='';
-    routeKey=key;routeCache=[];
-    for(const f of s.network?.flows??[]){
-      const plant=s.plants.find(p=>p.id===f.plantId),dc=s.distributors.find(d=>d.id===f.dcId);
-      if(!plant||!dc||!heroes.includes(plant.id))continue;
-      routeCache.push({from:[plant.lon,plant.lat],to:[dc.lon,dc.lat],plantId:plant.id,id:routeCache.length,stage:'upstream'});
-      const targets=s.hospitals.filter(h=>Math.hypot(h.lon-dc.lon,h.lat-dc.lat)<13);
-      for(let i=0;i<targets.length;i+=Math.max(1,Math.floor(targets.length/maxRoutes))){
-        const h=targets[i];routeCache.push({from:[dc.lon,dc.lat],to:[h.lon,h.lat],plantId:plant.id,id:routeCache.length,stage:'downstream'});
-      }
-    }
-  }
-  const risk=new Map(heroes.map(id=>[id,plantRisk(s,id)]));
-  const rk=routeKey+'|'+heroes.map(id=>risk.get(id)).join(',');
-  if(rk!==flowRiskKey){flowRiskKey=rk;flowResult=routeCache.map(f=>({...f,risk:risk.get(f.plantId)??0}));}
-  return flowResult;
-}
 export function buildLayers(s:AppState,zoom:number,counties:GeoCollection|null,onHover:(x:Picked|null,px:number,py:number)=>void):Layer[]{
   const out:Layer[]=[],weather=s.storms[s.scenarioId],sc=activeScenario(s),layers=s.layers;
   const selected=new Set([...(s.highlight?.ids??[]),s.selectedHospitalId??'']);
@@ -118,11 +97,8 @@ export function buildLayers(s:AppState,zoom:number,counties:GeoCollection|null,o
     out.push(new PathLayer({id:'observed-track',data:[track],getPath:x=>x,getWidth:3,widthUnits:'pixels',getColor:CYAN,jointRounded:true,capRounded:true}));
   }
   out.push(...labTrackLayers(s));
-  if(layers.network){
-    out.push(new ArcLayer({id:'supply-arcs',data:supplyFlows(s,zoom),getSourcePosition:f=>f.from,getTargetPosition:f=>f.to,
-      getSourceColor:f=>riskColor(f.risk,110),getTargetColor:f=>riskColor(f.risk,30),getWidth:1.05,widthUnits:'pixels',getHeight:.15}));
-    out.push(new ScatterplotLayer({id:'distribution-hubs',data:s.distributors,getPosition:p=>[p.lon,p.lat],getRadius:3,radiusUnits:'pixels',getFillColor:[130,160,173,255],stroked:true,getLineColor:[209,230,233,170],getLineWidth:1,lineWidthUnits:'pixels'}));
-  }
+  if(layers.network)out.push(...networkLayers(s,zoom,(hub,x,y)=>onHover(hub?{kind:'hub',id:hub.dc.id,name:hub.dc.name,
+    detail:hub.status==='down'?'Warehouse knocked offline':`${Math.round(hub.ratio*100)}% of normal inbound · ${hub.hospitals.toLocaleString()} hospitals`,provenance:'SIMULATED'}:null,x,y)));
   const days=hospitalDays(s);
   if(layers.hospitals)out.push(new ScatterplotLayer<Hospital>({
     id:'hospitals',data:s.hospitals,pickable:!s.whatif.drawing,getPosition:h=>[h.lon,h.lat],

@@ -1,6 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {Users, CircleDollarSign,Leaf,Scale,ArrowUpRight} from 'lucide-react';
 import {useActiveScenario,useApp} from '../store';
+import {networkView} from '../logistics/network';
 import {fmtCompact,fmtUsd,fmtPct} from '../lib/format';
 import {Prov} from '../ui/Prov';
 export const impactFields = [
@@ -16,7 +17,9 @@ export function Tick({value,format}:{value:number,format:(n:number)=>string}){
  return <>{format(n)}</>
 }
 export default function ImpactCounters(){
- const sc=useActiveScenario();
+ const sc=useActiveScenario(), net=useApp(networkView);
+ // Dispatched reroutes add their protected encounters and avoided costs on top of the forecast.
+ const bonus={patientsProtected:net?.kpi.patients??0,dollarsSaved:net?.kpi.dollars??0,co2TonsAvoided:0,highSviPreventedPct:0};
  return <section className="impact-strip" aria-label="Projected impact"><div className="impact-label"><span className="eyebrow">Projected impact</span><Prov kind="MODEL"/></div>
- {impactFields.map(({field,name,icon:Icon,format})=><button key={field} onClick={()=>useApp.getState().set({page:'impact'})}><Icon className="metric-icon"/><span><strong className="num">{sc?<Tick value={sc.impact[field]} format={format}/>: '—'}</strong><small>{name}</small></span><ArrowUpRight className="metric-arrow" size={12}/></button>)}</section>
+ {impactFields.map(({field,name,icon:Icon,format})=><button key={field} onClick={()=>useApp.getState().set({page:'impact'})}><Icon className="metric-icon"/><span><strong className="num">{sc?<Tick value={sc.impact[field]+bonus[field]} format={format}/>: '—'}</strong><small>{name}</small></span><ArrowUpRight className="metric-arrow" size={12}/></button>)}</section>
 }

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import maplibregl, { type Map as LibreMap, type StyleSpecification } from 'maplibre-gl';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import type { Layer } from '@deck.gl/core';
-import { windLayer, networkMotion, motionTime } from './motion';
+import { windLayer, motionTime } from './motion';
+import { networkMotion } from '../logistics/networkLayers';
 import { feature } from 'topojson-client';
 import type { Topology } from 'topojson-specification';
 import { Minus, Plus, LocateFixed, Navigation, Maximize2, X } from 'lucide-react';
@@ -16,6 +17,7 @@ import { Prov } from '../ui/Prov';
 import type { LngLat } from '../types';
 import './map.css';
 import { recordFrame, recordWork } from '../verification/frameMetrics';
+import { HAZARDS } from '../sim/lab/hazardMeta';
 
 declare global {interface Window {rxMapSnapshot?:()=>string|undefined}}
 const STYLE:StyleSpecification={
@@ -46,7 +48,7 @@ export default function MapView(){
   useEffect(()=>{
     if(!host.current) return;
     let frame=0,alive=true,last=0;
-    let staticLayers:Layer[]=[],wind:ReturnType<typeof windLayer>|null=null,flow:ReturnType<typeof networkMotion>=null,windKey='';
+    let staticLayers:Layer[]=[],wind:ReturnType<typeof windLayer>|null=null,flow:Layer[]=[],windKey='';
     const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const map=new maplibregl.Map({container:host.current,style:STYLE,center:[-83,31],zoom:4.3,
       minZoom:2.1,maxZoom:11,pitch:0,maxPitch:50,attributionControl:false,
@@ -66,8 +68,8 @@ export default function MapView(){
       const st=s.layers.wind?stormState(s,smoothTime()):null;
       const key=st?[s.scenarioId,Math.round(st.vmax/5),Math.round(st.rmwKm/4),Math.round(st.pressure/4),Math.round(st.lat)].join('|'):'';
       if(key!==windKey){windKey=key;wind=st?windLayer(st):null;}
-      flow=networkMotion(s,map.getZoom());
-      deck.setProps({layers:[...staticLayers,wind,flow]});
+      flow=networkMotion(s);
+      deck.setProps({layers:[...staticLayers,wind,...flow]});
       recordWork('refresh',performance.now()-refreshStart);
     };
     map.on('load',()=>{
@@ -80,7 +82,8 @@ export default function MapView(){
     const unsubscribe=useApp.subscribe((s,old)=>{
       if(s.time!==old.time||s.layers!==old.layers||s.hospitals!==old.hospitals||s.scenarios!==old.scenarios||s.whatif!==old.whatif||
         s.policy!==old.policy||s.lambda!==old.lambda||s.abmDay!==old.abmDay||s.equityOpen!==old.equityOpen||
-        s.selectedDrugId!==old.selectedDrugId||s.selectedHospitalId!==old.selectedHospitalId||s.highlight!==old.highlight||s.scenarioId!==old.scenarioId||s.live!==old.live)refresh.current();
+        s.selectedDrugId!==old.selectedDrugId||s.selectedHospitalId!==old.selectedHospitalId||s.highlight!==old.highlight||s.scenarioId!==old.scenarioId||s.live!==old.live||
+        s.executedActions!==old.executedActions||s.distributors!==old.distributors)refresh.current();
     });
     fetch('/basemap/counties.json').then(r=>r.json()).then((topology:Topology)=>{
       if(!alive)return;counties.current=feature(topology,topology.objects.counties) as GeoCollection;refresh.current();
@@ -95,9 +98,11 @@ export default function MapView(){
       const ctx=canvas.current?.getContext('2d'),s=useApp.getState();
       if(ctx&&s.introDone&&!document.hidden&&now-last>=16){
         const t=reducedMotion?60:motionTime(now);
-        if(wind||flow){
+        if(wind||flow.length){
           const st=wind?stormState(s,smoothTime()):null;
-          deck.setProps({layers:[...staticLayers,wind&&st?wind.clone({currentTime:t,coordinateOrigin:[st.lon,st.lat,0]}):null,flow?.clone({currentTime:reducedMotion?60:(now/1000*5)%990})]});
+          // 'grow*' layers draw newly dispatched reroutes on wall time; shipments loop on their own clock.
+          deck.setProps({layers:[...staticLayers,wind&&st?wind.clone({currentTime:t,coordinateOrigin:[st.lon,st.lat,0]}):null,
+            ...flow.map(l=>l.clone({currentTime:l.id.startsWith('grow')?(reducedMotion?1e7:now/1000):reducedMotion?60:(now/1000*5)%990} as never))]});
         }
         const effectsStart=performance.now();
         paintMapEffects(ctx,map,s,reducedMotion?1000:now,host.current!.clientWidth,host.current!.clientHeight);
@@ -182,7 +187,7 @@ export default function MapView(){
     <canvas ref={canvas} className="map-effects" aria-hidden="true"/>
     {introDone&&<>
       <div className="map-top-status">
-        {scenarioId==='whatif'?<><span className="status-dot"/>Storm sandbox<Prov kind="MODEL"/></>:
+        {scenarioId==='whatif'?<><span className="status-dot"/>{storm?.storm?'Storm':'Disaster'} sandbox<Prov kind="MODEL"/></>:
           scenarioId==='live'?<><span className="status-dot"/>{live?.fromCache?'Cached weather snapshot':'Live weather'}<Prov kind="REAL"/></>:
           <><span className="status-dot"/>{storm?.storm?.name??'Rocky Mount'} {advisory?'· Advisory '+advisory.num:'· Historical replay'}<Prov kind="REPLAY"/></>}
       </div>
@@ -192,13 +197,13 @@ export default function MapView(){
         <button aria-label="Fit scenario to map" onClick={fit}><LocateFixed size={17}/></button>
         <span title="North up"><Navigation size={14}/><small>N</small></span>
       </div>
-      {drawing&&<div className="drawing-hint"><span className="status-dot"/>Click points or drag to draw a storm track.<button onClick={()=>useApp.getState().setWhatIf({drawing:false})}>Finish drawing</button></div>}
+      {drawing&&<div className="drawing-hint"><span className="status-dot"/>{useApp.getState().whatif.hazard.kind==='hurricane'?'Click points or drag to draw a storm track.':HAZARDS[useApp.getState().whatif.hazard.kind].draw}<button onClick={()=>useApp.getState().setWhatIf({drawing:false})}>Finish drawing</button></div>}
       {highlight&&<div className="highlight-banner"><span>{highlight.label}</span><button onClick={()=>useApp.getState().clearHighlight()} aria-label="Clear highlighted hospitals"><X size={14}/></button></div>}
-      {tip&&<div className="map-tooltip" style={{left:Math.min(tip.x+18,(host.current?.clientWidth??800)-240),top:Math.max(62,tip.y-70)}}><b>{tip.name}</b>{tip.detail&&<span>{tip.detail}</span>}<small>{tip.kind==='hospital'?'Click for inventory and actions':tip.kind==='plant'?'Click for manufacturing exposure':'USGS river observation'}</small><Prov kind={tip.provenance}/></div>}
+      {tip&&<div className="map-tooltip" style={{left:Math.min(tip.x+18,(host.current?.clientWidth??800)-240),top:Math.max(62,tip.y-70)}}><b>{tip.name}</b>{tip.detail&&<span>{tip.detail}</span>}<small>{tip.kind==='hospital'?'Click for inventory and actions':tip.kind==='plant'?'Click for manufacturing exposure':tip.kind==='hub'?'Click to open the supply network':'USGS river observation'}</small><Prov kind={tip.provenance}/></div>}
       {scenarioId!=='whatif'&&<div className="map-bottom-left"><div className="stockout-legend"><span>{equityOpen?`Day ${abmDay} · ${policy==='rxradar'?'Fair allocation':policy}`:'Projected days to stockout'}</span><Prov kind="MODEL"/><div className="legend-swatches"><i/><span>60+</span><i/><span>30</span><i/><span>14</span><i/><span>7</span><i/><span>≤3</span></div></div>
         <div className="map-data-stamp">{advisory&&shownLayers.storm?<span>Forecast issued {clock(advisory.issued)}{radar&&shownLayers.radar?` · radar ${clock(radar.t).slice(-9)}`:''}</span>:satellite&&shownLayers.satellite?<span>Terra daily composite · {new Date(Date.parse(satellite.t)-86400000).toISOString().slice(0,10)}</span>:null}</div>
       </div>}
-      <div className="map-attribution"><button onClick={()=>useApp.getState().set({page:'sources'})}>Natural Earth · U.S. Census · NOAA</button><span>Local basemap</span><span>Routes &amp; transit buffers · SIMULATED</span></div>
+      <div className="map-attribution"><button onClick={()=>useApp.getState().set({page:'sources'})}>Natural Earth · U.S. Census · NOAA</button><span>Local basemap</span><span>Hubs, lanes &amp; buffers · SIMULATED</span></div>
       {error&&<div className="map-load-note">Map graphics unavailable. Reload this view to retry.</div>}
       {!ready&&<div className="map-load-note">Loading the replay archive…</div>}
     </>}

@@ -1,6 +1,7 @@
 // Loads every static JSON file from web/public/data into the store.
 // Rule: never block on data. A missing or broken file logs a warning and the panel shows its empty state.
 import { useApp } from '../store';
+import { calibrateScenario } from '../sim/realism';
 import type {
   CountiesFile,
   Distributor,
@@ -83,8 +84,9 @@ export async function loadAll(): Promise<void> {
     const scenarios = { ...s.scenarios };
     const storms = { ...s.storms };
     const equity = { ...s.equity };
+    const baseline = new Map(s.drugs.map((d) => [d.id, d.baselineRisk ?? 0]));
     for (const p of perScenario) {
-      if (p.scenario) scenarios[p.id] = p.scenario;
+      if (p.scenario) scenarios[p.id] = calibrateScenario(p.scenario, baseline);
       if (p.storm) storms[p.id] = p.storm;
       if (p.equity) equity[p.id] = p.equity;
     }

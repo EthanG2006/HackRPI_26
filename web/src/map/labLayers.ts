@@ -3,10 +3,11 @@ import { BitmapLayer, GeoJsonLayer, LineLayer, PathLayer, ScatterplotLayer, Text
 import type { Layer } from '@deck.gl/core';
 import { contours } from 'd3-contour';
 import type { AppState } from '../store';
-import type { LabFieldId, LabGrid, LngLat, WhatIfResult } from '../types';
+import type { HazardKind, LabFieldId, LabGrid, LngLat, WhatIfResult } from '../types';
+import { HAZARDS, type FieldLegend } from '../sim/lab/hazardMeta';
 
 type RGBA = [number, number, number, number];
-interface FieldMeta { label: string; unit: string; stops: [number, string, number][]; levels: number[]; fmt: (v: number) => string; source: string }
+type FieldMeta = FieldLegend;
 
 const pct = (v: number) => `${Math.round(v * 100)}%`;
 const PROB: [number, string, number][] = [[0.02, '#4fb3b5', 0], [0.1, '#5cc3bd', 0.42], [0.3, '#9bcf8e', 0.55], [0.5, '#e8c46a', 0.62], [0.7, '#eb9a5a', 0.68], [0.9, '#de6556', 0.74], [1, '#c8414e', 0.78]];
@@ -28,7 +29,11 @@ export const FIELD_META: Record<LabFieldId, FieldMeta> = {
     label: 'Tornado potential', unit: 'P(within 25 mi), experimental', levels: [0.05, 0.15, 0.3], fmt: pct, source: 'Parametric TC-tornado climatology',
     stops: [[0.01, '#d9a85b', 0], [0.05, '#e3b062', 0.4], [0.15, '#e88a52', 0.55], [0.3, '#d9574f', 0.7], [0.5, '#b8404f', 0.78]],
   },
+  hazard: { label: 'Disaster footprint', unit: '', stops: PROB, levels: [], fmt: pct, source: '' }, // replaced per disaster by metaFor()
 };
+
+/** Legend for a field; the generic 'hazard' field takes its legend from the disaster type. */
+export const metaFor = (field: LabFieldId, kind?: HazardKind): FieldMeta => (field === 'hazard' && kind && kind !== 'hurricane' ? HAZARDS[kind].field : FIELD_META[field]);
 
 const hex = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 
@@ -46,14 +51,15 @@ function lutFor(m: FieldMeta) {
   }
   return { lut: out, lo, hi };
 }
-const LUTS = Object.fromEntries(Object.entries(FIELD_META).map(([k, m]) => [k, lutFor(m)])) as Record<LabFieldId, ReturnType<typeof lutFor>>;
+const LUTS = new Map<FieldMeta, ReturnType<typeof lutFor>>();
+const lut = (m: FieldMeta) => { let l = LUTS.get(m); if (!l) LUTS.set(m, (l = lutFor(m))); return l; };
 
 const mercY = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
 const invMerc = (y: number) => (Math.atan(Math.exp(y)) * 360) / Math.PI - 90;
 
 /** Field → canvas, resampled to Mercator-uniform rows so BitmapLayer places every cell exactly. */
-function toImage(g: LabGrid, values: Float32Array, field: LabFieldId): HTMLCanvasElement {
-  const { lut, lo, hi } = LUTS[field];
+function toImage(g: LabGrid, values: Float32Array, meta: FieldMeta): HTMLCanvasElement {
+  const { lut: colors, lo, hi } = lut(meta);
   const W = g.nx, H = g.ny, c = document.createElement('canvas');
   c.width = W; c.height = H;
   const ctx = c.getContext('2d')!, img = ctx.createImageData(W, H), px = img.data;
@@ -65,7 +71,7 @@ function toImage(g: LabGrid, values: Float32Array, field: LabFieldId): HTMLCanva
       const v = values[r0 * W + i] * (1 - t) + values[(r0 + 1) * W + i] * t;
       if (!(v > lo)) continue;
       const k = Math.min(255, Math.max(0, Math.round(((v - lo) / (hi - lo)) * 255))) * 4, o = (j * W + i) * 4;
-      px[o] = lut[k]; px[o + 1] = lut[k + 1]; px[o + 2] = lut[k + 2]; px[o + 3] = lut[k + 3];
+      px[o] = colors[k]; px[o + 1] = colors[k + 1]; px[o + 2] = colors[k + 2]; px[o + 3] = colors[k + 3];
     }
   }
   ctx.putImageData(img, 0, 0);
@@ -76,7 +82,7 @@ function toImage(g: LabGrid, values: Float32Array, field: LabFieldId): HTMLCanva
 function valuesAt(r: WhatIfResult, field: LabFieldId, hour: number | null): Float32Array | null {
   const g = r.fields?.[field];
   if (!g) return null;
-  const snaps = field === 'rain' ? r.rainSnapshots : field === 'wind' ? r.windSnapshots : undefined;
+  const snaps = field === 'rain' ? r.rainSnapshots : field === 'wind' ? r.windSnapshots : field === 'hazard' ? r.hazardSnapshots : undefined;
   if (hour === null || !snaps?.length) return g.values;
   let k = 0;
   while (k < snaps.length - 1 && snaps[k + 1].hour <= hour) k++;
@@ -102,20 +108,22 @@ const catColor = (kt: number): RGBA => CAT[kt >= 137 ? 5 : kt >= 113 ? 4 : kt >=
 
 /** Hazard field + isolines: drawn under hospitals and plants. */
 export function labFieldLayers(s: AppState): Layer[] {
-  const r = s.whatif.result, field = s.whatif.field;
+  const r = s.whatif.result, field: LabFieldId = r?.hazardKind ? 'hazard' : s.whatif.field === 'hazard' ? 'p64' : s.whatif.field;
   const g = r?.fields?.[field];
   if (s.scenarioId !== 'whatif' || !r || !g) return [];
-  const hour = s.whatif.hour === null ? null : Math.round(s.whatif.hour * 2) / 2;
+  const meta = metaFor(field, r.hazardKind), end = r.series?.hours.at(-1) || 1;
+  // Fine time steps (1/120 of the run) keep playback fluid; snapshots are interpolated in between.
+  const step = end / 120, hour = s.whatif.hour === null ? null : Math.round(s.whatif.hour / step) * step;
   const key = `${r.elapsedMs}|${r.diagnostics?.seed}|${field}|${hour}|${g.nx}`;
   if (key !== imgKey) {
     const v = valuesAt(r, field, hour);
-    imgCache = v ? toImage(g, v, field) : null;
+    imgCache = v ? toImage(g, v, meta) : null;
     imgKey = key;
-    const ik = `${r.elapsedMs}|${field}|${hour === null ? 'T' : Math.round(hour / 3)}`;
-    if (ik !== isoKey && v) { isoCache = isolines(g, v, FIELD_META[field].levels); isoKey = ik; }
+    const ik = `${r.elapsedMs}|${field}|${hour === null ? 'T' : Math.round(hour / (end / 48))}`;
+    if (ik !== isoKey && v) { isoCache = isolines(g, v, meta.levels); isoKey = ik; }
   }
   if (!imgCache) return [];
-  const meta = FIELD_META[field], maxLevel = meta.levels[meta.levels.length - 1];
+  const maxLevel = meta.levels[meta.levels.length - 1];
   return [
     new BitmapLayer({ id: 'lab-field', image: imgCache, bounds: [g.west, g.south, g.east, g.north], opacity: 0.9, parameters: { depthWriteEnabled: false } as never }),
     new PathLayer<{ path: LngLat[]; level: number }>({ id: 'lab-isolines', data: isoCache, getPath: (d) => d.path, widthUnits: 'pixels',
@@ -124,10 +132,61 @@ export function labFieldLayers(s: AppState): Layer[] {
 }
 
 /** Track, cone, spaghetti, landfalls and editable fixes: drawn above the field. */
+const EF_RGB: RGBA[] = [[236, 200, 110, 230], [240, 176, 90, 235], [238, 134, 72, 240], [226, 86, 66, 250], [210, 52, 74, 255], [186, 40, 110, 255]];
+const EF_M = [50, 100, 250, 500, 900, 1500];
+/** The part of a path a disaster has covered by `hour` (null = all of it). */
+function trim(path: LngLat[], start: number, end: number, hour: number | null): LngLat[] {
+  if (hour === null || hour >= end) return path;
+  if (hour <= start) return [];
+  const f = (hour - start) / Math.max(1e-6, end - start), seg = path.slice(1).map((p, i) => Math.hypot(p[0] - path[i][0], p[1] - path[i][1]));
+  let left = f * seg.reduce((a, b) => a + b, 0);
+  const out: LngLat[] = [path[0]];
+  for (let i = 0; i < seg.length; i++) {
+    if (left >= seg[i]) { out.push(path[i + 1]); left -= seg[i]; continue; }
+    const u = left / (seg[i] || 1);
+    out.push([path[i][0] + (path[i + 1][0] - path[i][0]) * u, path[i][1] + (path[i + 1][1] - path[i][1]) * u]);
+    break;
+  }
+  return out;
+}
+
+/** Geometry of a non-hurricane disaster: tornado tracks, river, fault rupture, ignition, ice-band axis. */
+function disasterLayers(r: WhatIfResult, track: LngLat[], hour: number | null): Layer[] {
+  const kind = r.hazardKind, paths = r.hazardPaths ?? [], out: Layer[] = [];
+  if (kind === 'tornado') {
+    const live = paths.map((p) => ({ ...p, cut: trim(p.path, p.start, p.end, hour) })).filter((p) => p.cut.length > 1);
+    out.push(new PathLayer({ id: 'hz-tornado-tracks', data: live, getPath: (d) => d.cut, widthUnits: 'meters', getWidth: (d) => EF_M[Math.max(0, d.level)] * 1.6, widthMinPixels: 2,
+      getColor: (d) => EF_RGB[Math.max(0, d.level)], capRounded: true, updateTriggers: { getPath: [hour] } }));
+    const tips = hour === null ? [] : live.filter((d) => hour < d.end).map((d) => ({ at: d.cut[d.cut.length - 1], ef: d.level }));
+    out.push(new ScatterplotLayer({ id: 'hz-tornado-tips', data: tips, getPosition: (d) => d.at, getRadius: (d) => 5 + d.ef * 1.5, radiusUnits: 'pixels', filled: true, stroked: true,
+      getFillColor: [255, 236, 214, 235], getLineColor: (d) => EF_RGB[d.ef], getLineWidth: 3, lineWidthUnits: 'pixels' }));
+  } else if (kind === 'flood') {
+    out.push(new PathLayer({ id: 'hz-river-glow', data: [track], getPath: (p: LngLat[]) => p, widthUnits: 'pixels', getWidth: 9, getColor: [70, 160, 230, 70], jointRounded: true, capRounded: true }));
+    out.push(new PathLayer({ id: 'hz-river', data: [track], getPath: (p: LngLat[]) => p, widthUnits: 'pixels', getWidth: 2.4, getColor: [150, 210, 255, 235], jointRounded: true, capRounded: true }));
+  } else if (kind === 'earthquake') {
+    out.push(new PathLayer({ id: 'hz-fault', data: paths, getPath: (d) => d.path, widthUnits: 'pixels', getWidth: 3.5, getColor: [255, 96, 80, 245], capRounded: true }));
+    out.push(new ScatterplotLayer({ id: 'hz-epicenter', data: [track[0]], getPosition: (p: LngLat) => p, getRadius: 9, radiusUnits: 'pixels', filled: true, getFillColor: [255, 80, 70, 255],
+      stroked: true, getLineColor: [255, 236, 226, 255], getLineWidth: 2, lineWidthUnits: 'pixels' }));
+  } else if (kind === 'wildfire') {
+    out.push(new ScatterplotLayer({ id: 'hz-ignition', data: [track[0]], getPosition: (p: LngLat) => p, getRadius: 7, radiusUnits: 'pixels', getFillColor: [255, 170, 60, 255],
+      stroked: true, getLineColor: [255, 240, 210, 255], getLineWidth: 2, lineWidthUnits: 'pixels' }));
+  } else if (kind === 'winter') {
+    out.push(new PathLayer({ id: 'hz-ice-axis', data: [track], getPath: (p: LngLat[]) => p, widthUnits: 'pixels', getWidth: 1.6, getColor: [214, 196, 255, 200], jointRounded: true }));
+  }
+  return out;
+}
+
 export function labTrackLayers(s: AppState): Layer[] {
   if (s.scenarioId !== 'whatif') return [];
   const { track, result: r, hour } = s.whatif;
   const out: Layer[] = [];
+  if (s.whatif.hazard.kind !== 'hurricane') {
+    if (r?.hazardKind === s.whatif.hazard.kind) out.push(...disasterLayers(r, track, hour));
+    else if (track.length) out.push(new PathLayer({ id: 'lab-drawn', data: [track], getPath: (p: LngLat[]) => p, getWidth: 2.5, widthUnits: 'pixels', getColor: [131, 232, 218, 230] }));
+    out.push(new ScatterplotLayer({ id: 'lab-fixes', data: track, getPosition: (p: LngLat) => p, getRadius: 4.2, radiusUnits: 'pixels',
+      getFillColor: [12, 28, 36, 255], stroked: true, getLineColor: [226, 246, 244, 235], getLineWidth: 1.4, lineWidthUnits: 'pixels' }));
+    return out;
+  }
   const cone = r?.conePolys ?? (r?.cone?.length ? [r.cone] : []);
   if (cone.length) out.push(new GeoJsonLayer({ id: 'lab-cone', data: { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: cone } } as never,
     filled: true, stroked: true, getFillColor: [210, 236, 240, 16], getLineColor: [210, 236, 240, 120], lineWidthMinPixels: 1.2 }));

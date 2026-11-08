@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useApp } from '../store';
 import { runWhatIfInBrowser } from '../sim/whatif';
+import { withHubOutages } from '../logistics/network';
 import type { WhatIfRequest } from '../types';
 
 export function useLabRunner() {
@@ -17,14 +18,15 @@ export function useLabRunner() {
     if (cur.track.length < 2) return s.setWhatIf({ error: 'Draw at least two track points, or pick a preset.' });
     const req: WhatIfRequest = {
       track: cur.track, category: cur.category, forwardSpeedKt: cur.forwardSpeedKt, members: cur.lab.members,
-      lab: cur.lab, fixes: cur.fixes ?? undefined, startTime: cur.startTime,
+      lab: cur.lab, fixes: cur.fixes ?? undefined, startTime: cur.startTime, hazard: cur.hazard.kind === 'hurricane' ? undefined : cur.hazard,
     };
     lastKey.current = key(cur);
     s.setWhatIf({ running: true, error: undefined });
     if (s.scenarioId !== 'whatif') s.set({ scenarioId: 'whatif', playing: false });
     try {
-      const result = await runWhatIfInBrowser(req);
+      const result = withHubOutages(await runWhatIfInBrowser(req), useApp.getState());
       useApp.getState().setWhatIf({ result, running: false });
+      useApp.getState().set({ executedActions: [] }); // a new event needs a new plan
     } catch (e) {
       if ((e as Error).name !== 'AbortError') useApp.getState().setWhatIf({ running: false, error: (e as Error).message });
     }
@@ -46,4 +48,4 @@ export function useLabRunner() {
   return run;
 }
 
-const key = (w: ReturnType<typeof useApp.getState>['whatif']) => JSON.stringify([w.track, w.fixes?.length, w.lab, w.forwardSpeedKt, w.category]);
+const key = (w: ReturnType<typeof useApp.getState>['whatif']) => JSON.stringify([w.track, w.fixes?.length, w.lab, w.forwardSpeedKt, w.category, w.hazard]);
