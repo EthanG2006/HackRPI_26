@@ -111,7 +111,7 @@ export default function CopilotDrawer(){
  if(!open)return null;
  return <aside className="copilot-rail" aria-label="Ask Rx Radar">
   <header className="lab-head"><div><span className="lab-eyebrow"><AudioLines size={13}/> Supply copilot</span><h2>Ask Rx Radar</h2></div><button className="lab-icon" aria-label="Close copilot" onClick={()=>{stop();useApp.setState({copilotOpen:false});}}><X size={18}/></button></header>
-  <div className="copilot-intro"><span className="copilot-dot"/><span>{useApp.getState().api.anthropic?'Claude connected':'Cached demo ready'}</span><Prov kind="MODEL" compact/></div>
+  <div className="copilot-intro"><span className="copilot-dot"/><span>{useApp.getState().api.anthropic?'Claude connected':'Offline answers ready'}</span><Prov kind="MODEL" compact/></div>
   <div className="copilot-messages" ref={scroll} role="log" aria-label="Copilot conversation">
    {!messages.length&&<div className="copilot-welcome"><AudioLines size={31}/><h3>Follow a question<br/>through the network.</h3><p>Ask about a drug, a region or a hospital. Your map follows the answer.</p></div>}
    {messages.map((m,i)=><article className={'copilot-message '+m.role} key={i}>

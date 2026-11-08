@@ -1,4 +1,5 @@
 import { activeScenario, useApp } from '../store';
+import { hospitalForQuestion } from '../lib/hospitals';
 import type { Hospital, LngLat, PolicyId } from '../types';
 export type ToolCall={name:string; input:Record<string,unknown>};
 export type Answer={text:string;tools:ToolCall[];sourceIds:string[];hospitals?:{id:string;name:string;day:number}[]};
@@ -20,10 +21,7 @@ export function matchedHospitals(filter:Record<string,unknown>) {
    .sort((a,b)=>a.day-b.day||b.h.svi-a.h.svi).slice(0,Math.min(200,Number(filter.limit??8)));
 }
 function hospitalName(query:string):Hospital|undefined {
- const hs=useApp.getState().hospitals;
- if(/samaritan|troy/.test(query))return hs.find(h=>h.id==='samaritan-troy');
- if(/albany/.test(query))return hs.find(h=>h.name.toLowerCase().includes('albany medical'));
- return hs.find(h=>query.includes(h.name.toLowerCase()));
+ return hospitalForQuestion(useApp.getState().hospitals, query);
 }
 export function executeTool(tool:ToolCall):string {
  const s=useApp.getState(), input=tool.input??{};

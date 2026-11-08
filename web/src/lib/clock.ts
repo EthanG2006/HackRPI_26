@@ -27,7 +27,7 @@ export function useReplayClock(): void {
         const next = Math.min(end, s.time + dt * s.speed * SIM_MS_PER_WALL_MS_AT_1X);
         const alertT = sc?.alert ? Date.parse(sc.alert.t) : NaN;
         const patch: Partial<typeof s> = { time: next };
-        if (next >= end) patch.playing = false;
+        if (next >= end || (s.beat === 2 && s.time < alertT && next >= alertT)) patch.playing = false;
         tickWall = now;
         tickTime = next;
         useApp.setState(patch);

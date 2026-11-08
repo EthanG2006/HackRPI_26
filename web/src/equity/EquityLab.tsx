@@ -5,14 +5,14 @@ import type { EquityFile, PolicyId, PolicyMetrics, PolicyResult } from '../types
 import { Prov } from '../ui/Prov';
 import './lab.css';
 
-const names:Record<PolicyId,string>={market:'Market',proportional:'By volume',rxradar:'Rx Radar'};
+const names:Record<PolicyId,string>={market:'First come',proportional:'Patient volume',rxradar:'Fair share'};
 const pct=(v:number)=>Math.round(100*v)+'%';
 const fmt=(v:number)=>Math.round(v).toLocaleString();
 const money=(v:number)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:1}).format(v);
 const rows:[string,keyof PolicyMetrics,(n:number)=>string][]=[
-  ['Hospitals stocked out','pctStockedOut',pct],['High-SVI stockouts','highSviStockouts',fmt],
+  ['Hospitals stocked out','pctStockedOut',pct],['High-vulnerability stockouts','highSviStockouts',fmt],
   ['Rural stockouts','ruralStockouts',fmt],['Delayed encounters','patientsDelayed',fmt],
-  ['Coverage Gini','gini',n=>n.toFixed(2)],['Total cost','totalCostUsd',money]
+  ['Supply inequality','gini',n=>n.toFixed(2)],['Total cost','totalCostUsd',money]
 ];
 export default function EquityLab(){
   const open=useApp(s=>s.equityOpen), policy=useApp(s=>s.policy),lambda=useApp(s=>s.lambda),day=useApp(s=>s.abmDay);
@@ -61,14 +61,18 @@ export default function EquityLab(){
   const daily=chosen?.daily?.[timelineDay-1] ?? {day:timelineDay,stockedOut:chosen?.stockoutDay.filter(n=>n<=timelineDay).length??0,ordersVsDemand:1};
   const baseline=eq?.policies.market.metrics.highSviStockouts??0,delta=baseline-(point?.metrics.highSviStockouts??0);
   return <aside className="lab-rail" aria-label="Equity allocation lab">
-    <header className="lab-head"><div><span className="lab-eyebrow"><Scale size={13}/> Allocation simulator</span><h2>Equity lab</h2></div><button className="lab-icon" aria-label="Close equity lab" onClick={close}><X size={18}/></button></header>
-    <div className="lab-body">{eq && chosen && results ? <>
+    <header className="lab-head"><div><span className="lab-eyebrow"><Scale size={13}/> Allocation simulator</span><h2>Share supply fairly</h2></div><button className="lab-icon" aria-label="Close equity lab" onClick={close}><X size={18}/></button></header>
+    <div className="lab-body">{eq && chosen && results && eq.drugId===(selected??scenario?.heroDrugIds[0]) ? <>
       <div className="lab-sub"><span>{name??'Drug supply'} · {eq.horizonDays}-day horizon</span><Prov kind="SIMULATED"/></div>
-      <div className="lab-policy" aria-label="Allocation policy">{(Object.keys(names) as PolicyId[]).map(p=><button key={p} onClick={()=>choose(p)} aria-pressed={p===policy}>{names[p]}</button>)}</div>
+      <p className="lab-intro">When supply falls, over-ordering leaves smaller hospitals behind. Compare two ways to share what remains.</p><div className="lab-policy" aria-label="Allocation policy">{(['market','rxradar'] as PolicyId[]).map(p=><button key={p} onClick={()=>choose(p)} aria-pressed={p===policy}>{names[p]}</button>)}</div>
       <div className="lab-signal"><span className="lab-eyebrow">Hospitals out of stock</span><strong className="num">{fmt(daily.stockedOut)}</strong><span>by day {timelineDay} under {names[policy]} allocation</span></div>
       <div className="lab-run"><button className="lab-icon" aria-label={playing?'Pause hoarding simulation':'Play hoarding simulation'} onClick={()=>set({abmPlaying:!playing,abmDay:!playing&&day>=14?1:day})}>{playing?<Pause size={16}/>:<Play size={16}/>}</button>
         <input aria-label="Inventory simulation day" type="range" min="1" max="14" value={timelineDay} onChange={e=>set({abmDay:+e.target.value,abmPlaying:false})}/><span className="num">{timelineDay}/14</span></div>
       <div className="lab-note">Orders reach <b className="num">{daily.ordersVsDemand.toFixed(2)}×</b> daily demand. Available supply covers <b>{pct(eq.supplyFraction)}</b> of normal shipments.</div>
+      <section className="fair-outcome"><span className="eyebrow">With fair-share ordering <Prov kind="SIMULATED" compact/></span><strong className="num">{fmt(Math.max(0,results.market.stockoutDay.filter(n=>n<=eq.horizonDays).length-(results.rxradar.stockoutDay??eq.policies.rxradar.stockoutDay).filter(n=>n<=eq.horizonDays).length))}</strong><p>fewer hospitals run out by day {eq.horizonDays}</p>
+        <button className="primary wide" onClick={()=>set({policy:policy==='rxradar'?'market':'rxradar',abmDay:14,abmPlaying:false})}>{policy==='rxradar'?'Compare first-come ordering':'Apply fair-share ordering'}</button>
+      </section>
+      <details className="extra-details"><summary>Compare policies and adjust fairness</summary>
       <div className="lab-section-title"><Users size={14}/><h3>Policy comparison</h3></div>
       <table className="lab-table"><thead><tr><th>Day {eq.horizonDays}</th>{Object.entries(names).map(([k,v])=><th className={k===policy?'lab-active':''} key={k}>{v}</th>)}</tr></thead>
       <tbody>{rows.map(([label,key,format])=><tr key={key}><th>{label}</th>{(Object.keys(names) as PolicyId[]).map(k=><td className={k===policy?'lab-active num':'num'} key={k}>{format(results[k].metrics[key])}</td>)}</tr>)}</tbody></table>
@@ -81,7 +85,7 @@ export default function EquityLab(){
       <div className="lab-legend"><span>● Efficiency {pct(point?.metrics.efficiency??0)}</span><span>● Group coverage {pct(point?.metrics.equity??0)}</span></div>
       <input aria-label="Equity weight" className="lab-slider" type="range" min="0" max="1" step=".25" value={lambda} onChange={e=>set({lambda:+e.target.value,policy:'rxradar'})}/>
       <div className="lab-ends"><span>Favor efficiency</span><span>Favor equity</span></div>
-      <div className="lab-disclose"><ShieldCheck size={18}/><p><b>Simultaneous disclosure</b>Every hospital receives the same alert. The fair policy caps orders at unmet need. {delta>0?fmt(delta)+' fewer high-SVI hospitals stock out than under Market.':''}</p></div>
+      </details><div className="lab-disclose"><ShieldCheck size={18}/><p><b>Everyone gets the same warning</b>Every hospital receives the same alert. The fair policy caps orders at unmet need. {delta>0?fmt(delta)+' fewer hospitals in high-vulnerability counties run out than with first-come ordering.':''}</p></div>
       <button className="lab-link" onClick={()=>set({page:'model-card'})}>Inspect model assumptions ↗</button>
     </>:<p className="lab-note">{generationError?'Allocation inputs are unavailable. Select another storm replay.':'Preparing hospital inventory and comparing allocation policies…'}</p>}</div>
   </aside>;

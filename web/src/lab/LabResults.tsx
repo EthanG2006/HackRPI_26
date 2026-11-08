@@ -1,4 +1,7 @@
 // Storm Lab results: what the ensemble says, per plant and per medicine, with uncertainty.
+import { useMemo } from 'react';
+import { supplyOutlook } from './supplyOutlook';
+import { localHospital } from '../presenter/beats';
 import { CloudRain, Download, Tornado, Wind } from 'lucide-react';
 import { useApp } from '../store';
 import { categoryLabel } from '../sim/lab/params';
@@ -27,9 +30,10 @@ function download(name: string, text: string, type: string) {
 }
 
 export default function LabResults() {
-  const w = useApp((s) => s.whatif), plants = useApp((s) => s.plants), drugs = useApp((s) => s.drugs);
+  const w = useApp((s) => s.whatif), plants = useApp((s) => s.plants), drugs = useApp((s) => s.drugs), hospitals=useApp(s=>s.hospitals);
+  const outlook=useMemo(()=>w.result?supplyOutlook(w.result,hospitals):null,[w.result,hospitals]);
   const r = w.result;
-  if (!r?.series) return <div className="sl-empty"><b>No run yet.</b><p>Pick a storm or draw a track. Results update automatically as you change settings.</p></div>;
+  if (!r?.series) return <div className="sl-empty"><b>No run yet.</b><p>Choose a coast, or draw a track. Then select See supply impact.</p></div>;
   const s = r.series, ctrl = s.ctrl ?? s.vmax.p50, peak = Math.max(...ctrl), peakI = ctrl.indexOf(peak);
   const rain = maxAt(r, 'rain'), wind = maxAt(r, 'wind');
   const when = (h: number) => (s.startTime ? new Date(Date.parse(s.startTime) + h * 3.6e6).toUTCString().slice(5, 22) + ' UTC' : `+${Math.round(h)} h`);
@@ -53,7 +57,17 @@ export default function LabResults() {
 
   return (
     <div className="sl-results">
-      <div className="sl-kpis">
+      <section className="supply-headline"><span className="eyebrow">Medicine supply outlook <Prov kind="MODEL" compact/></span>
+        <h3>{outlook!.hospitals>0?`${outlook!.hospitals.toLocaleString()} hospitals could run short`:outlook!.downsideHospitals>0?`${outlook!.downsideHospitals.toLocaleString()} hospitals exposed in the downside estimate`:'No hospital stockouts projected'}</h3>
+        <p>{outlook!.exposed} manufacturing {outlook!.exposed===1?'site is':'sites are'} exposed to damaging weather. {outlook!.medicines>0?`${outlook!.medicines} medicines need attention.`:'Check the exposed sites before changing orders.'}</p>
+      </section>
+      {outlook!.downsideHospitals>0&&<p className="downside-note">Central estimate: {outlook!.hospitals.toLocaleString()} hospitals run short. Downside estimate: {outlook!.downsideHospitals.toLocaleString()}, using the earlier end of the 80% stockout window.</p>}
+      <div className="supply-next"><h3>Prepare before it arrives</h3>
+        <p><b>1. Confirm supply</b>Contact {plants.find(p=>p.id===hazards[0]?.plantId)?.company??'the exposed manufacturer'} about production and shipping plans.</p>
+        <p><b>2. Review the medicine plan</b>Check {drugs.find(d=>d.id===outlook!.priority?.drugId)?.shortName??'priority medicine'} inventory and alternatives with pharmacy teams.</p>
+        <button className="primary wide" onClick={()=>{const h=localHospital()??outlook!.hospital;if(h)useApp.getState().openHospital(h.id);}}>Open {localHospital()?.city??outlook!.hospital?.city??'a'} hospital plan</button>
+      </div>
+      <details className="extra-details"><summary>Storm strength and rainfall</summary><div className="sl-kpis">
         <div><small>Peak intensity</small><b className="num">{peak} kt</b><span>{categoryLabel(peak)} · {r.diagnostics?.params.minPcHpa} hPa</span></div>
         <div><small>Landfall</small><b className="num">{s.landfalls.length ? `${s.landfalls[0].vmaxKt} kt` : 'None'}</b><span>{s.landfalls.length ? when(s.landfalls[0].hour) : 'stays over water'}</span></div>
         <div><small>Max sustained wind</small><b className="num">{wind ? Math.round(wind.v) : '—'} kt</b><span>{wind ? ll(wind) : ''}</span></div>
@@ -66,10 +80,11 @@ export default function LabResults() {
         <p className="sl-hint">Peak at {when(s.hours[peakI])}. Shaded: over land, where Kaplan–DeMaria decay applies.</p>
       </div>
 
+      </details>
       <div className="sl-card">
         <div className="sl-card-head"><span>Manufacturing sites</span><span className="sl-pill num">{flagged} ≥ {Math.round(w.lab.alertThreshold * 100)}%</span></div>
         <div className="sl-plants" role="table" aria-label="Plant disruption probability">
-          {hazards.slice(0, 8).map((h) => {
+          {hazards.slice(0, 3).map((h) => {
             const p = plants.find((x) => x.id === h.plantId);
             if (!p) return null;
             const I = ICON[h.dominant];
@@ -93,7 +108,7 @@ export default function LabResults() {
         {meds.map((d) => {
           const drug = drugs.find((x) => x.id === d.drugId);
           return (
-            <button key={d.drugId} className="sl-med" onClick={() => useApp.getState().set({ rightPanel: 'drugs', selectedDrugId: d.drugId })}>
+            <button key={d.drugId} className="sl-med" onClick={() => useApp.getState().selectDrug(d.drugId)}>
               <span>{drug?.shortName ?? drug?.name ?? d.drugId}</span>
               <span className="num">{d.hospitalsAtRisk ? `${d.hospitalsAtRisk.toLocaleString()} hosp.` : '—'}</span>
               <b className="num" style={{ color: riskCss(d.risk) }}>{Math.round(d.risk * 100)}%</b>
@@ -102,10 +117,10 @@ export default function LabResults() {
         })}
       </div>
 
-      <div className="sl-exports">
+      <details className="extra-details"><summary>Download forecast data</summary><div className="sl-exports">
         <button className="sl-btn" onClick={exportCsv}><Download size={13} /> Plants CSV</button>
         <button className="sl-btn" onClick={exportJson}><Download size={13} /> Run JSON</button>
-      </div>
+      </div></details>
     </div>
   );
 }

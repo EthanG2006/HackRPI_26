@@ -1,5 +1,5 @@
 // Map overlay in lab mode: hazard field picker + legend, and storm playback.
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pause, Play, Sigma } from 'lucide-react';
 import { useApp } from '../store';
 import { FIELD_META } from '../map/labLayers';
@@ -9,10 +9,11 @@ import { Prov } from '../ui/Prov';
 import type { LabFieldId } from '../types';
 
 const FIELDS: LabFieldId[] = ['p34', 'p64', 'wind', 'rain', 'pRain', 'tornado'];
-const SHORT: Record<LabFieldId, string> = { p34: '≥34 kt', p50: '≥50 kt', p64: '≥64 kt', wind: 'Max wind', rain: 'Rain total', pRain: 'Flood rain', tornado: 'Tornado' };
+const SHORT: Record<LabFieldId, string> = { p34: '≥34 kt', p50: '≥50 kt', p64: 'Strong wind', wind: 'Max wind', rain: 'Rain total', pRain: 'Heavy rain', tornado: 'Tornado' };
 const HOURS_PER_SECOND = 9;
 
 export default function LabOverlay() {
+  const [moreLayers,setMoreLayers]=useState(false);
   const active = useApp((s) => s.scenarioId === 'whatif' && s.introDone);
   const field = useApp((s) => s.whatif.field), hour = useApp((s) => s.whatif.hour), playing = useApp((s) => s.whatif.labPlaying);
   const series = useApp((s) => s.whatif.result?.series), running = useApp((s) => s.whatif.running);
@@ -44,8 +45,9 @@ export default function LabOverlay() {
     <>
       <div className="sl-legend" role="group" aria-label="Hazard field">
         <div className="sl-legend-tabs" role="radiogroup">
-          {FIELDS.map((f) => <button key={f} role="radio" aria-checked={f === field} className={f === field ? 'on' : ''} onClick={() => useApp.getState().setWhatIf({ field: f })}>{SHORT[f]}</button>)}
+          {FIELDS.filter(f=>moreLayers||['p64','rain','pRain',field].includes(f)).map((f) => <button key={f} role="radio" aria-checked={f === field} className={f === field ? 'on' : ''} onClick={() => useApp.getState().setWhatIf({ field: f })}>{SHORT[f]}</button>)}
         </div>
+        <button className="legend-more" aria-expanded={moreLayers} onClick={()=>setMoreLayers(!moreLayers)}>{moreLayers?'Fewer weather layers':'More weather layers'}</button>
         <div className="sl-legend-title"><b>{meta.label}</b><span>{meta.unit}</span><Prov kind="MODEL" compact /></div>
         <div className="sl-legend-bar" style={{ background: gradient }} />
         <div className="sl-legend-ticks num">{[lo, ...meta.levels, hi].filter((v, i, a) => a.indexOf(v) === i).map((v) => <span key={v} style={{ left: `${((v - lo) / (hi - lo)) * 100}%` }}>{meta.fmt(v)}</span>)}</div>

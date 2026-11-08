@@ -306,7 +306,7 @@ export function useActiveScenario(): ScenarioFile | null {
   return useApp((s) => activeScenario(s));
 }
 
-let lastEnsemble: WhatIfState | undefined;
+let lastEnsemble: { result: WhatIfResult; category: number } | undefined;
 let assembled: ScenarioFile | null = null;
 let replaySource: ScenarioFile | undefined;
 let replaySnapshot: NonNullable<ScenarioFile['predictionSnapshots']>[number] | undefined;
@@ -327,16 +327,17 @@ export function activeScenario(s: AppState): ScenarioFile | null {
   }
   const r = s.whatif.result;
   if (!r) return null;
-  if (lastEnsemble === s.whatif && assembled) return assembled;
-  lastEnsemble = s.whatif;
+  if (lastEnsemble?.result === r && lastEnsemble.category === s.whatif.category && assembled) return assembled;
+  lastEnsemble = { result:r, category:s.whatif.category };
   const base = s.scenarios.helene;
+  const day0 = s.whatif.startTime ?? new Date().toISOString();
   return assembled = {
     id: 'whatif',
     name: 'What-if storm',
     subtitle: `Category ${s.whatif.category} · ${r.members.toLocaleString()} ensemble tracks · ${Math.round(r.elapsedMs)} ms (${r.engine})`,
-    start: base?.start ?? new Date().toISOString(),
-    end: base?.end ?? new Date().toISOString(),
-    day0: base?.day0 ?? new Date().toISOString(),
+    start:day0,
+    end:new Date(Date.parse(day0)+90*86400000).toISOString(),
+    day0,
     heroPlantIds: [...r.outages].sort((a, b) => b.pDisrupt - a.pDisrupt).slice(0, 3).map((o) => o.plantId),
     heroDrugIds: [...r.drugRisk].sort((a, b) => b.risk - a.risk).slice(0, 3).map((d) => d.drugId),
     camera: s.scenarios.helene?.camera ?? { longitude: -80, latitude: 30, zoom: 4 },

@@ -9,7 +9,8 @@
     "demo": "node scripts/run.mjs demo",
     "build": "npm --prefix web run build",
     "typecheck": "npm --prefix web run typecheck",
-    "pipeline": "node scripts/run.mjs pipeline"
+    "pipeline": "node scripts/run.mjs pipeline",
+    "test": "node scripts/test-web.mjs"
   },
   "engines": {
     "node": ">=20"

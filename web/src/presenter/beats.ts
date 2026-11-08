@@ -1,13 +1,15 @@
 import { useApp } from '../store';
+import { capitalRegionHospitals } from '../lib/hospitals';
+import { DEFAULT_LAB } from '../sim/lab/params';
 import type { ScenarioId } from '../types';
 
 export const beats = [
   ['Orbital view', 'Open on Earth. Introduce weather as an early signal for hospital pharmacy teams.'],
   ['Helene replay', 'Follow the advisory clock. The map reveals each weather product only after its issue time.'],
   ['Pharmacy alert', 'Read the information cutoff and compare it with the documented disruption date.'],
-  ['Local hospital', 'Open the Capital Region forecast, review the uncertainty, and export the CMO briefing.'],
-  ['Equity lab', 'Compare market allocation and fair allocation. Move the equity weight and watch the hospitals.'],
-  ['What-if storm', 'Draw another path or change the storm category, then run the ensemble.'],
+  ['Troy hospital plan', 'Open the Capital Region forecast, review the uncertainty, and export the CMO briefing.'],
+  ['Share supply', 'Compare market allocation and fair allocation. Move the equity weight and watch the hospitals.'],
+  ['Test a storm', 'Draw another path or change the storm category, then run the ensemble.'],
   ['Ask Rx Radar', 'Ask which children’s hospitals in the Southeast run out of IV fluids first.'],
   ['Impact', 'Open each estimate to inspect the assumptions behind the projected benefit.'],
 ] as const;
@@ -20,13 +22,12 @@ export function switchScenario(id: ScenarioId) {
     selectedPlantId: null, selectedHospitalId: null, highlight: null, equityOpen: false, abmPlaying: false,
     copilotOpen: false, page: null, paletteOpen: false, rightPanel: id === 'whatif' ? 'whatif' : 'drugs',
     camera: sc?.camera ?? { longitude: -86, latitude: 30, zoom: 3.5, duration: 800 } });
+  s.setLayers({storm:true,wind:true,radar:id!=='whatif',rain:id!=='whatif',network:true,hospitals:true,plants:true,gauges:id!=='whatif',svi:false,nri:false});
   s.setWhatIf({drawing: false});
 }
 
 export function localHospital() {
-  const list = useApp.getState().hospitals;
-  return list.find(h => /samaritan hospital/i.test(h.name) && /troy/i.test(h.city)) ??
-    list.find(h => /albany medical center/i.test(h.name));
+  return capitalRegionHospitals(useApp.getState().hospitals)[0];
 }
 
 export function goBeat(n: number) {
@@ -54,9 +55,9 @@ export function goBeat(n: number) {
   } else if (n === 5) {
     s.set({equityOpen: true, rightPanel: 'equity', equityAutoplayAt: performance.now(), policy: 'market', abmDay: 0,
       camera: {longitude: -88, latitude: 36, zoom: 4.15, duration: 900}});
-    s.setLayers({hospitals: true, svi: true});
+    s.setLayers({hospitals:true,svi:true,storm:false,wind:false,radar:false,rain:false,network:false,gauges:false});
   } else if (n === 6) {
-    s.setWhatIf({track: [[-60,15],[-64.5,16.8],[-66.7,18.3],[-69,20.4]], category:4, forwardSpeedKt:12, drawing:false, result:null});
+    s.setWhatIf({track: [[-60,15],[-64.5,16.8],[-66.7,18.3],[-69,20.4]], category:4, forwardSpeedKt:12, fixes:null,presetId:'syn-pr',startTime:undefined,lab:{...DEFAULT_LAB,vmaxKt:130},drawing:false,result:null});
     s.set({whatifRunAt: performance.now(), camera:{longitude:-67,latitude:19,zoom:4.8,duration:850}});
   } else if (n === 7) {
     if (sc?.alert) s.setTime(Date.parse(sc.alert.t));

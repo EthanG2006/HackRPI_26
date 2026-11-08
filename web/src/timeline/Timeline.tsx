@@ -4,7 +4,7 @@ import {useActiveScenario,useApp,SPEEDS} from '../store';
 import {fmtUtc} from '../lib/format';
 import {smoothTime} from '../lib/clock';
 import {Prov} from '../ui/Prov';
-import {goBeat} from '../presenter/beats';
+import {beats,goBeat} from '../presenter/beats';
 export default function Timeline(){
  const sc=useActiveScenario(), t=useApp(s=>s.time), playing=useApp(s=>s.playing), speed=useApp(s=>s.speed), beat=useApp(s=>s.beat);
  const [events,setEvents]=useState(false);
@@ -31,7 +31,7 @@ export default function Timeline(){
     <select title="Replay speed" aria-label="Replay speed" value={speed} onChange={e=>s.setSpeed(Number(e.target.value))}>{SPEEDS.map(n=><option key={n} value={n}>{n}×</option>)}</select></div>
   <div className="scrub-area"><div className="scrub-caption"><span>{replay?'REPLAY CLOCK':sc?.id==='live'?'WEATHER SNAPSHOT':'SIMULATION CLOCK'}</span><b>{replay?fmtUtc(t,true):sc?.id==='live'?fmtUtc(s.live?.fetchedAt??t,true):'Scenario horizon · 90 days'}</b></div>
    <div className="scrub-track"><div className="scrub-pins">{pins.map((e,i)=><i key={i} title={e.label} style={{left:Math.min(100,Math.max(0,(Date.parse(e.t)-start)/(end-start)*100))+'%'}}/>)}</div><input ref={bar} aria-label="Replay position" disabled={!replay} type="range" min={start} max={end} step={60000} value={start+(end-start)*pct/100} style={{background:'linear-gradient(to right,#70e2ed '+pct+'%, #263d49 '+pct+'%)'}} onChange={e=>seek(+e.target.value)}/></div></div>
-  <div className="timeline-end"><button className="quiet" onClick={()=>setEvents(!events)} disabled={!replay}><Flag size={14}/>Events</button><button className="quiet" onClick={()=>goBeat(beat>=8?1:Math.max(1,beat)+1)}>Next beat<ChevronRight size={15}/></button></div>
+  <div className="timeline-end"><button className="quiet" onClick={()=>setEvents(!events)} disabled={!replay}><Flag size={14}/>Events</button><button className="quiet" onClick={()=>goBeat(beat>=8?1:Math.max(1,beat)+1)}>{beat>=8?'Replay the story':`Next: ${beats[Math.min(7,Math.max(1,beat))][0]}`}<ChevronRight size={15}/></button></div>
   {events&&replay&&<div className="event-list"><div className="section-heading"><h3>Replay events</h3><button onClick={()=>setEvents(false)}>Close</button></div>{sc.events.map((e,i)=><div key={i}><button onClick={()=>{seek(Date.parse(e.t));setEvents(false)}}><small>{fmtUtc(e.t)}</small><strong>{e.label}</strong></button><Prov kind={e.provenance} compact sourceIds={e.sourceIds}/></div>)}</div>}
  </footer>;
 }

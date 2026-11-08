@@ -6,7 +6,7 @@ import type { StormState } from './storm';
 import { riskColor } from '../lib/colors';
 import type { LngLat } from '../types';
 
-interface ParticlePath {path:[number,number,number][];times:number[];color:[number,number,number,number]}
+interface ParticlePath {period?:number;path:[number,number,number][];times:number[];color:[number,number,number,number]}
 const rho=1.15;
 const backgroundPressure=1010;
 const LOOP=240;
@@ -53,6 +53,27 @@ export function flowPath(flow:Flow):[number,number,number][] {
   }
   return path;
 }
+// Repeat the same geometry in the shader instead of drawing ten mostly invisible copies per route.
+class ShipmentLayer extends TripsLayer<ParticlePath, {getPeriod:(p:ParticlePath)=>number}> {
+  static layerName = 'ShipmentLayer';
+  static defaultProps = { ...TripsLayer.defaultProps, getPeriod: { type:'accessor' as const, value:30 } };
+  initializeState() {
+    super.initializeState();
+    this.getAttributeManager()!.addInstanced({instancePeriod:{size:1,accessor:'getPeriod',defaultValue:30}});
+  }
+  getShaders() {
+    const shaders=super.getShaders();
+    shaders.inject = {...shaders.inject,
+      'vs:#decl':shaders.inject['vs:#decl']+'\nin float instancePeriod; out float vPeriod;',
+      'vs:#main-end':shaders.inject['vs:#main-end']+'\nvPeriod = instancePeriod;',
+      'fs:#decl':shaders.inject['fs:#decl']+'\nin float vPeriod;',
+      'fs:DECKGL_FILTER_COLOR':`float age = mod(trips.currentTime - vTime, vPeriod);
+        if(age > trips.trailLength) discard;
+        color.a *= 1.0 - age / trips.trailLength;`
+    };
+    return shaders;
+  }
+}
 let flowKey='',flowCache:TripsLayer<ParticlePath>|null=null;
 export function networkMotion(s:AppState,zoom:number):TripsLayer<ParticlePath>|null {
   if(!s.layers.network)return null;
@@ -68,13 +89,10 @@ export function networkMotion(s:AppState,zoom:number):TripsLayer<ParticlePath>|n
     const remaining=1-flow.risk*Math.max(0,Math.min(1,(day-(flow.stage==='upstream'?0:4))/7));
     const path=flowPath(flow),phase=(flow.id*17)%60;
     const color=riskColor(flow.risk,Math.round(150+105*remaining));
-    for(let start=-60+phase;start<LOOP;start+=remaining<.3?90:remaining<.65?55:30){
-      if(remaining<.05)break;
-      paths.push({path,times:path.map((_,i)=>start+i*1.5),color});
-    }
+    if(remaining>=.05)paths.push({path,times:path.map((_,i)=>phase+i*1.5),color,period:remaining<.3?90:remaining<.65?55:30});
   }
   flowKey=key;
-  return flowCache=new TripsLayer<ParticlePath>({id:'moving-shipments',data:paths,getPath:p=>p.path,getTimestamps:p=>p.times,getColor:p=>p.color,
+  return flowCache=new ShipmentLayer({id:'moving-shipments',getPeriod:(p:ParticlePath)=>p.period??30,data:paths,getPath:p=>p.path,getTimestamps:p=>p.times,getColor:p=>p.color,
     getWidth:1.6,widthUnits:'pixels',trailLength:2.3,fadeTrail:true,currentTime:0,opacity:.7});
 }
 export function motionTime(now:number){return (now/1000*5)%LOOP;}

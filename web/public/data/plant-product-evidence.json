@@ -1,0 +1,2503 @@
+{
+  "schemaVersion": 1,
+  "status": "partial-research-handoff-not-applied",
+  "reviewedAt": "2026-11-07",
+  "stopReason": "User changed scope to simplifying the hackathon demo and explicitly stopped further research.",
+  "catalogScope": {
+    "drugIds": [
+      "albuterol-inhalation",
+      "amiodarone-inj",
+      "amoxicillin-oral-susp",
+      "atropine-inj",
+      "bupivacaine-inj",
+      "calcium-gluconate-inj",
+      "carboplatin-inj",
+      "cefazolin-inj",
+      "cisplatin-inj",
+      "cytarabine-inj",
+      "dexamethasone-inj",
+      "dextrose-5-iv",
+      "dextrose-50-inj",
+      "dobutamine-inj",
+      "epinephrine-inj",
+      "fentanyl-inj",
+      "fluorouracil-inj",
+      "furosemide-inj",
+      "heparin-inj",
+      "hydromorphone-inj",
+      "ketamine-inj",
+      "lactated-ringers-iv",
+      "lidocaine-inj",
+      "magnesium-sulfate-inj",
+      "methotrexate-inj",
+      "midazolam-inj",
+      "morphine-inj",
+      "naloxone-inj",
+      "norepinephrine-inj",
+      "ondansetron-inj",
+      "penicillin-g-benzathine-inj",
+      "peritoneal-dialysis-solution",
+      "potassium-chloride-inj",
+      "potassium-phosphates-inj",
+      "sodium-bicarbonate-inj",
+      "sodium-chloride-0-9-iv",
+      "sodium-chloride-minibag",
+      "sterile-water-inj",
+      "vancomycin-inj",
+      "vasopressin-inj",
+      "vincristine-inj"
+    ],
+    "newPlantIds": [
+      "amgen-juncos-pr",
+      "amphastar-ims-south-el-monte",
+      "baxter-aibonito-pr",
+      "baxter-cleveland-ms",
+      "baxter-round-lake-il",
+      "civica-petersburg",
+      "eugia-east-windsor",
+      "exela-lenoir",
+      "fresenius-kabi-grand-island",
+      "fresenius-kabi-melrose-park",
+      "fresenius-kabi-wilson",
+      "hikma-bedford",
+      "hikma-cherry-hill",
+      "hikma-columbus",
+      "icu-medical-austin",
+      "nephron-west-columbia",
+      "par-sterile-rochester",
+      "pfizer-kalamazoo",
+      "pfizer-mcpherson",
+      "sca-pharmaceuticals-little-rock",
+      "simtra-bloomington"
+    ],
+    "originalSevenPlantsReverified": false
+  },
+  "summary": {
+    "plantsReviewed": 21,
+    "researchLinkRows": 43,
+    "researchLinkedPlants": 13,
+    "catalogChangesApplied": 0,
+    "observedBaselineNewLinkedPlants": 6,
+    "observedBaselineNewLinks": 12
+  },
+  "method": {
+    "acceptance": "Product-specific primary manufacturer/FDA evidence only; evidence grade, temporal limits and unresolved identity checks are preserved per row. No corporate-portfolio-only links.",
+    "confidence": "Uncalibrated reviewer judgment of documented relationship; does not quantify supply share.",
+    "shares": {
+      "provenance": "SIMULATED",
+      "values": null,
+      "note": "No share percentages researched or asserted. Existing scenario percentages remain separate from factual link evidence."
+    },
+    "reproduction": "Structured facts and source locators are saved; automated rebuild integration was not implemented before the scope change."
+  },
+  "sites": [
+    {
+      "plantId": "fresenius-kabi-wilson",
+      "status": "supported-links",
+      "reason": "FDA inspection documents historical manufacture of the named products.",
+      "evidenceIds": [
+        "plant-product-wilson-2019-483"
+      ],
+      "remainingGap": "Specific current freeflex product routing is unverified; do not attach every freeflex product to Wilson.",
+      "supportedResearchDrugIds": [
+        "morphine-inj",
+        "ondansetron-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "fresenius-kabi-grand-island",
+      "status": "supported-links",
+      "reason": "Site-specific company production statement.",
+      "evidenceIds": [
+        "plant-product-grand-island-heparin"
+      ],
+      "remainingGap": "Other corporate products cannot be allocated to this site from portfolio membership.",
+      "supportedResearchDrugIds": [
+        "heparin-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "fresenius-kabi-melrose-park",
+      "status": "supported-links",
+      "reason": "FDA identifies the site and injectable product.",
+      "evidenceIds": [
+        "plant-product-melrose-2026-letter"
+      ],
+      "remainingGap": "Reconcile campus address before geocoding changes; do not infer other injectables.",
+      "supportedResearchDrugIds": [
+        "lidocaine-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "pfizer-mcpherson",
+      "status": "supported-links",
+      "reason": "Original opioid mappings have primary site evidence; midazolam also appears.",
+      "evidenceIds": [
+        "plant-product-mcpherson-2016-483"
+      ],
+      "remainingGap": "No current production schedule or SKU allocation verified.",
+      "supportedResearchDrugIds": [
+        "morphine-inj",
+        "hydromorphone-inj",
+        "midazolam-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "icu-medical-austin",
+      "status": "supported-family-candidates",
+      "reason": "Explicit Austin manufacturing statement, with product-family evidence.",
+      "evidenceIds": [
+        "plant-product-austin-annual-report"
+      ],
+      "remainingGap": "Confirm concentration/presentation and current SKU routing. Do not treat this as proof of all corporate products.",
+      "supportedResearchDrugIds": [
+        "sodium-chloride-0-9-iv",
+        "dextrose-5-iv",
+        "lactated-ringers-iv",
+        "sterile-water-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "status": "supported-links",
+      "reason": "Seven explicit product manufacturer statements; distributor kept separate.",
+      "evidenceIds": [
+        "plant-product-cherry-hill-heparin-inj",
+        "plant-product-cherry-hill-naloxone-inj",
+        "plant-product-cherry-hill-sterile-water-inj",
+        "plant-product-cherry-hill-ondansetron-inj",
+        "plant-product-cherry-hill-dexamethasone-inj",
+        "plant-product-cherry-hill-midazolam-inj",
+        "plant-product-cherry-hill-fentanyl-inj"
+      ],
+      "remainingGap": "Other Hikma and Civica products need independent site evidence.",
+      "supportedResearchDrugIds": [
+        "heparin-inj",
+        "naloxone-inj",
+        "sterile-water-inj",
+        "ondansetron-inj",
+        "dexamethasone-inj",
+        "midazolam-inj",
+        "fentanyl-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "hikma-bedford",
+      "status": "not-commercial",
+      "reason": "Do not attach current national drug supply to planned commercial operations.",
+      "evidenceIds": [
+        "plant-product-bedford-planned"
+      ],
+      "remainingGap": "The general factsheet describes capabilities but does not establish current product manufacture. No accepted links.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "hikma-columbus",
+      "status": "unresolved",
+      "reason": "Capabilities and company portfolios cannot establish product-site routing.",
+      "evidenceIds": [
+        "plant-product-hikma-site-capabilities"
+      ],
+      "remainingGap": "Albuterol inhaler/aerosol does not establish the canonical nebulized solution; amoxicillin suspension also lacks site evidence. FDA city search was capped at 1,000 and contains unrelated repackagers.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "status": "supported-links-with-identity-caveat",
+      "reason": "Five product-specific records; four require final establishment identifier crosswalk.",
+      "evidenceIds": [
+        "plant-product-ims-atropine-inj",
+        "plant-product-ims-dextrose-50-inj",
+        "plant-product-ims-sodium-bicarbonate-inj",
+        "plant-product-ims-naloxone-inj",
+        "plant-product-ims-epinephrine"
+      ],
+      "remainingGap": "Existing lidocaine injection link remains unsupported: fetched lidocaine SPL was topical JELLY, not injection. NDC 76329-3306 lookup returned no record. Do not use that SPL for lidocaine-inj; do not infer morphine from corporate products.",
+      "supportedResearchDrugIds": [
+        "atropine-inj",
+        "dextrose-50-inj",
+        "sodium-bicarbonate-inj",
+        "naloxone-inj",
+        "epinephrine-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "exela-lenoir",
+      "status": "supported-links",
+      "reason": "Direct FDA product/filling evidence replaces shortage-report inference.",
+      "evidenceIds": [
+        "plant-product-exela-bicarbonate"
+      ],
+      "remainingGap": "Building-level campus location and current capacity remain unverified.",
+      "supportedResearchDrugIds": [
+        "sodium-bicarbonate-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "nephron-west-columbia",
+      "status": "supported-links",
+      "reason": "Albuterol has primary product evidence tied to the campus.",
+      "evidenceIds": [
+        "plant-product-nephron-albuterol"
+      ],
+      "remainingGap": "Other Nephron injectable products have not been verified for this plant record.",
+      "supportedResearchDrugIds": [
+        "albuterol-inhalation"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "baxter-cleveland-ms",
+      "status": "supported-links",
+      "reason": "Explicit manufacturing agreement site-product mapping.",
+      "evidenceIds": [
+        "plant-product-cleveland-swfi"
+      ],
+      "remainingGap": "Current production and availability were not checked.",
+      "supportedResearchDrugIds": [
+        "sterile-water-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "baxter-aibonito-pr",
+      "status": "out-of-scope-documented-device-activity",
+      "reason": "Unsupported existing sodium-chloride-minibag association should be removed or explicitly withheld.",
+      "evidenceIds": [
+        "plant-product-aibonito-device-site"
+      ],
+      "remainingGap": "No primary filled-drug product/site evidence recovered. Device/container production is not a filled-saline manufacturing link.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "baxter-round-lake-il",
+      "status": "supported-links",
+      "reason": "FDA site-specific cefazolin production evidence.",
+      "evidenceIds": [
+        "plant-product-round-lake-cefazolin"
+      ],
+      "remainingGap": "Other products cannot be inferred from the Baxter portfolio.",
+      "supportedResearchDrugIds": [
+        "cefazolin-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "simtra-bloomington",
+      "status": "unresolved",
+      "reason": "Contract manufacturing capabilities establish existence, not a specific drug link.",
+      "evidenceIds": [
+        "plant-product-simtra-bloomington"
+      ],
+      "remainingGap": "Client product/site assignment is undisclosed in the reviewed source. No assertion that the plant has zero matching products.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "par-sterile-rochester",
+      "status": "supported-links",
+      "reason": "Original vasopressin and epinephrine links have explicit company site evidence.",
+      "evidenceIds": [
+        "plant-product-rochester-products"
+      ],
+      "remainingGap": "Presentation-specific products only; current capacity and market share remain unknown.",
+      "supportedResearchDrugIds": [
+        "vasopressin-inj",
+        "epinephrine-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "status": "supported-historical-compounding-links",
+      "reason": "Product-specific FDA records distinguish Little Rock from Windsor, Connecticut.",
+      "evidenceIds": [
+        "plant-product-sca-hydromorphone-inj",
+        "plant-product-sca-magnesium-sulfate-inj",
+        "plant-product-sca-lidocaine-inj",
+        "plant-product-sca-calcium-gluconate-inj",
+        "plant-product-sca-bupivacaine-inj",
+        "plant-product-sca-potassium-chloride-inj",
+        "plant-product-sca-vancomycin-inj",
+        "plant-product-sca-cefazolin-inj",
+        "plant-product-sca-potassium-phosphates-inj",
+        "plant-product-sca-furosemide-inj",
+        "plant-product-sca-norepinephrine-inj",
+        "plant-product-sca-morphine-inj",
+        "plant-product-sca-fentanyl-inj",
+        "plant-product-sca-epinephrine-inj"
+      ],
+      "remainingGap": "Current formulation/site routing is not verified. Historical 503B output must not be presented as current national supply.",
+      "supportedResearchDrugIds": [
+        "hydromorphone-inj",
+        "magnesium-sulfate-inj",
+        "lidocaine-inj",
+        "calcium-gluconate-inj",
+        "bupivacaine-inj",
+        "potassium-chloride-inj",
+        "vancomycin-inj",
+        "cefazolin-inj",
+        "potassium-phosphates-inj",
+        "furosemide-inj",
+        "norepinephrine-inj",
+        "morphine-inj",
+        "fentanyl-inj",
+        "epinephrine-inj"
+      ],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "civica-petersburg",
+      "status": "unresolved",
+      "reason": "A medication marketed by Civica is not evidence that Petersburg manufactured it.",
+      "evidenceIds": [
+        "plant-product-civica-site-and-portfolio"
+      ],
+      "remainingGap": "Reviewed labels identify other manufacturers for several portfolio drugs. No verified Petersburg-to-41-drug production link completed.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "amgen-juncos-pr",
+      "status": "out-of-scope-documented-biologics",
+      "reason": "No documented matching canonical product; do not substitute acute generic drugs from any broader portfolio.",
+      "evidenceIds": [
+        "plant-product-amgen-juncos"
+      ],
+      "remainingGap": "Complete current site portfolio not verified; no acute-drug manufacturing link accepted.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "eugia-east-windsor",
+      "status": "out-of-scope-headquarters-distribution",
+      "reason": "The catalog address is a headquarters/distribution location, not verified manufacturing.",
+      "evidenceIds": [
+        "plant-product-eugia-east-windsor"
+      ],
+      "remainingGap": "No manufacturing link to any canonical drug should be created from Eugia corporate products.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    },
+    {
+      "plantId": "pfizer-kalamazoo",
+      "status": "out-of-scope-documented-portfolio",
+      "reason": "No matching documented product; do not attach unrelated acute drugs from Pfizer corporate products.",
+      "evidenceIds": [
+        "plant-product-kalamazoo-portfolio"
+      ],
+      "remainingGap": "Current complete site portfolio was not verified.",
+      "supportedResearchDrugIds": [],
+      "provenance": "REAL"
+    }
+  ],
+  "links": [
+    {
+      "plantId": "fresenius-kabi-wilson",
+      "drugId": "morphine-inj",
+      "evidenceIds": [
+        "plant-product-wilson-2019-483"
+      ],
+      "sourceIds": [
+        "plant-evidence-wilson-2019-483"
+      ],
+      "confidence": 0.95,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "fresenius-kabi-wilson",
+      "drugId": "ondansetron-inj",
+      "evidenceIds": [
+        "plant-product-wilson-2019-483"
+      ],
+      "sourceIds": [
+        "plant-evidence-wilson-2019-483"
+      ],
+      "confidence": 0.95,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "fresenius-kabi-grand-island",
+      "drugId": "heparin-inj",
+      "evidenceIds": [
+        "plant-product-grand-island-heparin"
+      ],
+      "sourceIds": [
+        "plant-evidence-grand-island-heparin"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "current-company-page",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "fresenius-kabi-melrose-park",
+      "drugId": "lidocaine-inj",
+      "evidenceIds": [
+        "plant-product-melrose-2026-letter"
+      ],
+      "sourceIds": [
+        "plant-evidence-melrose-2026-letter"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2026",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "pfizer-mcpherson",
+      "drugId": "morphine-inj",
+      "evidenceIds": [
+        "plant-product-mcpherson-2016-483"
+      ],
+      "sourceIds": [
+        "plant-evidence-mcpherson-2016-483"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "pfizer-mcpherson",
+      "drugId": "hydromorphone-inj",
+      "evidenceIds": [
+        "plant-product-mcpherson-2016-483"
+      ],
+      "sourceIds": [
+        "plant-evidence-mcpherson-2016-483"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "pfizer-mcpherson",
+      "drugId": "midazolam-inj",
+      "evidenceIds": [
+        "plant-product-mcpherson-2016-483"
+      ],
+      "sourceIds": [
+        "plant-evidence-mcpherson-2016-483"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "icu-medical-austin",
+      "drugId": "sodium-chloride-0-9-iv",
+      "evidenceIds": [
+        "plant-product-austin-annual-report"
+      ],
+      "sourceIds": [
+        "plant-evidence-austin-annual-report"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2023-report",
+      "verificationStatus": "needs-concentration-and-presentation-check"
+    },
+    {
+      "plantId": "icu-medical-austin",
+      "drugId": "dextrose-5-iv",
+      "evidenceIds": [
+        "plant-product-austin-annual-report"
+      ],
+      "sourceIds": [
+        "plant-evidence-austin-annual-report"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2023-report",
+      "verificationStatus": "needs-concentration-and-presentation-check"
+    },
+    {
+      "plantId": "icu-medical-austin",
+      "drugId": "lactated-ringers-iv",
+      "evidenceIds": [
+        "plant-product-austin-annual-report"
+      ],
+      "sourceIds": [
+        "plant-evidence-austin-annual-report"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2023-report",
+      "verificationStatus": "needs-concentration-and-presentation-check"
+    },
+    {
+      "plantId": "icu-medical-austin",
+      "drugId": "sterile-water-inj",
+      "evidenceIds": [
+        "plant-product-austin-annual-report"
+      ],
+      "sourceIds": [
+        "plant-evidence-austin-annual-report"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2023-report",
+      "verificationStatus": "needs-concentration-and-presentation-check"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "heparin-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-heparin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-heparin-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "naloxone-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-naloxone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-naloxone-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "sterile-water-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-sterile-water-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-sterile-water-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "ondansetron-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-ondansetron-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-ondansetron-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "dexamethasone-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-dexamethasone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-dexamethasone-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "midazolam-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-midazolam-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-midazolam-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "hikma-cherry-hill",
+      "drugId": "fentanyl-inj",
+      "evidenceIds": [
+        "plant-product-cherry-hill-fentanyl-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-fentanyl-inj"
+      ],
+      "confidence": 0.93,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugId": "atropine-inj",
+      "evidenceIds": [
+        "plant-product-ims-atropine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-atropine-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "needs-duns-to-site-crosswalk"
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugId": "dextrose-50-inj",
+      "evidenceIds": [
+        "plant-product-ims-dextrose-50-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-dextrose-50-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "needs-duns-to-site-crosswalk"
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugId": "sodium-bicarbonate-inj",
+      "evidenceIds": [
+        "plant-product-ims-sodium-bicarbonate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-sodium-bicarbonate-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "needs-duns-to-site-crosswalk"
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugId": "naloxone-inj",
+      "evidenceIds": [
+        "plant-product-ims-naloxone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-naloxone-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "confidence": 0.85,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "label-version-at-review",
+      "verificationStatus": "needs-duns-to-site-crosswalk"
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugId": "epinephrine-inj",
+      "evidenceIds": [
+        "plant-product-ims-epinephrine"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-epinephrine"
+      ],
+      "confidence": 0.99,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2025-inspection/2026-letter",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "exela-lenoir",
+      "drugId": "sodium-bicarbonate-inj",
+      "evidenceIds": [
+        "plant-product-exela-bicarbonate"
+      ],
+      "sourceIds": [
+        "plant-evidence-exela-bicarbonate"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2024-inspection",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "nephron-west-columbia",
+      "drugId": "albuterol-inhalation",
+      "evidenceIds": [
+        "plant-product-nephron-albuterol"
+      ],
+      "sourceIds": [
+        "plant-evidence-nephron-albuterol"
+      ],
+      "confidence": 0.95,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2024-inspection",
+      "verificationStatus": "needs-campus-entity-reconciliation"
+    },
+    {
+      "plantId": "baxter-cleveland-ms",
+      "drugId": "sterile-water-inj",
+      "evidenceIds": [
+        "plant-product-cleveland-swfi"
+      ],
+      "sourceIds": [
+        "plant-evidence-cleveland-swfi"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2015-agreement",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "baxter-round-lake-il",
+      "drugId": "cefazolin-inj",
+      "evidenceIds": [
+        "plant-product-round-lake-cefazolin"
+      ],
+      "sourceIds": [
+        "plant-evidence-round-lake-cefazolin"
+      ],
+      "confidence": 0.99,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2026-letter",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "par-sterile-rochester",
+      "drugId": "vasopressin-inj",
+      "evidenceIds": [
+        "plant-product-rochester-products"
+      ],
+      "sourceIds": [
+        "plant-evidence-rochester-products"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2025-presentation",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "par-sterile-rochester",
+      "drugId": "epinephrine-inj",
+      "evidenceIds": [
+        "plant-product-rochester-products"
+      ],
+      "sourceIds": [
+        "plant-evidence-rochester-products"
+      ],
+      "confidence": 0.98,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "2025-presentation",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "hydromorphone-inj",
+      "evidenceIds": [
+        "plant-product-sca-hydromorphone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-hydromorphone-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "magnesium-sulfate-inj",
+      "evidenceIds": [
+        "plant-product-sca-magnesium-sulfate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-magnesium-sulfate-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "lidocaine-inj",
+      "evidenceIds": [
+        "plant-product-sca-lidocaine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-lidocaine-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2018",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "calcium-gluconate-inj",
+      "evidenceIds": [
+        "plant-product-sca-calcium-gluconate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-calcium-gluconate-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "bupivacaine-inj",
+      "evidenceIds": [
+        "plant-product-sca-bupivacaine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-bupivacaine-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "potassium-chloride-inj",
+      "evidenceIds": [
+        "plant-product-sca-potassium-chloride-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-potassium-chloride-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "vancomycin-inj",
+      "evidenceIds": [
+        "plant-product-sca-vancomycin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-vancomycin-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "cefazolin-inj",
+      "evidenceIds": [
+        "plant-product-sca-cefazolin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-cefazolin-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "potassium-phosphates-inj",
+      "evidenceIds": [
+        "plant-product-sca-potassium-phosphates-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-potassium-phosphates-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "furosemide-inj",
+      "evidenceIds": [
+        "plant-product-sca-furosemide-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-furosemide-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2018",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "norepinephrine-inj",
+      "evidenceIds": [
+        "plant-product-sca-norepinephrine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-norepinephrine-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "morphine-inj",
+      "evidenceIds": [
+        "plant-product-sca-morphine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-morphine-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "fentanyl-inj",
+      "evidenceIds": [
+        "plant-product-sca-fentanyl-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-fentanyl-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    },
+    {
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugId": "epinephrine-inj",
+      "evidenceIds": [
+        "plant-product-sca-epinephrine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-epinephrine-inj"
+      ],
+      "confidence": 0.88,
+      "provenance": "REAL",
+      "status": "supported-research-not-applied",
+      "temporalScope": "historical-2017",
+      "verificationStatus": "verified-site-product-relationship"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "plant-product-wilson-2019-483",
+      "plantId": "fresenius-kabi-wilson",
+      "drugIds": [
+        "morphine-inj",
+        "ondansetron-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-wilson-2019-483"
+      ],
+      "claim": "FDA identifies Wilson manufacturing equipment and discusses morphine cleaning validation and ondansetron production.",
+      "locator": "Page 1; FEI 3008887707; cleaning validation observation",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical",
+      "limitations": "FDA-authored primary document on a third-party host. Establishes historical manufacturing, not present production or allocation."
+    },
+    {
+      "id": "plant-product-grand-island-heparin",
+      "plantId": "fresenius-kabi-grand-island",
+      "drugIds": [
+        "heparin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-grand-island-heparin"
+      ],
+      "claim": "The site page explicitly identifies heparin sodium as a product produced at Grand Island.",
+      "locator": "Grand Island site description; heparin paragraph",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "current-company-page",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-melrose-2026-letter",
+      "plantId": "fresenius-kabi-melrose-park",
+      "drugIds": [
+        "lidocaine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-melrose-2026-letter"
+      ],
+      "claim": "The Melrose Park manufacturing inspection and resulting recalls identify lidocaine injection.",
+      "locator": "FEI 1450022; Recall Discussion",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2026",
+      "limitations": "FDA lists 2085 N Hawthorne Ave; the existing Ruby Street address appears in the 2020 inspection for the same FEI. Coordinate/address reconciliation remains separate."
+    },
+    {
+      "id": "plant-product-mcpherson-2016-483",
+      "plantId": "pfizer-mcpherson",
+      "drugIds": [
+        "morphine-inj",
+        "hydromorphone-inj",
+        "midazolam-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-mcpherson-2016-483"
+      ],
+      "claim": "FDA documents injectable cartridge manufacture at McPherson for morphine, hydromorphone and midazolam.",
+      "locator": "Pages 11-13; FEI 1925262; iSecure and cartridge observations",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical",
+      "limitations": "Historical production is established. Current product routing and capacity are not verified."
+    },
+    {
+      "id": "plant-product-austin-annual-report",
+      "plantId": "icu-medical-austin",
+      "drugIds": [
+        "sodium-chloride-0-9-iv",
+        "dextrose-5-iv",
+        "lactated-ringers-iv",
+        "sterile-water-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-austin-annual-report"
+      ],
+      "claim": "The report describes its IV fluid/diluent families and explicitly assigns IV Solutions manufacture to Austin, while noting suppliers in prior years.",
+      "locator": "IV Solutions product description and manufacturing-facilities discussion",
+      "provenance": "REAL",
+      "confidence": 0.85,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2023-report",
+      "limitations": "Site-level family evidence, not lot-level routing. Exact concentrations require product-label confirmation before final integration; sodium chloride 0.9% has a separate 2026 FDA-posted recall. These four rows are research candidates."
+    },
+    {
+      "id": "plant-product-cherry-hill-heparin-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "heparin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-heparin-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "1e362730-5a56-4948-a90f-2cb75fed9e91",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-cherry-hill-naloxone-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "naloxone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-naloxone-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "21d20dff-6efe-481e-a5a0-9c80ded73ca9",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-cherry-hill-sterile-water-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "sterile-water-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-sterile-water-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "3f49eedf-5bf5-4a95-b704-c956d860ca04",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-cherry-hill-ondansetron-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "ondansetron-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-ondansetron-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "70437694-0341-4f3b-824c-06843403443f",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-cherry-hill-dexamethasone-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "dexamethasone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-dexamethasone-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "d54a27f2-2af8-4f86-a7fd-453f6b1a9997",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-cherry-hill-midazolam-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "midazolam-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-midazolam-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "f0c8b6cd-9efc-4344-9212-fbdd3b8e2f9b",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-cherry-hill-fentanyl-inj",
+      "plantId": "hikma-cherry-hill",
+      "drugIds": [
+        "fentanyl-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cherry-hill-fentanyl-inj"
+      ],
+      "claim": "The product label identifies Hikma in Cherry Hill as manufacturer and Civica as the separate distributor.",
+      "locator": "Manufactured by statement and product/route information",
+      "provenance": "REAL",
+      "confidence": 0.93,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity.",
+      "structuredFacts": {
+        "splSetId": "aacf276b-e133-4199-ad3f-67b894744c04",
+        "manufacturerCity": "Cherry Hill",
+        "manufacturerRole": "manufactured by",
+        "distributor": "Civica"
+      }
+    },
+    {
+      "id": "plant-product-bedford-planned",
+      "plantId": "hikma-bedford",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-bedford-planned"
+      ],
+      "claim": "The report expects full commercial production at Bedford to begin in 2028.",
+      "locator": "Executive chairman statement; Injectables",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2025-report",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-hikma-site-capabilities",
+      "plantId": "hikma-columbus",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-hikma-site-capabilities"
+      ],
+      "claim": "Columbus has non-injectable oral, nasal and inhalation manufacturing capabilities; no specific canonical product is assigned.",
+      "locator": "Columbus manufacturing plant entry",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2026-factsheet",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-ims-atropine-inj",
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugIds": [
+        "atropine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-atropine-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "claim": "The product SPL assigns manufacturing to the IMS establishment, DUNS 055750020; FDA independently identifies the IMS South El Monte manufacturing facility.",
+      "locator": "SPL author/assignedEntity/performance; C43360 manufacture",
+      "provenance": "REAL",
+      "confidence": 0.85,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating.",
+      "structuredFacts": {
+        "splSetId": "b72d0a82-6163-460f-965a-12f6da47370a",
+        "productNdc": "76329-3340",
+        "manufacturerDuns": "055750020",
+        "roleCode": "C43360",
+        "role": "manufacture"
+      }
+    },
+    {
+      "id": "plant-product-ims-dextrose-50-inj",
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugIds": [
+        "dextrose-50-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-dextrose-50-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "claim": "The product SPL assigns manufacturing to the IMS establishment, DUNS 055750020; FDA independently identifies the IMS South El Monte manufacturing facility.",
+      "locator": "SPL author/assignedEntity/performance; C43360 manufacture",
+      "provenance": "REAL",
+      "confidence": 0.85,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating.",
+      "structuredFacts": {
+        "splSetId": "fcc7ac79-cd70-4f03-a4de-f051f9ca1f7d",
+        "productNdc": "76329-3302",
+        "manufacturerDuns": "055750020",
+        "roleCode": "C43360",
+        "role": "manufacture"
+      }
+    },
+    {
+      "id": "plant-product-ims-sodium-bicarbonate-inj",
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugIds": [
+        "sodium-bicarbonate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-sodium-bicarbonate-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "claim": "The product SPL assigns manufacturing to the IMS establishment, DUNS 055750020; FDA independently identifies the IMS South El Monte manufacturing facility.",
+      "locator": "SPL author/assignedEntity/performance; C43360 manufacture",
+      "provenance": "REAL",
+      "confidence": 0.85,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating.",
+      "structuredFacts": {
+        "splSetId": "77698221-a01d-4568-a7bc-d3d4e982875d",
+        "productNdc": "76329-3352",
+        "manufacturerDuns": "055750020",
+        "roleCode": "C43360",
+        "role": "manufacture"
+      }
+    },
+    {
+      "id": "plant-product-ims-naloxone-inj",
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugIds": [
+        "naloxone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-naloxone-inj",
+        "plant-evidence-ims-fda-site"
+      ],
+      "claim": "The product SPL assigns manufacturing to the IMS establishment, DUNS 055750020; FDA independently identifies the IMS South El Monte manufacturing facility.",
+      "locator": "SPL author/assignedEntity/performance; C43360 manufacture",
+      "provenance": "REAL",
+      "confidence": 0.85,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "label-version-at-review",
+      "limitations": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating.",
+      "structuredFacts": {
+        "splSetId": "236349ef-2cb5-47ca-a3a5-99534c3a4996",
+        "productNdc": "76329-3369",
+        "manufacturerDuns": "055750020",
+        "roleCode": "C43360",
+        "role": "manufacture"
+      }
+    },
+    {
+      "id": "plant-product-ims-epinephrine",
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugIds": [
+        "epinephrine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-ims-epinephrine"
+      ],
+      "claim": "FDA directly describes epinephrine batch manufacture at the identified IMS facility.",
+      "locator": "FEI 2016148; observation 1; lot EA038A5",
+      "provenance": "REAL",
+      "confidence": 0.99,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2025-inspection/2026-letter",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-exela-bicarbonate",
+      "plantId": "exela-lenoir",
+      "drugIds": [
+        "sodium-bicarbonate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-exela-bicarbonate"
+      ],
+      "claim": "FDA identifies the Lenoir site and specifically documents filling sodium bicarbonate injection.",
+      "locator": "FEI/site header and observation 2, page 3",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2024-inspection",
+      "limitations": "The report describes the Augusta facility within Lenoir operations; building-level mapping to the existing catalog address has not been reconciled."
+    },
+    {
+      "id": "plant-product-nephron-albuterol",
+      "plantId": "nephron-west-columbia",
+      "drugIds": [
+        "albuterol-inhalation"
+      ],
+      "sourceIds": [
+        "plant-evidence-nephron-albuterol"
+      ],
+      "claim": "The FDA report identifies the West Columbia site and discusses manufactured albuterol sulfate inhalation solution lots.",
+      "locator": "Site header; FEI 3011158388; observation 3",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2024-inspection",
+      "limitations": "4500 12th Street Extension campus; different legal entities and adjacent 503B operations should not be silently conflated."
+    },
+    {
+      "id": "plant-product-cleveland-swfi",
+      "plantId": "baxter-cleveland-ms",
+      "drugIds": [
+        "sterile-water-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-cleveland-swfi"
+      ],
+      "claim": "The agreement identifies sterile water for injection vials as products produced in Cleveland, Mississippi.",
+      "locator": "Exhibit A/Schedule 1 site descriptions; Cleveland entry",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2015-agreement",
+      "limitations": "Historical SWFI vial manufacture, not proof of current supply, irrigation water, or saline bags."
+    },
+    {
+      "id": "plant-product-aibonito-device-site",
+      "plantId": "baxter-aibonito-pr",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-aibonito-device-site"
+      ],
+      "claim": "The Aibonito record establishes a medical-device site; it does not establish filled saline MINI-BAG manufacture.",
+      "locator": "FEI 2649614; establishment listing",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2026-registration",
+      "limitations": "The originally cited Baxter 2018 letter URL now returns a not-found page. This is insufficient to retain the saline link, and does not prove the site never made drugs."
+    },
+    {
+      "id": "plant-product-round-lake-cefazolin",
+      "plantId": "baxter-round-lake-il",
+      "drugIds": [
+        "cefazolin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-round-lake-cefazolin"
+      ],
+      "claim": "FDA identifies the Round Lake manufacturing facility and discusses cefazolin product batches and manufacturing investigations.",
+      "locator": "FEI 1416980; cefazolin particulate and sterility investigations",
+      "provenance": "REAL",
+      "confidence": 0.99,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2026-letter",
+      "limitations": "Cefazolin in dextrose maps to the cefazolin family; its carrier must not create a dextrose-5-iv manufacturing link."
+    },
+    {
+      "id": "plant-product-simtra-bloomington",
+      "plantId": "simtra-bloomington",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-simtra-bloomington"
+      ],
+      "claim": "The Bloomington site provides sterile vial and syringe fill-finish services, without naming matching client products.",
+      "locator": "Bloomington facility and manufacturing services sections",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "current-company-page",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-rochester-products",
+      "plantId": "par-sterile-rochester",
+      "drugIds": [
+        "vasopressin-inj",
+        "epinephrine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-rochester-products"
+      ],
+      "claim": "The product manufacturing table assigns Vasostrict and Adrenalin vials/prefilled syringes to Rochester; Adrenalin bags are assigned to a contractor.",
+      "locator": "Slide B18; Manufacturing column",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2025-presentation",
+      "limitations": "Do not assign outsourced Adrenalin bags to Rochester or import the presentation market-share figures as observed plant shares."
+    },
+    {
+      "id": "plant-product-sca-hydromorphone-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "hydromorphone-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-hydromorphone-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0060-2018; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0060-2018",
+        "recallInitiationDate": "20171019",
+        "recallingFirm": "SCA Pharmaceuticals, LLC",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "hydromorphone-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-magnesium-sulfate-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "magnesium-sulfate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-magnesium-sulfate-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1003-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1003-2017",
+        "recallInitiationDate": "20170714",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "magnesium-sulfate-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-lidocaine-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "lidocaine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-lidocaine-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0918-2018; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2018",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0918-2018",
+        "recallInitiationDate": "20180629",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "lidocaine-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-calcium-gluconate-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "calcium-gluconate-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-calcium-gluconate-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0067-2018; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0067-2018",
+        "recallInitiationDate": "20171019",
+        "recallingFirm": "SCA Pharmaceuticals, LLC",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "calcium-gluconate-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-bupivacaine-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "bupivacaine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-bupivacaine-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1007-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1007-2017",
+        "recallInitiationDate": "20170714",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "bupivacaine-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-potassium-chloride-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "potassium-chloride-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-potassium-chloride-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1032-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1032-2017",
+        "recallInitiationDate": "20170714",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "potassium-chloride-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-vancomycin-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "vancomycin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-vancomycin-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0640-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0640-2017",
+        "recallInitiationDate": "20170203",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "vancomycin-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-cefazolin-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "cefazolin-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-cefazolin-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0876-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0876-2017",
+        "recallInitiationDate": "20170518",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "cefazolin-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-potassium-phosphates-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "potassium-phosphates-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-potassium-phosphates-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0977-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0977-2017",
+        "recallInitiationDate": "20170621",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "potassium-phosphates-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-furosemide-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "furosemide-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-furosemide-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1189-2018; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2018",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1189-2018",
+        "recallInitiationDate": "20180827",
+        "recallingFirm": "SCA Pharmaceuticals, Inc.",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "furosemide-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-norepinephrine-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "norepinephrine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-norepinephrine-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1020-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1020-2017",
+        "recallInitiationDate": "20170714",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "norepinephrine-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-morphine-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "morphine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-morphine-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-0871-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-0871-2017",
+        "recallInitiationDate": "20170518",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "morphine-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-fentanyl-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "fentanyl-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-fentanyl-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1012-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1012-2017",
+        "recallInitiationDate": "20170714",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "fentanyl-inj"
+      }
+    },
+    {
+      "id": "plant-product-sca-epinephrine-inj",
+      "plantId": "sca-pharmaceuticals-little-rock",
+      "drugIds": [
+        "epinephrine-inj"
+      ],
+      "sourceIds": [
+        "plant-evidence-sca-epinephrine-inj"
+      ],
+      "claim": "The product record names SCA in Little Rock with the matching compounded injectable family and facility address.",
+      "locator": "Recall D-1019-2017; product_description, recalling_firm, city, address fields",
+      "provenance": "REAL",
+      "confidence": 0.88,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "historical-2017",
+      "limitations": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture.",
+      "structuredFacts": {
+        "recallNumber": "D-1019-2017",
+        "recallInitiationDate": "20170714",
+        "recallingFirm": "SCA Pharmaceuticals",
+        "city": "Little Rock",
+        "address": "8821 Knoedl Ct",
+        "canonicalFamily": "epinephrine-inj"
+      }
+    },
+    {
+      "id": "plant-product-civica-site-and-portfolio",
+      "plantId": "civica-petersburg",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-civica-site-and-portfolio"
+      ],
+      "claim": "The page describes Petersburg capabilities separately from its partner-sourced medication catalog.",
+      "locator": "Growing U.S. manufacturing capability; medication list",
+      "provenance": "REAL",
+      "confidence": 0.95,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "current-company-page",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-amgen-juncos",
+      "plantId": "amgen-juncos-pr",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-amgen-juncos"
+      ],
+      "claim": "The FDA review assigns ABP-501 biologic manufacture to Juncos; the reviewed product is outside the canonical 41-drug catalog.",
+      "locator": "Inspection waiver memo; Amgen Manufacturing Ltd; Building 1",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2016-review",
+      "limitations": "Scope classification refers to documented products, not an exhaustive claim about everything ever made at Juncos."
+    },
+    {
+      "id": "plant-product-eugia-east-windsor",
+      "plantId": "eugia-east-windsor",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-eugia-east-windsor"
+      ],
+      "claim": "The company distinguishes Indian manufacturing facilities from East Windsor distribution and headquarters operations.",
+      "locator": "East Windsor distribution center and headquarters sections; 279 Princeton Hightstown Road footer",
+      "provenance": "REAL",
+      "confidence": 0.99,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "current-company-page",
+      "limitations": ""
+    },
+    {
+      "id": "plant-product-kalamazoo-portfolio",
+      "plantId": "pfizer-kalamazoo",
+      "drugIds": [],
+      "sourceIds": [
+        "plant-evidence-kalamazoo-portfolio"
+      ],
+      "claim": "The site overview lists vaccine, biologic, steroid and other branded products; none of the named site products matches a canonical drug presentation.",
+      "locator": "Major products produced at the site",
+      "provenance": "REAL",
+      "confidence": 0.98,
+      "confidenceMeaning": "Reviewer judgment of this documented relationship, not a calibrated probability or supply share",
+      "temporalScope": "2022-site-overview",
+      "limitations": "This is a documented-portfolio scope exclusion, not proof that no unlisted canonical medicine has ever been made there."
+    }
+  ],
+  "sources": [
+    {
+      "id": "plant-evidence-wilson-2019-483",
+      "name": "FDA Wilson inspection, February 2019",
+      "url": "https://static.propublica.org/fda-inspection-documents/483s/2024-3040%2F483s%2F2019-9193.pdf",
+      "publisher": "FDA (original inspection document hosted by ProPublica)",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "FDA-authored primary document on a third-party host. Establishes historical manufacturing, not present production or allocation."
+    },
+    {
+      "id": "plant-evidence-grand-island-heparin",
+      "name": "Fresenius Kabi Grand Island manufacturing site",
+      "url": "https://cmo.fresenius-kabi.com/sterile-pharmaceuticals/pharmaceutical-sites/grand-island-usa",
+      "publisher": "Fresenius Kabi",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-melrose-2026-letter",
+      "name": "FDA Melrose Park warning letter, September 2026",
+      "url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/fresenius-kabi-usa-llc-733107-09222026",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "FDA lists 2085 N Hawthorne Ave; the existing Ruby Street address appears in the 2020 inspection for the same FEI. Coordinate/address reconciliation remains separate."
+    },
+    {
+      "id": "plant-evidence-mcpherson-2016-483",
+      "name": "FDA McPherson inspection, June 2016",
+      "url": "https://www.fda.gov/media/103543/download",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical production is established. Current product routing and capacity are not verified."
+    },
+    {
+      "id": "plant-evidence-austin-annual-report",
+      "name": "ICU Medical 2023 annual report",
+      "url": "https://ir.icumed.com/node/19396/html",
+      "publisher": "ICU Medical",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Site-level family evidence, not lot-level routing. Exact concentrations require product-label confirmation before final integration; sodium chloride 0.9% has a separate 2026 FDA-posted recall. These four rows are research candidates."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-heparin-inj",
+      "name": "Manufacturer label: heparin-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1e362730-5a56-4948-a90f-2cb75fed9e91",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-naloxone-inj",
+      "name": "Manufacturer label: naloxone-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=21d20dff-6efe-481e-a5a0-9c80ded73ca9",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-sterile-water-inj",
+      "name": "Manufacturer label: sterile-water-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3f49eedf-5bf5-4a95-b704-c956d860ca04",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-ondansetron-inj",
+      "name": "Manufacturer label: ondansetron-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=70437694-0341-4f3b-824c-06843403443f",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-dexamethasone-inj",
+      "name": "Manufacturer label: dexamethasone-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d54a27f2-2af8-4f86-a7fd-453f6b1a9997",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-midazolam-inj",
+      "name": "Manufacturer label: midazolam-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f0c8b6cd-9efc-4344-9212-fbdd3b8e2f9b",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-cherry-hill-fentanyl-inj",
+      "name": "Manufacturer label: fentanyl-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=aacf276b-e133-4199-ad3f-67b894744c04",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Manufacturer-city statement corroborates the Cherry Hill site; it is not proof of exclusive manufacture or present capacity."
+    },
+    {
+      "id": "plant-evidence-bedford-planned",
+      "name": "Hikma 2025 annual report",
+      "url": "https://www.hikma.com/media/wsnfgf3v/1-2025-annual-report.pdf",
+      "publisher": "Hikma",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-hikma-site-capabilities",
+      "name": "Hikma North America January 2026 factsheet",
+      "url": "https://www.hikma.com/media/w53f0m21/hikma-north-america-factsheet-en-jan-2026.pdf",
+      "publisher": "Hikma",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-ims-fda-site",
+      "name": "FDA IMS South El Monte warning letter",
+      "url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/international-medication-systems-limited-727560-07022026",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "FEI 2016148; 1886 Santa Anita Avenue. Do not substitute a corporate portfolio for product evidence."
+    },
+    {
+      "id": "plant-evidence-ims-atropine-inj",
+      "name": "IMS product SPL: atropine-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/services/v2/spls/b72d0a82-6163-460f-965a-12f6da47370a.xml",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating."
+    },
+    {
+      "id": "plant-evidence-ims-dextrose-50-inj",
+      "name": "IMS product SPL: dextrose-50-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/services/v2/spls/fcc7ac79-cd70-4f03-a4de-f051f9ca1f7d.xml",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating."
+    },
+    {
+      "id": "plant-evidence-ims-sodium-bicarbonate-inj",
+      "name": "IMS product SPL: sodium-bicarbonate-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/services/v2/spls/77698221-a01d-4568-a7bc-d3d4e982875d.xml",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating."
+    },
+    {
+      "id": "plant-evidence-ims-naloxone-inj",
+      "name": "IMS product SPL: naloxone-inj",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/services/v2/spls/236349ef-2cb5-47ca-a3a5-99534c3a4996.xml",
+      "publisher": "Manufacturer SPL published by NIH DailyMed",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Product-specific manufacturer role is verified. A direct FDA DUNS-to-FEI address crosswalk was not completed; preserve that limitation when integrating."
+    },
+    {
+      "id": "plant-evidence-ims-epinephrine",
+      "name": "FDA IMS South El Monte manufacturing observation",
+      "url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/international-medication-systems-limited-727560-07022026",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-exela-bicarbonate",
+      "name": "FDA Exela Lenoir inspection, November 2024",
+      "url": "https://www.fda.gov/media/185443/download",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "The report describes the Augusta facility within Lenoir operations; building-level mapping to the existing catalog address has not been reconciled."
+    },
+    {
+      "id": "plant-evidence-nephron-albuterol",
+      "name": "FDA Nephron West Columbia inspection, September 2024",
+      "url": "https://www.fda.gov/media/183238/download",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "4500 12th Street Extension campus; different legal entities and adjacent 503B operations should not be silently conflated."
+    },
+    {
+      "id": "plant-evidence-cleveland-swfi",
+      "name": "Baxter/Baxalta manufacturing agreement, June 2015",
+      "url": "https://www.sec.gov/Archives/edgar/data/1620546/000119312515244456/d59817dex103.htm",
+      "publisher": "Baxter/Baxalta filing on SEC EDGAR",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical SWFI vial manufacture, not proof of current supply, irrigation water, or saline bags."
+    },
+    {
+      "id": "plant-evidence-aibonito-device-site",
+      "name": "FDA Baxter Aibonito establishment/device listing",
+      "url": "https://www.accessdata.fda.gov/scrIpts/cdrh/cfdocs/cfRL/rl.cfm?rid=2245",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "The originally cited Baxter 2018 letter URL now returns a not-found page. This is insufficient to retain the saline link, and does not prove the site never made drugs."
+    },
+    {
+      "id": "plant-evidence-round-lake-cefazolin",
+      "name": "FDA Baxter Round Lake warning letter, September 2026",
+      "url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/baxter-international-inc-733231-09292026",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Cefazolin in dextrose maps to the cefazolin family; its carrier must not create a dextrose-5-iv manufacturing link."
+    },
+    {
+      "id": "plant-evidence-simtra-bloomington",
+      "name": "Simtra Bloomington manufacturing services",
+      "url": "https://simtra.com/our-facilities/bloomington-indiana-usa/",
+      "publisher": "Simtra",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-rochester-products",
+      "name": "Par Health company financing presentation, July 2025",
+      "url": "https://www.sec.gov/Archives/edgar/data/1567892/000110465925072891/tm2522037d2_ex99-2.htm",
+      "publisher": "Company presentation filed on SEC EDGAR",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Do not assign outsourced Adrenalin bags to Rochester or import the presentation market-share figures as observed plant shares."
+    },
+    {
+      "id": "plant-evidence-sca-hydromorphone-inj",
+      "name": "FDA SCA recall record D-0060-2018",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0060-2018%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-magnesium-sulfate-inj",
+      "name": "FDA SCA recall record D-1003-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1003-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-lidocaine-inj",
+      "name": "FDA SCA recall record D-0918-2018",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0918-2018%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-calcium-gluconate-inj",
+      "name": "FDA SCA recall record D-0067-2018",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0067-2018%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-bupivacaine-inj",
+      "name": "FDA SCA recall record D-1007-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1007-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-potassium-chloride-inj",
+      "name": "FDA SCA recall record D-1032-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1032-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-vancomycin-inj",
+      "name": "FDA SCA recall record D-0640-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0640-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-cefazolin-inj",
+      "name": "FDA SCA recall record D-0876-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0876-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-potassium-phosphates-inj",
+      "name": "FDA SCA recall record D-0977-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0977-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-furosemide-inj",
+      "name": "FDA SCA recall record D-1189-2018",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1189-2018%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-norepinephrine-inj",
+      "name": "FDA SCA recall record D-1020-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1020-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-morphine-inj",
+      "name": "FDA SCA recall record D-0871-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-0871-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-fentanyl-inj",
+      "name": "FDA SCA recall record D-1012-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1012-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-sca-epinephrine-inj",
+      "name": "FDA SCA recall record D-1019-2017",
+      "url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-1019-2017%22",
+      "publisher": "FDA openFDA enforcement data",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Historical compounding/fill evidence, not API synthesis or verified current production. Saline/dextrose carriers do not create independent links. Buffered lidocaine does not establish bicarbonate injection manufacture."
+    },
+    {
+      "id": "plant-evidence-civica-site-and-portfolio",
+      "name": "Civica medications and manufacturing description",
+      "url": "https://civicarx.org/medications/",
+      "publisher": "Civica",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-amgen-juncos",
+      "name": "FDA Juncos biologic manufacturing review",
+      "url": "https://www.accessdata.fda.gov/drugsatfda_docs/nda/2016/761024Orig1s000ChemR.pdf",
+      "publisher": "FDA",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "Scope classification refers to documented products, not an exhaustive claim about everything ever made at Juncos."
+    },
+    {
+      "id": "plant-evidence-eugia-east-windsor",
+      "name": "Eugia manufacturing facilities and U.S. headquarters",
+      "url": "https://eugiaus.com/about/our-facilities/",
+      "publisher": "Eugia",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": ""
+    },
+    {
+      "id": "plant-evidence-kalamazoo-portfolio",
+      "name": "Pfizer Kalamazoo manufacturing site overview, May 2022",
+      "url": "https://cdn.pfizer.com/pfizercom/Pfizer_PGS_Kalamazoo_Infographic_060322.pdf",
+      "publisher": "Pfizer",
+      "retrieved": "2026-11-07",
+      "license": "Public source; factual paraphrases only",
+      "usedFor": "Plant/product research handoff; not applied to catalog",
+      "status": "used",
+      "notes": "This is a documented-portfolio scope exclusion, not proof that no unlisted canonical medicine has ever been made there."
+    }
+  ],
+  "candidateWarnings": [
+    {
+      "plantId": "baxter-aibonito-pr",
+      "drugId": "sodium-chloride-minibag",
+      "decision": "remove-or-withhold",
+      "reason": "Device registration and a broken historical letter do not establish filled saline manufacture."
+    },
+    {
+      "plantId": "amphastar-ims-south-el-monte",
+      "drugId": "lidocaine-inj",
+      "decision": "unverified-do-not-use-fetched-label",
+      "reason": "Fetched SPL 0cbc37d3-c2d6-4747-9834-7c23b38fcc20 describes topical jelly, not injectable lidocaine; further research stopped."
+    }
+  ],
+  "remainingGaps": [
+    "No catalog modifications, evidence application script, link regression tests or run_all preservation hook completed.",
+    "pipeline.run_all still builds the original seven plants and can overwrite the 21 additions. Parent integration is required.",
+    "Current plants.json already had 6 of 21 added plants linked through 12 rows at audit start; this differs from the prompt estimate of 8.",
+    "Four Austin family candidates require concentration/presentation confirmation; four IMS SPL records require a direct DUNS-to-site crosswalk.",
+    "Historical manufacturing and compounded products do not establish current capacity, availability or product-specific market shares.",
+    "Columbus, Simtra Bloomington and Civica Petersburg have genuine product-site evidence gaps.",
+    "Original seven plants were outside this audit; their links have not been reverified."
+  ]
+}

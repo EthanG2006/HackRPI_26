@@ -1,0 +1,464 @@
+{
+  "schemaVersion": 1,
+  "compiled": "2026-11-07",
+  "domain": "pharmaceutical manufacturing only",
+  "selection": "Purposive public primary-report search for pharmaceutical event/site outcomes. This is not a census or a probability sample of exposed sites.",
+  "outcomeDefinition": {
+    "target": "Material weather-related site production disruption beyond precautionary closure alone",
+    "positive": "Explicit weather-caused stopped or reduced normal manufacturing with actual impairment/recovery; a later limited restart does not erase disruption.",
+    "negative": "Explicit company confirmation of unaffected/normal site operation, or a completed planned restart plus no serious impact. Negative is not a claim of zero downtime.",
+    "precautionary": "Planned closure alone is not a positive. A promised restart is not a negative. Ambiguous completed restarts remain censored.",
+    "censored": "Unknown post-event outcome, pre-event plans, unspecified recovery severity, or incompatible/missing hazard inputs never become operating controls.",
+    "timeHorizon": "Event-associated material interruption reported in dated primary follow-ups; no uniform hour/day threshold can be identified. Do not interpret this as any shutdown, outage >72h, or a national shortage label."
+  },
+  "sources": [
+    {
+      "id": "baxter-helene-q3",
+      "publisher": "Baxter",
+      "published": "2024-11-08",
+      "title": "Baxter Reports Third-Quarter 2024 Results",
+      "url": "https://investor.baxter.com/investors/events-and-news/news/press-release-details/2024/Baxter-Reports-Third-Quarter-2024-Results/default.aspx",
+      "quote": "production has now restarted",
+      "locator": "Opening results bullet on North Cove recovery",
+      "summary": "Baxter reports production recovery at North Cove in November after Helene. The September 29 report independently confirms flooding and production closure.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "baxter-helene-closure",
+      "publisher": "Baxter",
+      "published": "2024-09-29",
+      "title": "Baxter Provides Update on North Cove, N.C., Facility and Hurricane Helene Relief Plans for Community",
+      "url": "https://investor.baxter.com/investors/events-and-news/news/press-release-details/2024/Baxter-Provides-Update-on-North-Cove-N.C.-Facility-and-Hurricane-Helene-Relief-Plans-for-Community/default.aspx",
+      "quote": "affected by flooding due to the storm and is currently closed for production",
+      "locator": "First substantive paragraph",
+      "summary": "North Cove manufacturing stopped following site flooding; exact initial interruption time is not given.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "baxter-maria-recovery",
+      "publisher": "Baxter",
+      "published": "2017-10-12",
+      "title": "Baxter Provides Update on Puerto Rico Recovery Status Post Hurricane Maria",
+      "url": "https://investor.baxter.com/investors/events-and-news/news/press-release-details/2017/Baxter-Provides-Update-on-Puerto-Rico-Recovery-Status-Post-Hurricane-Maria/default.aspx",
+      "quote": "limited production activities resumed across its facilities within one week of the storm",
+      "locator": "Paragraph beginning Baxter’s three Puerto Rico manufacturing sites",
+      "summary": "All three Puerto Rico sites sustained some structural damage and restarted limited manufacturing. Normal production was still ramping. Jayuya and Aibonito are the two pharmaceutical sites represented here; the shared report is not independent evidence for each site.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "amgen-maria-recovery",
+      "publisher": "Amgen",
+      "published": "2017-10-25",
+      "title": "Amgen Provides Update on Status of Puerto Rico Operations",
+      "url": "https://www-ext.amgen.com/newsroom/company-statements/10-25-17-amgen-provides-update-on-status-of-puerto-rico-operations",
+      "quote": "we expect to resume formulation/filling and small molecule commercial production by the end of October 2017",
+      "locator": "Site section, first bullet",
+      "summary": "Juncos had not returned all production operations to normal five weeks after Maria. Uninterrupted patient supply from inventory and other sites does not imply uninterrupted site production.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "braun-helene-milton-operating",
+      "publisher": "B. Braun",
+      "published": "2024-10-11",
+      "title": "Solutions Supply Update 10.11.2024",
+      "url": "https://www.bbraunusa.com/content/dam/b-braun/en_us/website-6/about-us/support/customer-resources/customer-updates/Customer%20Letter_101124_FINAL.pdf",
+      "quote": "was not impacted by the hurricanes and is operating normally",
+      "locator": "Opening paragraph naming Daytona Beach IV fluids manufacturing plant",
+      "summary": "Company explicitly confirms Daytona Beach normal operation following Helene and Milton. This establishes material nonfailure; it does not mean no precautionary closure.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "braun-milton-restart",
+      "publisher": "B. Braun",
+      "published": "2024-10-18",
+      "title": "B. Braun Takes Steps to Secure the Supply of Critical IV Fluids in the US",
+      "url": "https://www.bbraunusa.com/en/about-us/media/company-news/2024/b--braun-takes-steps-to-secure-the-supply-of-critical-iv-fluids-.html",
+      "quote": "were not seriously impacted by Hurricane Milton and resumed operations as planned on October 11",
+      "locator": "Paragraph beginning B. Braun’s IV solutions manufacturing plant",
+      "summary": "Retrospective confirmation of the planned Daytona Beach restart after precautionary closure. Negative for material unplanned disruption, not for any downtime.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "pfizer-florence-planned-restart",
+      "publisher": "Pfizer",
+      "published": "2018-09-26",
+      "title": "Pfizer Injectables Response to Hurricane Florence",
+      "url": "https://www.pfizerhospitalus.com/sites/default/files/news_announcements/pfizer_injectables_response_to_hurricane_florence_0_0_0.pdf",
+      "quote": "underwent an orderly planned shutdown in advance of the hurricane. The manufacturing facility has resumed operations",
+      "locator": "Page 1, first paragraph",
+      "summary": "Rocky Mount shutdown was planned and operations had resumed by September 26. The exact restart date, normal output, and absence of serious operational impairment are unspecified; keep outcome censored for this endpoint.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "nephron-florence-plan",
+      "publisher": "Nephron",
+      "published": "2018-09-13",
+      "title": "Nephron Pharmaceuticals Continues Production Despite Hurricane Florence",
+      "url": "https://nephronpharm.com/news/nephron-pharmaceuticals-continues-production-despite-hurricane-florence/",
+      "quote": "is currently producing medications",
+      "locator": "Opening paragraph; publication is before storm arrival",
+      "summary": "The report confirms pre-storm operation and an intention to remain open. It cannot confirm post-storm nonfailure.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "pfizer-rocky-restart",
+      "publisher": "Pfizer",
+      "published": "2023-09-25",
+      "title": "Pfizer’s Rocky Mount Facility Restarts Production Amid First Phase of Post-Tornado Recovery Efforts",
+      "url": "https://www.pfizer.com/news/articles/pfizers_rocky_mount_facility_restarts_production_amid_first_phase_post_tornado",
+      "quote": "following severe damage from a tornado that hit the site on July 19",
+      "locator": "Opening paragraph",
+      "summary": "Verified production disruption and majority-line restart September 25. A direct convective tornado strike has no compatible input for the tropical-cyclone tornado probability used by run.ts.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "fda-maria-context",
+      "publisher": "FDA",
+      "published": "2017-10-24",
+      "title": "Examining HHS’ Public Health Preparedness for and Response to the 2017 Hurricane Season",
+      "url": "https://www.fda.gov/news-events/congressional-testimony/examining-hhs-public-health-preparedness-and-response-2017-hurricane-season-10242017",
+      "quote": "About 8 percent of the medicines consumed by Americans",
+      "locator": "Puerto Rico pharmaceutical manufacturing discussion",
+      "summary": "Primary regulatory context for island manufacturing exposure and response. Aggregate testimony is not assigned as an outcome to unnamed sites.",
+      "retrieved": "2026-11-07",
+      "primary": true
+    },
+    {
+      "id": "baxter-2017-site-identities",
+      "publisher": "Baxter / SEC EDGAR",
+      "published": "2018",
+      "retrieved": "2026-11-07",
+      "primary": true,
+      "title": "Baxter 2017 Form 10-K, Item 2 Properties",
+      "url": "https://www.sec.gov/Archives/edgar/data/10456/000156459018002954/bax-10k_20171231.htm",
+      "quote": "Aibonito, Puerto Rico",
+      "locator": "Item 2 Properties: table of principal manufacturing facilities; also lists Jayuya and Guayama",
+      "summary": "Contemporaneous property list verifies Aibonito and Jayuya were Baxter manufacturing sites in 2017. The all-three-sites recovery report can be linked to these plants without assuming current registrations imply historical operation.",
+      "fiscalYear": 2017,
+      "datePrecision": "year"
+    }
+  ],
+  "sites": {
+    "amgen-juncos-pr": {
+      "lon": -65.90604,
+      "lat": 18.2346,
+      "name": "Amgen Juncos",
+      "address": "Road 31 Km 24.6, Juncos, PR 00777",
+      "city": "Juncos",
+      "state": "PR",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "osm-amgen-juncos"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.openstreetmap.org/"
+      }
+    },
+    "b-braun-daytona-beach": {
+      "lon": -81.075,
+      "lat": 29.17,
+      "name": "B. Braun Daytona Beach",
+      "address": "1845 Mason Ave, Daytona Beach, Florida (FL) 32117, United States (USA)",
+      "city": "Daytona Beach",
+      "state": "FL",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "braun",
+          "assumptions",
+          "fda-decrs"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.accessdata.fda.gov/scripts/cder/drls/default.cfm"
+      }
+    },
+    "baxter-aibonito-pr": {
+      "lon": -66.2591,
+      "lat": 18.1378,
+      "name": "Baxter Aibonito",
+      "address": "Aibonito, PR",
+      "city": "Aibonito",
+      "state": "PR",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "baxter-pr-letter-2018"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.openstreetmap.org/"
+      }
+    },
+    "baxter-jayuya-pr": {
+      "lon": -66.59,
+      "lat": 18.218,
+      "name": "Baxter Jayuya",
+      "address": "250 Road 144, Jayuya, Puerto Rico (PR) 00664, United States (USA)",
+      "city": "Jayuya",
+      "state": "PR",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "baxter-maria",
+          "assumptions",
+          "fda-decrs"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.accessdata.fda.gov/scripts/cder/drls/default.cfm"
+      }
+    },
+    "baxter-north-cove": {
+      "lon": -82.004,
+      "lat": 35.835,
+      "name": "Baxter North Cove",
+      "address": "65 Pitts Station Rd, Marion, North Carolina (NC) 28752, United States (USA)",
+      "city": "Marion",
+      "state": "NC",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "aha-north-cove",
+          "assumptions",
+          "fda-decrs"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.accessdata.fda.gov/scripts/cder/drls/default.cfm"
+      }
+    },
+    "nephron-west-columbia": {
+      "lon": -81.04128,
+      "lat": 33.90116,
+      "name": "Nephron Pharmaceuticals West Columbia",
+      "address": "4500 12th Street Ext, West Columbia, SC 29172",
+      "city": "West Columbia",
+      "state": "SC",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "sccommerce-nephron"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.openstreetmap.org/"
+      }
+    },
+    "pfizer-rocky-mount": {
+      "lon": -77.777,
+      "lat": 36.045,
+      "name": "Pfizer Rocky Mount",
+      "address": "Highway 301 North, Rocky Mount, North Carolina (NC) 27801, United States (USA)",
+      "city": "Rocky Mount",
+      "state": "NC",
+      "locationProvenance": {
+        "kind": "existing-project-approximate-site-point",
+        "sourcePath": "web/public/data/plants.json",
+        "catalogSha256": "ed9ae898d570e5a8fc93e87085cda60dbcba33b4dbcc27552eae256b20b7a2d2",
+        "sourceIds": [
+          "pfizer-products",
+          "assumptions",
+          "fda-decrs"
+        ],
+        "note": "Coordinates are the existing geocoded/curated public site approximation, not independently surveyed plant parcels. FDA registration verifies site address, not these exact coordinates.",
+        "publicAddressReference": "https://www.accessdata.fda.gov/scripts/cder/drls/default.cfm"
+      }
+    }
+  },
+  "events": [
+    {
+      "id": "helene-2024",
+      "stormId": "AL092024",
+      "start": "2024-09-24T00:00:00Z",
+      "end": "2024-09-29T18:00:00Z"
+    },
+    {
+      "id": "milton-2024",
+      "stormId": "AL142024",
+      "start": "2024-10-05T12:00:00Z",
+      "end": "2024-10-12T00:00:00Z"
+    },
+    {
+      "id": "maria-2017",
+      "stormId": "AL152017",
+      "start": "2017-09-17T00:00:00Z",
+      "end": "2017-09-23T18:00:00Z"
+    },
+    {
+      "id": "florence-2018",
+      "stormId": "AL062018",
+      "start": "2018-09-11T00:00:00Z",
+      "end": "2018-09-18T12:00:00Z"
+    },
+    {
+      "id": "rocky-mount-tornado-2023",
+      "stormId": null,
+      "start": "2023-07-19T00:00:00Z",
+      "end": "2023-07-20T00:00:00Z"
+    }
+  ],
+  "observations": [
+    {
+      "id": "helene-2024__baxter-north-cove",
+      "plantId": "baxter-north-cove",
+      "eventId": "helene-2024",
+      "date": "2024-09-27",
+      "disrupted": true,
+      "status": "confirmed_disruption",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "baxter-helene-closure",
+        "baxter-helene-q3"
+      ],
+      "outcomeRationale": "Flooding closed production; subsequent recovery extended into November. Date is the event date, not an inferred precise shutdown hour.",
+      "fitEligible": true,
+      "exclusionReason": null
+    },
+    {
+      "id": "helene-2024__b-braun-daytona-beach",
+      "plantId": "b-braun-daytona-beach",
+      "eventId": "helene-2024",
+      "date": "2024-09-27",
+      "disrupted": false,
+      "status": "confirmed_operating",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "braun-helene-milton-operating"
+      ],
+      "outcomeRationale": "Company explicitly says its Daytona plant was not impacted by the hurricanes and was operating normally. No zero-downtime claim.",
+      "fitEligible": true,
+      "exclusionReason": null
+    },
+    {
+      "id": "milton-2024__b-braun-daytona-beach",
+      "plantId": "b-braun-daytona-beach",
+      "eventId": "milton-2024",
+      "date": "2024-10-10",
+      "disrupted": false,
+      "status": "confirmed_planned_restart",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "braun-milton-restart"
+      ],
+      "outcomeRationale": "Company explicitly confirms no serious impact and completed planned October 11 restart. Precautionary closure alone is outside the material-disruption target.",
+      "fitEligible": true,
+      "exclusionReason": null
+    },
+    {
+      "id": "maria-2017__baxter-jayuya-pr",
+      "plantId": "baxter-jayuya-pr",
+      "eventId": "maria-2017",
+      "date": "2017-09-20",
+      "disrupted": true,
+      "status": "confirmed_disruption",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "baxter-maria-recovery",
+        "baxter-2017-site-identities"
+      ],
+      "outcomeRationale": "The company report applies to all three Puerto Rico facilities, including Jayuya: limited rather than normal manufacturing after the storm.",
+      "fitEligible": true,
+      "exclusionReason": null
+    },
+    {
+      "id": "maria-2017__baxter-aibonito-pr",
+      "plantId": "baxter-aibonito-pr",
+      "eventId": "maria-2017",
+      "date": "2017-09-20",
+      "disrupted": true,
+      "status": "confirmed_disruption",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "baxter-maria-recovery",
+        "baxter-2017-site-identities"
+      ],
+      "outcomeRationale": "The company report applies to all three Puerto Rico facilities, including Aibonito. This shares a report and event with Jayuya; independence is not established.",
+      "fitEligible": true,
+      "exclusionReason": null
+    },
+    {
+      "id": "maria-2017__amgen-juncos-pr",
+      "plantId": "amgen-juncos-pr",
+      "eventId": "maria-2017",
+      "date": "2017-09-20",
+      "disrupted": true,
+      "status": "confirmed_disruption",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "amgen-maria-recovery"
+      ],
+      "outcomeRationale": "Formulation/filling and small molecule production had not resumed five weeks after Maria despite uninterrupted patient supply.",
+      "fitEligible": true,
+      "exclusionReason": null
+    },
+    {
+      "id": "florence-2018__pfizer-rocky-mount",
+      "plantId": "pfizer-rocky-mount",
+      "eventId": "florence-2018",
+      "date": "2018-09-14",
+      "disrupted": null,
+      "status": "censored_endpoint",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "pfizer-florence-planned-restart"
+      ],
+      "outcomeRationale": "Planned shutdown and completed restart reported, but restart date, output recovery and serious-impact status are insufficient for a material-disruption label.",
+      "fitEligible": false,
+      "exclusionReason": "Planned shutdown and completed restart reported, but restart date, output recovery and serious-impact status are insufficient for a material-disruption label."
+    },
+    {
+      "id": "florence-2018__nephron-west-columbia",
+      "plantId": "nephron-west-columbia",
+      "eventId": "florence-2018",
+      "date": "2018-09-14",
+      "disrupted": null,
+      "status": "censored_pre_event",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "nephron-florence-plan"
+      ],
+      "outcomeRationale": "Pre-storm operating statement and future intent; no verified post-event site outcome.",
+      "fitEligible": false,
+      "exclusionReason": "Pre-storm operating statement and future intent; no verified post-event site outcome."
+    },
+    {
+      "id": "rocky-mount-tornado-2023__pfizer-rocky-mount",
+      "plantId": "pfizer-rocky-mount",
+      "eventId": "rocky-mount-tornado-2023",
+      "date": "2023-07-19",
+      "disrupted": true,
+      "status": "confirmed_disruption",
+      "labelOrigin": "primary-company-report",
+      "sourceIds": [
+        "pfizer-rocky-restart"
+      ],
+      "outcomeRationale": "Outcome is known positive, but no compatible TC tornado probability, site total rainfall or site sustained wind reconstruction exists for this convective event. Do not substitute EF3 wind for windKt or a direct hit for probability.",
+      "fitEligible": false,
+      "exclusionReason": "Outcome is known positive, but no compatible TC tornado probability, site total rainfall or site sustained wind reconstruction exists for this convective event. Do not substitute EF3 wind for windKt or a direct hit for probability."
+    }
+  ],
+  "sourceRules": [
+    "No outcome inferred from silence, absence of an FDA shortage, market share, or site exposure.",
+    "FDA aggregate disaster testimony is context, not site-specific labels.",
+    "Baxter Jayuya and Aibonito share the all-sites company report; fit sensitivity must address storm clustering.",
+    "No broader industrial-domain outcome transfer or synthetic training labels."
+  ]
+}

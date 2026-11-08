@@ -15,6 +15,7 @@ import { smoothTime } from '../lib/clock';
 import { Prov } from '../ui/Prov';
 import type { LngLat } from '../types';
 import './map.css';
+import { recordFrame, recordWork } from '../verification/frameMetrics';
 
 declare global {interface Window {rxMapSnapshot?:()=>string|undefined}}
 const STYLE:StyleSpecification={
@@ -49,15 +50,17 @@ export default function MapView(){
     const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const map=new maplibregl.Map({container:host.current,style:STYLE,center:[-83,31],zoom:4.3,
       minZoom:2.1,maxZoom:11,pitch:0,maxPitch:50,attributionControl:false,
-      canvasContextAttributes:{antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'},dragRotate:false,touchPitch:false});
+      canvasContextAttributes:{antialias:false,preserveDrawingBuffer:false,powerPreference:'high-performance'},dragRotate:false,touchPitch:false});
     mapRef.current=map;
+    map.on('render',()=>recordFrame('map',performance.now()));
     if(import.meta.env.DEV)Object.assign(window,{rxMap:map});
-    const deck=new MapboxOverlay({interleaved:true,layers:[],getCursor:()=>useApp.getState().whatif.drawing?'crosshair':'grab'});
+    const deck=new MapboxOverlay({interleaved:true,layers:[],_onMetrics:m=>{recordWork('deckCPU',m.cpuTimePerFrame);recordWork('deckGPU',m.gpuTimePerFrame);},getCursor:()=>useApp.getState().whatif.drawing?'crosshair':'grab'});
     overlay.current=deck;map.addControl(deck);
     const onHover=(item:Picked|null,x:number,y:number)=>{if(!useApp.getState().whatif.drawing)setTip(item?{...item,x,y}:null)};
     refresh.current=()=>{
       if(!alive||!map.isStyleLoaded())return;
       const s=useApp.getState();
+      const refreshStart=performance.now();
       staticLayers=buildLayers(s,map.getZoom(),counties.current,onHover);
       // Rebuild particles only when the storm's structure changes; position moves per frame below.
       const st=s.layers.wind?stormState(s,smoothTime()):null;
@@ -65,6 +68,7 @@ export default function MapView(){
       if(key!==windKey){windKey=key;wind=st?windLayer(st):null;}
       flow=networkMotion(s,map.getZoom());
       deck.setProps({layers:[...staticLayers,wind,flow]});
+      recordWork('refresh',performance.now()-refreshStart);
     };
     map.on('load',()=>{
       refresh.current();
@@ -93,15 +97,19 @@ export default function MapView(){
         const t=reducedMotion?60:motionTime(now);
         if(wind||flow){
           const st=wind?stormState(s,smoothTime()):null;
-          deck.setProps({layers:[...staticLayers,wind&&st?wind.clone({currentTime:t,coordinateOrigin:[st.lon,st.lat,0]}):null,flow?.clone({currentTime:t})]});
+          deck.setProps({layers:[...staticLayers,wind&&st?wind.clone({currentTime:t,coordinateOrigin:[st.lon,st.lat,0]}):null,flow?.clone({currentTime:reducedMotion?60:(now/1000*5)%990})]});
         }
-        paintMapEffects(ctx,map,s,reducedMotion?1000:now,host.current!.clientWidth,host.current!.clientHeight);last=now;
+        const effectsStart=performance.now();
+        paintMapEffects(ctx,map,s,reducedMotion?1000:now,host.current!.clientWidth,host.current!.clientHeight);
+        recordWork('effects',performance.now()-effectsStart);
+        recordFrame('effects',now);last=now;
       }
       frame=requestAnimationFrame(draw);
     };
     frame=requestAnimationFrame(draw);
     window.rxMapSnapshot=()=>{
       if(!canvas.current)return;
+      map.redraw();
       const base=map.getCanvas(),copy=document.createElement('canvas');
       copy.width=base.width;copy.height=base.height;
       const ctx=copy.getContext('2d');if(!ctx)return;

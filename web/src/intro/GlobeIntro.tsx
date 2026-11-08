@@ -37,7 +37,7 @@ export default function GlobeIntro() {
     if(leaving) return;
     setLeaving(true);
     timer.current=setTimeout(()=>{
-      if(id==='helene') goBeat(2);
+      if(id==='helene') {goBeat(2);useApp.getState().set({time:Date.parse('2024-09-25T12:00:00Z'),speed:16});}
       else {switchScenario(id);useApp.getState().setPlaying(true);}
     },matchMedia('(prefers-reduced-motion: reduce)').matches?0:480);
   }
@@ -57,7 +57,7 @@ export default function GlobeIntro() {
         <div className="intro-eyebrow"><span/> Pharmaceutical supply intelligence</div>
         <h1>Rx Radar<span>.</span></h1>
         <p>The sky already caused some of the worst drug shortages of the decade. <strong>Nobody is watching it.</strong></p>
-        <div className="intro-cta-row"><button className="intro-begin" onClick={()=>begin()}><Play size={16} fill="currentColor"/> Begin replay <ArrowRight size={17}/></button><span className="intro-shortcut">or press <kbd>Space</kbd></span></div>
+        <div className="intro-cta-row"><button className="intro-begin" onClick={()=>begin()}><Play size={16} fill="currentColor"/> Watch Helene unfold <ArrowRight size={17}/></button><span className="intro-shortcut">or press <kbd>Space</kbd></span></div>
       </div>
     </div>
     <div className="intro-bottom">

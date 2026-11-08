@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 // App shell. Each region is owned by one teammate (see docs/CONTRACTS.md); keep this file thin.
 import { useReplayClock } from './lib/clock';
 import MapView from './map/MapView';
@@ -19,11 +20,16 @@ import { useLiveScenario } from './sim/live';
 import { useActiveScenario, useApp } from './store';
 import './workspace.css';
 import './calm.css';
+import './demo-flow.css';
+import PlaybackCheck from './verification/PlaybackCheck';
+const verifyPlayback = new URLSearchParams(location.search).has('verify');
 
 export default function App() {
   useReplayClock();
   useLiveScenario();
   usePresenterKeys();
+  const panel=useApp(s=>s.rightPanel),introDone=useApp(s=>s.introDone);
+  useEffect(()=>{if(introDone&&window.innerWidth<=800)document.documentElement.classList.add('show-rail');},[introDone,panel]);
   const lab = useApp((s) => s.scenarioId === 'whatif');
   const impact = useActiveScenario()?.impact;
   // The impact strip only takes space once it has something to say; the Storm Lab has its own playback.
@@ -44,6 +50,7 @@ export default function App() {
       <CommandPalette />
       <PresenterNotes />
       <GlobeIntro />
+      {verifyPlayback && <PlaybackCheck />}
     </div>
   );
 }

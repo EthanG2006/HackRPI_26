@@ -1,0 +1,361 @@
+{
+  "scheme": "leave-one-whole-storm-out likelihood diagnostics; fixed priors and feature transforms; no hyperparameter tuning",
+  "operationallyCalibrated": false,
+  "independentValidation": false,
+  "priorKnowledgeOverlap": [
+    "helene-2024"
+  ],
+  "priorKnowledgeCaveat": "The existing rainRiver prior explicitly cites North Cove/Helene. Removing held-out likelihood rows does not remove this prior event knowledge. These scores are conditional diagnostics, not independent generalization estimates.",
+  "folds": [
+    {
+      "heldOutEvent": "helene-2024",
+      "trainIds": [
+        "milton-2024__b-braun-daytona-beach",
+        "maria-2017__baxter-jayuya-pr",
+        "maria-2017__baxter-aibonito-pr",
+        "maria-2017__amgen-juncos-pr"
+      ],
+      "testIds": [
+        "helene-2024__baxter-north-cove",
+        "helene-2024__b-braun-daytona-beach"
+      ],
+      "fit": {
+        "n": 2,
+        "brier": 0.0866016213673935,
+        "logLoss": 0.27510980035425053,
+        "observedRate": 0.5,
+        "meanPredicted": 0.2981510209781505
+      },
+      "prior": {
+        "n": 2,
+        "brier": 0.13634881185808143,
+        "logLoss": 0.37435411760679416,
+        "observedRate": 0.5,
+        "meanPredicted": 0.24409576331722949
+      },
+      "trainingPrevalenceBaseline": {
+        "n": 2,
+        "brier": 0.29,
+        "logLoss": 0.7803238741323342,
+        "observedRate": 0.5,
+        "meanPredicted": 0.7
+      },
+      "diagnostics": {
+        "splitRhat": {
+          "intercept": 1.0004690448775884,
+          "wind": 1.0004888632639823,
+          "rain": 1.0012189667381453,
+          "rainRiver": 1.0001394841852957,
+          "sfha": 1.0005454223442263,
+          "tornado": 1.002586986246396
+        },
+        "effectiveSampleSize": {
+          "intercept": 1638.9677329665453,
+          "wind": 1683.9577790152966,
+          "rain": 1605.7109006983044,
+          "rainRiver": 1824.4008816613182,
+          "sfha": 1523.145330528467,
+          "tornado": 1154.6749528325724
+        },
+        "maxRhat": 1.002586986246396,
+        "minESS": 1154.6749528325724,
+        "chains": 4,
+        "drawsPerChain": 1024,
+        "method": "conventional split R-hat and initial-positive-pair autocorrelation ESS; diagnostics do not establish calibration"
+      }
+    },
+    {
+      "heldOutEvent": "maria-2017",
+      "trainIds": [
+        "helene-2024__baxter-north-cove",
+        "helene-2024__b-braun-daytona-beach",
+        "milton-2024__b-braun-daytona-beach"
+      ],
+      "testIds": [
+        "maria-2017__baxter-jayuya-pr",
+        "maria-2017__baxter-aibonito-pr",
+        "maria-2017__amgen-juncos-pr"
+      ],
+      "fit": {
+        "n": 3,
+        "brier": 0.13170283300602723,
+        "logLoss": 0.3851337744453806,
+        "observedRate": 1.0,
+        "meanPredicted": 0.7226378317425385
+      },
+      "prior": {
+        "n": 3,
+        "brier": 0.16674467466412757,
+        "logLoss": 0.46783146631968947,
+        "observedRate": 1.0,
+        "meanPredicted": 0.676977446329203
+      },
+      "trainingPrevalenceBaseline": {
+        "n": 3,
+        "brier": 0.390625,
+        "logLoss": 0.9808292530117262,
+        "observedRate": 1.0,
+        "meanPredicted": 0.375
+      },
+      "diagnostics": {
+        "splitRhat": {
+          "intercept": 1.0005789660725977,
+          "wind": 0.9997317271293338,
+          "rain": 1.000407115358807,
+          "rainRiver": 1.0002837809501122,
+          "sfha": 1.0003905238653077,
+          "tornado": 1.0031218684158436
+        },
+        "effectiveSampleSize": {
+          "intercept": 2563.768042515676,
+          "wind": 2392.6619810699767,
+          "rain": 2060.831613511274,
+          "rainRiver": 2074.1080367386317,
+          "sfha": 2513.3865745663097,
+          "tornado": 2192.1179479001757
+        },
+        "maxRhat": 1.0031218684158436,
+        "minESS": 2060.831613511274,
+        "chains": 4,
+        "drawsPerChain": 1024,
+        "method": "conventional split R-hat and initial-positive-pair autocorrelation ESS; diagnostics do not establish calibration"
+      }
+    },
+    {
+      "heldOutEvent": "milton-2024",
+      "trainIds": [
+        "helene-2024__baxter-north-cove",
+        "helene-2024__b-braun-daytona-beach",
+        "maria-2017__baxter-jayuya-pr",
+        "maria-2017__baxter-aibonito-pr",
+        "maria-2017__amgen-juncos-pr"
+      ],
+      "testIds": [
+        "milton-2024__b-braun-daytona-beach"
+      ],
+      "fit": {
+        "n": 1,
+        "brier": 0.0008833312594448789,
+        "logLoss": 0.030171505861893776,
+        "observedRate": 0.0,
+        "meanPredicted": 0.02972088927749099
+      },
+      "prior": {
+        "n": 1,
+        "brier": 0.0005018398416020027,
+        "logLoss": 0.0226565135080853,
+        "observedRate": 0.0,
+        "meanPredicted": 0.02240178210772533
+      },
+      "trainingPrevalenceBaseline": {
+        "n": 1,
+        "brier": 0.5625,
+        "logLoss": 1.3862943611198906,
+        "observedRate": 0.0,
+        "meanPredicted": 0.75
+      },
+      "diagnostics": {
+        "splitRhat": {
+          "intercept": 1.00126841854421,
+          "wind": 1.001995020904335,
+          "rain": 1.0007956782969798,
+          "rainRiver": 1.0080343910340344,
+          "sfha": 1.0003936469467445,
+          "tornado": 1.0029132943951928
+        },
+        "effectiveSampleSize": {
+          "intercept": 1078.5822898083313,
+          "wind": 1438.9636434692302,
+          "rain": 1185.757153230057,
+          "rainRiver": 1385.2683665288757,
+          "sfha": 1555.4936974010136,
+          "tornado": 1265.1674330450235
+        },
+        "maxRhat": 1.0080343910340344,
+        "minESS": 1078.5822898083313,
+        "chains": 4,
+        "drawsPerChain": 1024,
+        "method": "conventional split R-hat and initial-positive-pair autocorrelation ESS; diagnostics do not establish calibration"
+      }
+    }
+  ],
+  "predictions": [
+    {
+      "id": "helene-2024__baxter-north-cove",
+      "eventId": "helene-2024",
+      "plantId": "baxter-north-cove",
+      "observed": 1,
+      "predicted": 0.5840047834785613,
+      "priorPredicted": 0.47789690248967076,
+      "trainingPrevalencePredicted": 0.7
+    },
+    {
+      "id": "helene-2024__b-braun-daytona-beach",
+      "eventId": "helene-2024",
+      "plantId": "b-braun-daytona-beach",
+      "observed": 0,
+      "predicted": 0.012297258477739697,
+      "priorPredicted": 0.010294624144788225,
+      "trainingPrevalencePredicted": 0.7
+    },
+    {
+      "id": "maria-2017__baxter-jayuya-pr",
+      "eventId": "maria-2017",
+      "plantId": "baxter-jayuya-pr",
+      "observed": 1,
+      "predicted": 0.9884123406301402,
+      "priorPredicted": 0.9765555831060873,
+      "trainingPrevalencePredicted": 0.375
+    },
+    {
+      "id": "maria-2017__baxter-aibonito-pr",
+      "eventId": "maria-2017",
+      "plantId": "baxter-aibonito-pr",
+      "observed": 1,
+      "predicted": 0.41892164603273163,
+      "priorPredicted": 0.36504226574514015,
+      "trainingPrevalencePredicted": 0.375
+    },
+    {
+      "id": "maria-2017__amgen-juncos-pr",
+      "eventId": "maria-2017",
+      "plantId": "amgen-juncos-pr",
+      "observed": 1,
+      "predicted": 0.7605795085647434,
+      "priorPredicted": 0.6893344901363815,
+      "trainingPrevalencePredicted": 0.375
+    },
+    {
+      "id": "milton-2024__b-braun-daytona-beach",
+      "eventId": "milton-2024",
+      "plantId": "b-braun-daytona-beach",
+      "observed": 0,
+      "predicted": 0.02972088927749099,
+      "priorPredicted": 0.02240178210772533,
+      "trainingPrevalencePredicted": 0.75
+    }
+  ],
+  "metrics": {
+    "n": 6,
+    "brier": 0.09486584550205228,
+    "logLoss": 0.2892987383177561,
+    "observedRate": 0.6666666666666666,
+    "meanPredicted": 0.46565607107690127
+  },
+  "priorMetrics": {
+    "n": 6,
+    "brier": 0.12890558125835794,
+    "logLoss": 0.362476524613457,
+    "observedRate": 0.6666666666666666,
+    "meanPredicted": 0.4235876079549655
+  },
+  "eventMacroMetrics": {
+    "brier": 0.07306259521095519,
+    "logLoss": 0.2301383602205083
+  },
+  "trainingPrevalenceMetrics": {
+    "n": 6,
+    "brier": 0.3857291666666667,
+    "logLoss": 0.981571644736623,
+    "observedRate": 0.6666666666666666,
+    "meanPredicted": 0.5458333333333333
+  },
+  "calibrationBins": [
+    {
+      "low": 0,
+      "high": 0.2,
+      "observedRateWilson95": [
+        0,
+        0.6576197724933345
+      ],
+      "n": 2,
+      "brier": 0.0005172769127566099,
+      "logLoss": 0.0212725006354436,
+      "observedRate": 0.0,
+      "meanPredicted": 0.021009073877615345
+    },
+    {
+      "low": 0.2,
+      "high": 0.5,
+      "observedRateWilson95": [
+        0.20654931437724644,
+        0.9999999999999999
+      ],
+      "n": 1,
+      "brier": 0.33765205344931004,
+      "logLoss": 0.8700713788556276,
+      "observedRate": 1.0,
+      "meanPredicted": 0.41892164603273163
+    },
+    {
+      "low": 0.5,
+      "high": 0.8,
+      "observedRateWilson95": [
+        0.34238022750666547,
+        1
+      ],
+      "n": 2,
+      "brier": 0.1151870959439092,
+      "logLoss": 0.4057603651479452,
+      "observedRate": 1.0,
+      "meanPredicted": 0.6722921460216524
+    },
+    {
+      "low": 0.8,
+      "high": 1,
+      "observedRateWilson95": [
+        0.20654931437724644,
+        0.9999999999999999
+      ],
+      "n": 1,
+      "brier": 0.00013427384967190049,
+      "logLoss": 0.011655319484131283,
+      "observedRate": 1.0,
+      "meanPredicted": 0.9884123406301402
+    }
+  ],
+  "designRank": 6,
+  "coefficientCount": 6,
+  "eventCount": 3,
+  "completeSeparation": true,
+  "identification": "Six effects are not empirically established by three storms. Priors make the posterior proper; this is an evidence update, not operational calibration.",
+  "sensitivity": {
+    "eventBalanced": {
+      "interpretation": "Power likelihood: each storm has total weight one; not the primary Bernoulli posterior.",
+      "weights": [
+        0.5,
+        0.5,
+        1.0,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "postMean": [
+        -5.093543781030554,
+        2.697846641177065,
+        0.6566549503585324,
+        2.5516614604500565,
+        0.8050772378635175,
+        1.5221342494855503
+      ]
+    },
+    "doublePriorSd": {
+      "postMean": [
+        -4.70084770913518,
+        3.2803395028097544,
+        0.9170200388167191,
+        3.0218612723136578,
+        0.7863910814353698,
+        1.5445765471344655
+      ]
+    },
+    "primaryPostMean": [
+      -4.974625300182211,
+      2.855709767875956,
+      0.7413845717329786,
+      2.6567742169538406,
+      0.8117115462580903,
+      1.55110652295077
+    ]
+  }
+}

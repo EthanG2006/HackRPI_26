@@ -11,12 +11,12 @@ export default function DrugDetail({drug:d,risk:r}:{drug:Drug,risk:DrugRisk}){
  <div className="big-risk"><strong className="num">{fmtPct(r.risk)}</strong><span>Shortage risk<br/>80% interval {fmtPct(r.ci[0])}–{fmtPct(r.ci[1])}</span></div>
  <h3>Projected national supply</h3><div className="large-trend"><Trend band={r.supplyCurve} height={65}/></div><div className="axis-caption"><span>Day 0</span><span>P10–P90 band</span><span>Day 89</span></div>
  <p>{fmtInt(r.hospitalsAtRisk)} hospitals reach a modeled stockout within the horizon.</p>
- <h3>Why this drug is at risk</h3><small>Signed contributions · scenario model</small>{r.shap.map((v,i)=><div className="driver" key={i}><div><span>{v.label}</span><b className="num">{v.value>0?'+':''}{v.value.toFixed(2)}</b></div><div className="driver-track"><i style={{left:v.value<0?(50-48*Math.abs(v.value)/max)+'%':'50%',width:(48*Math.abs(v.value)/max)+'%',background:v.value<0?'#67d9c6':'#efaa6a'}}/></div></div>)}
+ <h3>Pharmacy review</h3>{[...d.alternatives.map(x=>({title:x.name,note:x.note})),...d.conservation.map(x=>({title:x.strategy,note:x.note}))].map((x,i)=><p key={i}><strong>{x.title}</strong> {x.note}</p>)}
+ <details className="extra-details"><summary>Why this medicine is at risk</summary> <h3>Why this drug is at risk</h3><small>Signed contributions · scenario model</small>{r.shap.map((v,i)=><div className="driver" key={i}><div><span>{v.label}</span><b className="num">{v.value>0?'+':''}{v.value.toFixed(2)}</b></div><div className="driver-track"><i style={{left:v.value<0?(50-48*Math.abs(v.value)/max)+'%':'50%',width:(48*Math.abs(v.value)/max)+'%',background:v.value<0?'#67d9c6':'#efaa6a'}}/></div></div>)}
  <h3>Supply links</h3><div className="supply-graph">{linked.slice(0,5).map(p=>{
  const edge=net?.edges.find(e=>e.target==='plant:'+p.id&&e.kind==='made-at');
  const flow=net?.flows.find(f=>f.plantId===p.id&&f.drugIds.includes(d.id));
  const hub=hubs.find(h=>h.id===flow?.dcId);
  return <div key={p.id}><p><Factory size={15}/><strong>{p.name}</strong></p><small>{p.company} · {fmtPct(edge?.confidence??p.linkConfidence)} link confidence</small><Prov kind={edge?.provenance??p.shareProvenance} compact/>{hub&&<p><ArrowDown size={12}/><Truck size={13}/>{hub.name}</p>}</div>})}{!linked.length&&<p>Manufacturer link unresolved in this scenario.</p>}</div>
- <h3>Pharmacy review</h3>{[...d.alternatives.map(x=>({title:x.name,note:x.note})),...d.conservation.map(x=>({title:x.strategy,note:x.note}))].map((x,i)=><p key={i}><strong>{x.title}</strong> {x.note}</p>)}
- <button className="link-button" onClick={()=>useApp.getState().set({page:'model-card'})}>Read the model card ↗</button></div>;
+ </details><button className="link-button" onClick={()=>useApp.getState().set({page:'model-card'})}>Read the model card ↗</button></div>;
 }

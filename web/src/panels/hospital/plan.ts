@@ -13,6 +13,7 @@ export function buildPlan(s:AppState,sc:ScenarioFile,h:Hospital){
    const band=sc.hospitalStockouts[r.drugId], dh=sc.inventoryDoh?.[r.drugId]?.[i];
    return [{drug,r,median:band.p50[i]??999,early:band.p10[i]??999,late:band.p90[i]??999,inventory:dh}];
  });
+ drugs.sort((a,b)=>a.median-b.median||a.early-b.early||b.r.risk-a.r.risk);
  const first=drugs[0], eq=s.equity[sc.id];
  const demand=first?Math.max(1,first.drug.dailyUsePer100Beds*h.beds/100):0;
  const horizon=eq?.horizonDays??14;
@@ -24,8 +25,8 @@ export function buildPlan(s:AppState,sc:ScenarioFile,h:Hospital){
  const contract=order*(first?.drug.contractPricePerUnit??0), crisis=contract*(first?.drug.grayMarketMultiplier??1);
  const region=first?s.hospitals.map((hospital,j)=>({hospital,day:sc.hospitalStockouts[first.drug.id].p50[j],dist:Math.hypot((hospital.lon-h.lon)*Math.cos(h.lat*Math.PI/180),hospital.lat-h.lat)})).filter(n=>n.hospital.id!==h.id&&n.day>Math.max(14,first.median)&&n.dist<3).sort((a,b)=>a.dist-b.dist)[0]:null;
  const actions=[
- {action:'Review a capped replenishment order',reason:order+' '+(first?.drug.unit??'unit')+' units under a modeled fair-share cap of '+cap+' over '+horizon+' days.'},
- {action:'Prepare formulary alternatives',reason:first?.drug.conservation[0]?.strategy??'Ask the pharmacy committee to review substitution protocols.'},
+ {action:order>0?'Review an order for '+order+' units':'Confirm stock with the distributor',reason:order>0?(first?.drug.shortName??'Priority medicine')+' replenishment, capped at '+cap+' units over '+horizon+' days.':'Check current inventory and order availability before changing the purchasing plan.'},
+ {action:'Prepare formulary alternatives',reason:'Ask the pharmacy lead to confirm suitable alternatives and conservation guidance for '+(first?.drug.shortName??'the priority medicine')+'.'},
  {action:'Review elective procedure demand',reason:'Compare scheduled procedures with the estimated supply window before changing bookings.'},
  {action:region?'Contact '+region.hospital.name:'Request regional inventory confirmation',reason:region?'This nearby facility has a longer modeled supply window. Confirm transferable stock directly.':'Confirm actual availability with the regional pharmacy network.'}
  ];

@@ -28,6 +28,15 @@ For optional live Claude answers, copy `.env.example` to `.env` and set `ANTHROP
 
 ## Present the demo
 
+The main flow is **Storm watch -> hospital plan -> Share supply -> Test a storm**.
+
+1. Select **Watch Helene unfold**. The replay opens near the warning and pauses on the alert.
+2. Select **Open a hospital plan** to see Samaritan Hospital in Troy, its first projected shortage, a capped order, pharmacy review and the downloadable briefing.
+3. Select **Share supply**, then **Apply fair-share ordering**. The national map and stockout count change together.
+4. Select **Test a storm**. Choose a coast, adjust category or speed, and select **See supply impact**. The result leads to a hospital plan; advanced physics and data exports stay available in details.
+
+`npm test` checks hospital identity, supply-impact counts and reproducible storm presets. `npm run typecheck` and `npm run build` check the app.
+
 | Key | View |
 | --- | --- |
 | 1 | Orbital title |

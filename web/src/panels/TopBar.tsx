@@ -12,7 +12,7 @@ export default function TopBar() {
   return <>
     <header className="masthead">
       <button className="brand" onClick={()=>goBeat(1)} title="Title screen"><Radar/><span>Rx<span className="rx-accent">Radar</span></span></button>
-      <span className="mast-divider"/><span className="product-name">Supply intelligence</span>
+      <span className="mast-divider"/><span className="product-name">Storms to medicine shortages</span>
       <div className="head-actions">
         <button className="head-text" onClick={()=>s.set({page:'sources'})}><BookOpen size={16}/>Sources</button>
         <button className="icon-button" title="Presenter menu" aria-label="Presenter menu" onClick={()=>s.set({paletteOpen:true})}><Command size={17}/></button>
@@ -25,7 +25,7 @@ export default function TopBar() {
         <button aria-label="Choose scenario" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{scenes.find(x=>x[0]===id)?.[1]}<ChevronDown size={19}/></button>
         {menu&&<><button className="dismiss-area" aria-label="Close scenarios" onClick={()=>setMenu(false)}/><div className="scenario-menu">{scenes.map(([key,title])=><button key={key} onClick={()=>{switchScenario(key);setMenu(false)}}><span>{title}</span><small>{key==='helene'?'2024':key==='maria'?'2017':key==='rocky-mount'?'2023':key==='live'?'NOW':'DRAW'}</small></button>)}</div></>}
       </div>
-      <nav className="map-tabs" aria-label="Workspace"><button className={!equity&&id!=='whatif'?'active':''} onClick={()=>{if(id==='whatif')switchScenario('helene');s.set({equityOpen:false,rightPanel:'drugs',abmPlaying:false})}}><Activity/>Monitor</button><button className={equity?'active':''} onClick={()=>s.set({equityOpen:true,rightPanel:'equity',abmDay:0,copilotOpen:false})}><SlidersHorizontal/>Equity lab</button><button className={id==='whatif'&&!equity?'active':''} onClick={()=>switchScenario('whatif')}><Waypoints/>What-if</button></nav>
+      <nav className="map-tabs" aria-label="Workspace"><button className={!equity&&id!=='whatif'?'active':''} onClick={()=>{if(id==='whatif')switchScenario('helene');s.set({equityOpen:false,rightPanel:'drugs',abmPlaying:false});s.setLayers({storm:true,wind:true,radar:true,rain:true,network:true,hospitals:true,svi:false})}}><Activity/>Storm watch</button><button className={equity?'active':''} onClick={()=>{if(id==='whatif'&&!s.whatif.result)goBeat(5);else {s.set({equityOpen:true,rightPanel:'equity',abmDay:14,copilotOpen:false,selectedHospitalId:null,highlight:null});s.flyTo({longitude:-88,latitude:36,zoom:4.15,duration:1200});s.setLayers({storm:false,wind:false,radar:false,rain:false,network:false,hospitals:true,svi:true})}}}><SlidersHorizontal/>Share supply</button><button className={id==='whatif'&&!equity?'active':''} onClick={()=>{switchScenario('whatif');s.setLayers({storm:true,wind:true,radar:false,rain:false,network:true,hospitals:true,svi:false});}}><Waypoints/>Test a storm</button></nav>
     </section>
     {id==='live'&&<LiveStatus/>}
     <button className="mobile-panel" title="Toggle detail panel" aria-label="Toggle detail panel" onClick={()=>document.documentElement.classList.toggle('show-rail')}><PanelTopOpen size={19}/></button>

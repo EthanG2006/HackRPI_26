@@ -7,7 +7,7 @@ export const impactFields = [
  {key:'patients',field:'patientsProtected',name:'Patients protected',icon:Users,format:fmtCompact},
  {key:'dollars',field:'dollarsSaved',name:'Projected savings',icon:CircleDollarSign,format:fmtUsd},
  {key:'co2',field:'co2TonsAvoided',name:'CO₂ avoided',icon:Leaf,format:(v:number)=>fmtCompact(v)+' t'},
- {key:'equity',field:'highSviPreventedPct',name:'High-SVI share of prevented stockouts',icon:Scale,format:fmtPct},
+ {key:'equity',field:'highSviPreventedPct',name:'Prevention in vulnerable counties',icon:Scale,format:fmtPct},
 ] as const;
 export function Tick({value,format}:{value:number,format:(n:number)=>string}){
  const [n,setN]=useState(value), prev=useRef(value);
