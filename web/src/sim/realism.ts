@@ -10,7 +10,9 @@ const r3 = (x: number) => Math.round(x * 1000) / 1000;
 /** Real outages ran 2–3× the archived lognormal medians (North Cove: ~3 months to full allocation). */
 const OUTAGE_SCALE = 2.4;
 /** Cancelled procedures, expedited freight and gray-market premiums per delayed encounter (scenario assumption). */
-const USD_PER_ENCOUNTER = 1150;
+export const USD_PER_ENCOUNTER = 1150;
+/** Encounter scaling applied to the confirmed (post-impact) archived impact. */
+export const IMPACT_SCALE = 2.5 * 1.35;
 
 function drugs(rows: DrugRisk[], base: Map<string, number>, confirmed: Set<string>): DrugRisk[] {
   return rows.map((d) => {
@@ -67,7 +69,7 @@ export function calibrateScenario(sc: ScenarioFile, baseline: Map<string, number
     if (prev.outages[0] && before[k].outages[0] && prev.outages[0].pDisrupt > before[k].outages[0].pDisrupt)
       before[k] = { ...before[k], outages: prev.outages, drugRisk: prev.drugRisk, hospitalStockouts: prev.hospitalStockouts, impact: prev.impact };
   }
-  const confirmed = { t: new Date(hitT).toISOString(), outages: outages(sc.outages, true), drugRisk: drugs(sc.drugRisk, baseline, hero), hospitalStockouts: sc.hospitalStockouts, hazardProbability: 1, impact: impact(sc.impact, 1.35) };
+  const confirmed = { t: new Date(hitT).toISOString(), outages: outages(sc.outages, true), drugRisk: drugs(sc.drugRisk, baseline, hero), hospitalStockouts: sc.hospitalStockouts, hazardProbability: 1, impact: impact(sc.impact, IMPACT_SCALE / 2.5) };
   return {
     ...sc, hazard: calibrated as ScenarioFile['hazard'], outages: confirmed.outages, drugRisk: confirmed.drugRisk, impact: confirmed.impact,
     alert: sc.alert ? { ...sc.alert, prob: r3(amp(sc.alert.prob)), probCI: [r3(amp(sc.alert.probCI[0])), r3(amp(sc.alert.probCI[1]))] } : undefined,

@@ -9,6 +9,7 @@ import { frameSummary } from './frameMetrics';
 import { calibrateScenario, amp } from '../sim/realism';
 import { runHazard } from '../sim/lab/hazards';
 import { HAZARDS } from '../sim/lab/hazardMeta';
+import { comparison } from '../impact/story';
 import type { Hospital, ScenarioFile } from '../types';
 const json=(p:string)=>JSON.parse(readFileSync('web/public/data/'+p,'utf8'));
 const hospitals:Hospital[]=json('hospitals.json').hospitals;
@@ -78,3 +79,10 @@ for (const kind of ['earthquake', 'wildfire', 'flood', 'tornado', 'winter'] as c
   assert.equal(r.hazardSnapshots!.length, r.series!.hours.length);
 }
 console.log('Passed earthquake, wildfire, flood, tornado and ice-storm engine checks.');
+
+// Judge scoreboard: Rx Radar improves every row of the Helene comparison.
+useApp.setState({ hospitals, drugs: drugsFile, scenarios: { helene: cal }, equity: { helene: json('equity/helene.json') } });
+const cmp = comparison(useApp.getState(), 'helene')!;
+assert.ok(cmp.kept > 4000, 'Helene keeps thousands of hospitals supplied');
+assert.ok(cmp.rows.every(r => (r.better === 'lower' ? r.with <= r.without : r.with > r.without)));
+console.log('Passed impact scoreboard comparison checks.');

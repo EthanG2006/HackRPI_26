@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, AudioLines, ChevronRight, Play, Radar, VolumeX, Wind, Waves, Tornado } from 'lucide-react';
+import { ArrowRight, AudioLines, ChevronRight, Cloud, Play, Radar, VolumeX, Wind, Waves, Tornado } from 'lucide-react';
+import CloudSky from '../ui/CloudSky';
 import { goBeat, switchScenario } from '../presenter/beats';
 import { useApp } from '../store';
 import type { ScenarioId } from '../types';
@@ -43,8 +44,10 @@ export default function GlobeIntro() {
   }
   return <section className={'rx-intro'+(leaving?' entering':'')} aria-label="Rx Radar introduction">
     <div className="orbital-stars" aria-hidden="true"/>
+    <CloudSky variant="intro"/>
     <header className="intro-head">
       <div className="intro-brand"><span className="intro-brand-icon"><Radar size={28} strokeWidth={1.7}/></span><strong>Rx Radar</strong><span className="intro-brand-sep"/><span className="intro-head-label">Operations center</span></div>
+      <span className="hack-badge"><Cloud size={14}/>HackRPI 2026 · In the Clouds</span>
       <button className="intro-audio" onClick={()=>useApp.getState().set({muted:!muted})}>{muted?<VolumeX size={16}/>:<AudioLines size={16}/>}<span>Sound {muted?'off':'on'}</span></button>
     </header>
     <div className="intro-main">
@@ -56,7 +59,7 @@ export default function GlobeIntro() {
       <div className="intro-hero">
         <div className="intro-eyebrow"><span/> Pharmaceutical supply intelligence</div>
         <h1>Rx Radar<span>.</span></h1>
-        <p>The sky already caused some of the worst drug shortages of the decade. <strong>Nobody is watching it.</strong></p>
+        <p>The sky already caused some of the worst drug shortages of the decade. <strong>Rx Radar reads the clouds before they reach the medicine cabinet.</strong></p>
         <div className="intro-cta-row"><button className="intro-begin" onClick={()=>begin()}><Play size={16} fill="currentColor"/> Watch Helene unfold <ArrowRight size={17}/></button><span className="intro-shortcut">or press <kbd>Space</kbd></span></div>
       </div>
     </div>

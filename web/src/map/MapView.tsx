@@ -18,6 +18,7 @@ import type { LngLat } from '../types';
 import './map.css';
 import { recordFrame, recordWork } from '../verification/frameMetrics';
 import { HAZARDS } from '../sim/lab/hazardMeta';
+import CloudSky from '../ui/CloudSky';
 
 declare global {interface Window {rxMapSnapshot?:()=>string|undefined}}
 const STYLE:StyleSpecification={
@@ -184,6 +185,7 @@ export default function MapView(){
   function fit(){const s=useApp.getState();s.flyTo(activeScenario(s)?.camera??{longitude:-83,latitude:31,zoom:4.3,duration:1000});}
   return <section className="rx-map" aria-label="Interactive weather and pharmaceutical supply map">
     <div id="rx-map-canvas" ref={host} className="map-surface"/>
+    <CloudSky variant="map"/>
     <canvas ref={canvas} className="map-effects" aria-hidden="true"/>
     {introDone&&<>
       <div className="map-top-status">

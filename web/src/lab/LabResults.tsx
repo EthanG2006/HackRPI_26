@@ -62,6 +62,7 @@ export default function LabResults() {
       <section className="supply-headline"><span className="eyebrow">Medicine supply outlook <Prov kind="MODEL" compact/></span>
         <h3>{outlook!.hospitals>0?`${outlook!.hospitals.toLocaleString()} hospitals could run short`:outlook!.downsideHospitals>0?`${outlook!.downsideHospitals.toLocaleString()} hospitals exposed in the downside estimate`:'No hospital stockouts projected'}</h3>
         <p>{outlook!.exposed} manufacturing {outlook!.exposed===1?'site is':'sites are'} exposed to {disaster?`the ${disaster.noun}`:'damaging weather'}. {outlook!.medicines>0?`${outlook!.medicines} medicines need attention.`:'Check the exposed sites before changing orders.'}</p>
+        {r.impact&&r.impact.patientsProtected>0&&<button className="link-button" onClick={()=>useApp.getState().set({page:'impact'})}>Acting early protects {r.impact.patientsProtected.toLocaleString()} patients · open impact scoreboard ↗</button>}
       </section>
       {outlook!.downsideHospitals>0&&<p className="downside-note">Central estimate: {outlook!.hospitals.toLocaleString()} hospitals run short. Downside estimate: {outlook!.downsideHospitals.toLocaleString()}, using the earlier end of the 80% stockout window.</p>}
       <div className="supply-next"><h3>Prepare before it arrives</h3>

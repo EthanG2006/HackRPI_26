@@ -22,6 +22,7 @@ import { useActiveScenario, useApp } from './store';
 import './workspace.css';
 import './calm.css';
 import './demo-flow.css';
+import './ui/clouds.css'; // theme layer: loads last so it can tint the base styles
 import PlaybackCheck from './verification/PlaybackCheck';
 const verifyPlayback = new URLSearchParams(location.search).has('verify');
 

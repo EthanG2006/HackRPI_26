@@ -31,7 +31,7 @@ const hash = (id: string) => { let h = 7; for (let i = 0; i < id.length; i++) h 
 let spokeKey: unknown[] = [], spokeCache: { from: LngLat; to: LngLat; hub: number }[] = [];
 /** A thinned sample of hub → hospital deliveries. */
 function spokes(s: AppState, zoom: number) {
-  const per = zoom < 4.5 ? 16 : zoom < 6 ? 36 : 90, hub = hubOfHospital(s);
+  const per = zoom < 4.5 ? 16 : zoom < 6 ? 30 : 24, hub = hubOfHospital(s); // fewer spokes up close, where they fan into a sunburst
   if (spokeKey[0] === hub && spokeKey[1] === per) return spokeCache;
   const groups = s.distributors.map(() => [] as number[]);
   hub.forEach((k, i) => groups[k].push(i));
@@ -44,32 +44,38 @@ function spokes(s: AppState, zoom: number) {
 }
 
 export type HubPick = { kind: 'hub'; hub: Hub };
+let layerKey: unknown[] = [], layerCache: Layer[] = [];
 export function networkLayers(s: AppState, zoom: number, onHover: (hub: Hub | null, x: number, y: number) => void): Layer[] {
   const net = networkView(s);
   if (!net) return [];
+  // Reuse the same layer instances until the network or zoom band changes: new data arrays would make
+  // deck.gl rebuild every lane on each replay tick (that cost ~65 ms per tick).
+  const sp = spokes(s, zoom);
+  if (layerKey[0] === net && layerKey[1] === sp) return layerCache;
+  layerKey = [net, sp];
   const maxU = Math.max(1, ...net.lanes.map((l) => l.units)), maxH = Math.max(1, ...net.hubs.map((h) => h.hospitals));
   const width = (l: Lane) => 1 + 3.4 * Math.sqrt(l.units / maxU), path = (l: Lane) => curve(l.from, l.to);
   const live = net.lanes.filter((l) => l.state !== 'down'), down = net.lanes.filter((l) => l.state === 'down');
   const status = net.hubs.map((h) => h.status), trig = [net];
-  const transitions = { getColor: { duration: 700 }, getWidth: { duration: 700 } };
-  return [
-    new LineLayer({ id: 'last-mile', data: spokes(s, zoom), getSourcePosition: (d) => d.from, getTargetPosition: (d) => d.to, widthUnits: 'pixels', getWidth: 0.6,
-      getColor: (d) => { const st = status[d.hub]; return [...HUB_RGB[st], st === 'normal' ? 26 : st === 'strained' ? 55 : 80] as [number, number, number, number]; }, updateTriggers: { getColor: trig }, transitions }),
+  // No deck.gl attribute transitions here: each one stalled the frame ~70 ms whenever the network changed.
+  return (layerCache = [
+    new LineLayer({ id: 'last-mile', data: sp, getSourcePosition: (d) => d.from, getTargetPosition: (d) => d.to, widthUnits: 'pixels', getWidth: 0.6,
+      getColor: (d) => { const st = status[d.hub]; return [...HUB_RGB[st], st === 'normal' ? 18 : st === 'strained' ? 45 : 70] as [number, number, number, number]; }, updateTriggers: { getColor: trig } }),
     new PathLayer<Lane>({ id: 'lane-glow', data: live, getPath: path, widthUnits: 'pixels', getWidth: (l) => width(l) * 2.6, getColor: (l) => [...LANE_RGB[l.state], l.state === 'flowing' ? 12 : 26],
-      capRounded: true, jointRounded: true, updateTriggers: { getColor: trig }, transitions }),
+      capRounded: true, jointRounded: true, updateTriggers: { getColor: trig } }),
     new PathLayer<Lane>({ id: 'lanes', data: live, getPath: path, widthUnits: 'pixels', getWidth: width, getColor: (l) => [...LANE_RGB[l.state], l.state === 'flowing' ? 110 : 190],
-      capRounded: true, jointRounded: true, updateTriggers: { getColor: trig }, transitions }),
+      capRounded: true, jointRounded: true, updateTriggers: { getColor: trig } }),
     new PathLayer<Lane>({ id: 'lanes-down', data: down, getPath: path, widthUnits: 'pixels', getWidth: (l: Lane) => Math.max(1.6, width(l) * 0.8), getColor: [255, 77, 90, 215],
       getDashArray: [3, 2.2], dashJustified: true, extensions: [new PathStyleExtension({ dash: true })] } as never),
     new TextLayer<Lane>({ id: 'lane-breaks', data: down, getPosition: (l) => path(l)[16], getText: () => '✕', getSize: 15, getColor: [255, 110, 110, 255], fontWeight: 800,
       fontFamily: 'Inter Variable, Inter, sans-serif', outlineWidth: 4, outlineColor: [8, 18, 26, 230], fontSettings: { sdf: true }, characterSet: ['✕'] }),
     new ScatterplotLayer<Hub>({ id: 'hub-halo', data: net.hubs, getPosition: (h) => [h.dc.lon, h.dc.lat], radiusUnits: 'pixels', getRadius: (h) => 11 + 9 * Math.sqrt(h.hospitals / maxH),
-      getFillColor: (h) => [...HUB_RGB[h.status], h.status === 'normal' ? 22 : 48], updateTriggers: { getFillColor: trig }, transitions: { getFillColor: 700 } }),
+      getFillColor: (h) => [...HUB_RGB[h.status], h.status === 'normal' ? 22 : 48], updateTriggers: { getFillColor: trig } }),
     new ScatterplotLayer<Hub>({ id: 'hubs', data: net.hubs, pickable: true, getPosition: (h) => [h.dc.lon, h.dc.lat], radiusUnits: 'pixels', getRadius: (h) => 4.5 + 3.5 * Math.sqrt(h.hospitals / maxH),
       getFillColor: [8, 22, 30, 255], stroked: true, lineWidthUnits: 'pixels', getLineWidth: 2.2, getLineColor: (h) => [...HUB_RGB[h.status], 255],
       onHover: (info) => onHover(info.object ?? null, info.x, info.y), onClick: (info) => { if (info.object) useApp.getState().set({ rightPanel: 'logistics', equityOpen: false }); },
-      updateTriggers: { getLineColor: trig }, transitions: { getLineColor: 700 } }),
-  ];
+      updateTriggers: { getLineColor: trig } }),
+  ]);
 }
 
 interface Trip { path: [number, number, number][]; times: number[]; color: [number, number, number, number]; period?: number }
