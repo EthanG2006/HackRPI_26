@@ -442,6 +442,14 @@ export interface ScenarioFile {
   backtest?: Backtest;
   provenance: Provenance;
   notes?: string[];
+  predictionSnapshots?: {
+    t: string;
+    drugRisk: DrugRisk[];
+    hospitalStockouts: HospitalStockouts;
+    outages: PlantOutage[];
+    hazardProbability: number;
+    impact: Impact;
+  }[];
 }
 
 // ---------- equity/<scenarioId>.json (owner: equity agent) ----------

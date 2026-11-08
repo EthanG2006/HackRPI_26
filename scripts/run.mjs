@@ -21,12 +21,12 @@ const venvPython = join(root, '.venv', isWin ? 'Scripts/python.exe' : 'bin/pytho
 const children = [];
 
 function runSync(cmd, args, opts = {}) {
-  const r = spawnSync(cmd, args, { cwd: root, stdio: 'inherit', shell: isWin, ...opts });
+  const r = spawnSync(cmd, args, { cwd: root, stdio: 'inherit', shell: isWin && cmd === 'npm', windowsHide: true, ...opts });
   return r.status === 0;
 }
 
 function start(name, cmd, args, opts = {}) {
-  const p = spawn(cmd, args, { cwd: root, shell: isWin, stdio: ['ignore', 'pipe', 'pipe'], ...opts });
+  const p = spawn(cmd, args, { cwd: root, shell: isWin && cmd === 'npm', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'], ...opts });
   const out = (stream) => (buf) =>
     stream.write(
       buf
@@ -39,6 +39,7 @@ function start(name, cmd, args, opts = {}) {
   p.stdout.on('data', out(process.stdout));
   p.stderr.on('data', out(process.stderr));
   p.on('exit', (code) => console.log(`[${name}] exited (${code})${name === 'api' ? ' — the frontend keeps working on cached data' : ''}`));
+  p.on('error', (error) => console.error(`[${name}] ${error.message}`));
   children.push(p);
   return p;
 }
@@ -46,7 +47,7 @@ function start(name, cmd, args, opts = {}) {
 function stopAll() {
   for (const p of children) {
     if (p.exitCode !== null) continue;
-    if (isWin) spawnSync('taskkill', ['/pid', String(p.pid), '/T', '/F'], { stdio: 'ignore' });
+    if (isWin) spawnSync('taskkill', ['/pid', String(p.pid), '/T', '/F'], { stdio: 'ignore', windowsHide: true });
     else p.kill('SIGTERM');
   }
 }
@@ -56,17 +57,18 @@ process.on('SIGTERM', () => (stopAll(), process.exit(0)));
 function systemPython() {
   const candidates = isWin ? [['py', ['-3.12']], ['py', ['-3.11']], ['python', []]] : [['python3.12', []], ['python3', []]];
   for (const [cmd, pre] of candidates) {
-    const r = spawnSync(cmd, [...pre, '--version'], { shell: isWin, encoding: 'utf8' });
-    if (r.status === 0 && /Python 3\.(1[1-3])/.test(r.stdout + r.stderr)) return [cmd, pre];
+    const r = spawnSync(cmd, [...pre, '--version'], { encoding: 'utf8', windowsHide: true });
+    if (r.status === 0 && /Python 3\.(1[1-9])/.test(r.stdout + r.stderr)) return [cmd, pre];
   }
   return null;
 }
 
 function setup({ full }) {
-  if (!existsSync(join(web, 'node_modules'))) {
+  if (!existsSync(join(web, 'node_modules', 'vite', 'bin', 'vite.js'))) {
     console.log('[setup] installing web dependencies…');
-    runSync('npm', ['install', '--prefix', 'web', '--no-audit', '--no-fund']);
+    if (!runSync('npm', ['ci', '--prefix', 'web', '--no-audit', '--no-fund'])) process.exit(1);
   }
+  if (flags.has('--no-api') && !full) return;
   if (!existsSync(venvPython)) {
     const py = systemPython();
     if (!py) {
@@ -74,13 +76,13 @@ function setup({ full }) {
       return;
     }
     console.log('[setup] creating .venv…');
-    runSync(py[0], [...py[1], '-m', 'venv', '.venv']);
+    if (!runSync(py[0], [...py[1], '-m', 'venv', '.venv'])) return;
   }
   const req = full ? 'pipeline/requirements.txt' : 'server/requirements.txt';
-  const probe = full ? 'import lightgbm, shap, geopandas' : 'import fastapi, uvicorn, numpy, scipy';
-  if (spawnSync(venvPython, ['-c', probe]).status !== 0) {
+  const probe = full ? 'import lightgbm, shap, geopandas, networkx, rapidfuzz, pyarrow' : 'import fastapi, uvicorn, numpy, scipy, anthropic, dotenv';
+  if (spawnSync(venvPython, ['-c', probe], { windowsHide: true }).status !== 0) {
     console.log(`[setup] installing Python packages (${req})…`);
-    runSync(venvPython, ['-m', 'pip', 'install', '-q', '-r', req]);
+    if (!runSync(venvPython, ['-m', 'pip', 'install', '-q', '-r', req]) && full) process.exit(1);
   }
 }
 
@@ -95,7 +97,8 @@ function newestMtime(dir) {
 
 function buildIfStale() {
   const index = join(web, 'dist', 'index.html');
-  const srcTime = Math.max(newestMtime(join(web, 'src')), newestMtime(join(web, 'public')), statSync(join(web, 'index.html')).mtimeMs);
+  const srcTime = Math.max(newestMtime(join(web, 'src')), newestMtime(join(web, 'public')),
+    ...['index.html', 'vite.config.ts', 'package.json', 'package-lock.json'].map(file => statSync(join(web, file)).mtimeMs));
   if (existsSync(index) && statSync(index).mtimeMs > srcTime) return console.log('[demo] build is up to date');
   console.log('[demo] building the frontend…');
   if (!runSync('npm', ['--prefix', 'web', 'run', 'build'])) {
@@ -113,7 +116,11 @@ function startApi(reload) {
 function openBrowser() {
   if (flags.has('--no-open')) return;
   const [cmd, args] = isWin ? ['cmd', ['/c', 'start', '""', URL]] : process.platform === 'darwin' ? ['open', [URL]] : ['xdg-open', [URL]];
-  setTimeout(() => spawn(cmd, args, { stdio: 'ignore', detached: true, shell: false }).unref(), 2500);
+  setTimeout(() => {
+    const child = spawn(cmd, args, { stdio: 'ignore', detached: true, shell: false, windowsHide: true });
+    child.on('error', () => console.log(`[browser] Open ${URL}`));
+    child.unref();
+  }, 2500);
 }
 
 switch (mode) {

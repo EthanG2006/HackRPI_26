@@ -7,10 +7,11 @@ export function useReplayClock(): void {
     let raf = 0;
     let last = performance.now();
     const tick = (now: number) => {
-      const dt = Math.min(100, now - last); // clamp: tab switches must not jump the replay
-      last = now;
       const s = useApp.getState();
-      if (s.playing) {
+      const dt = Math.min(250, now - last);
+      if (!s.playing) last = now;
+      if (s.playing && dt >= 125 && s.ready) {
+        last = now;
         const sc = activeScenario(s);
         const end = sc ? Date.parse(sc.end) : Infinity;
         const next = Math.min(end, s.time + dt * s.speed * SIM_MS_PER_WALL_MS_AT_1X);

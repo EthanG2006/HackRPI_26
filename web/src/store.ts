@@ -39,7 +39,7 @@ export type LayerId =
   | 'svi' // CDC SVI choropleth
   | 'nri'; // FEMA NRI choropleth
 
-export type PageId = 'model-card' | 'sources' | 'under-the-hood' | 'audit' | 'climate' | null;
+export type PageId = 'model-card' | 'sources' | 'under-the-hood' | 'audit' | 'climate' | 'impact' | null;
 export type RightPanelId = 'drugs' | 'drug' | 'hospital' | 'equity' | 'whatif';
 
 /** Replay clock: at 1x one wall-clock second advances this many simulated milliseconds (15 minutes). */
@@ -173,7 +173,8 @@ const DEFAULT_LAYERS: Record<LayerId, boolean> = {
 const AUDIT_KEY = 'rxradar.audit.v1';
 function loadAudit(): AuditEntry[] {
   try {
-    return JSON.parse(localStorage.getItem(AUDIT_KEY) ?? '[]') as AuditEntry[];
+    const rows: unknown = JSON.parse(localStorage.getItem(AUDIT_KEY) ?? '[]');
+    return Array.isArray(rows) ? rows.filter(row => row && typeof row.action === 'string' && typeof row.at === 'string') : [];
   } catch {
     return [];
   }
@@ -284,12 +285,31 @@ export function useActiveScenario(): ScenarioFile | null {
   return useApp((s) => activeScenario(s));
 }
 
+let lastEnsemble: WhatIfState | undefined;
+let assembled: ScenarioFile | null = null;
+let replaySource: ScenarioFile | undefined;
+let replaySnapshot: NonNullable<ScenarioFile['predictionSnapshots']>[number] | undefined;
+let replayView: ScenarioFile | null = null;
 export function activeScenario(s: AppState): ScenarioFile | null {
-  if (s.scenarioId !== 'whatif') return s.scenarios[s.scenarioId] ?? null;
+  if (s.scenarioId !== 'whatif') {
+    const base = s.scenarios[s.scenarioId];
+    if (!base) return null;
+    // The equity lab explores a specified plant-outage contingency across policies.
+    if (s.equityOpen || !base.predictionSnapshots?.length) return base;
+    const available = base.predictionSnapshots.filter(p => Date.parse(p.t) <= s.time);
+    const snapshot = available.at(-1) ?? base.predictionSnapshots[0];
+    if (base === replaySource && snapshot === replaySnapshot && replayView) return replayView;
+    replaySource = base;
+    replaySnapshot = snapshot;
+    return replayView = { ...base, drugRisk: snapshot.drugRisk, hospitalStockouts: snapshot.hospitalStockouts,
+      outages: snapshot.outages, impact: snapshot.impact };
+  }
   const r = s.whatif.result;
   if (!r) return null;
+  if (lastEnsemble === s.whatif && assembled) return assembled;
+  lastEnsemble = s.whatif;
   const base = s.scenarios.helene;
-  return {
+  return assembled = {
     id: 'whatif',
     name: 'What-if storm',
     subtitle: `Category ${s.whatif.category} · ${r.members.toLocaleString()} ensemble tracks · ${Math.round(r.elapsedMs)} ms (${r.engine})`,

@@ -10,3 +10,4 @@ data/cache/
 .DS_Store
 Thumbs.db
 .vite/
+tmp/

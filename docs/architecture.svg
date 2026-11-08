@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="500" viewBox="0 0 1120 500" role="img" aria-labelledby="title desc">
+ <title id="title">Rx Radar architecture</title>
+ <desc id="desc">Public weather, drug and hospital data feed an offline preprocessing pipeline. The React map and browser workers share scenario results with an optional FastAPI server. A pharmacist reviews recommendations and records decisions.</desc>
+ <defs>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 6 3 0 6" fill="none" stroke="#70dbce" stroke-width="1.3"/></marker>
+ </defs>
+ <rect width="1120" height="500" rx="12" fill="#10222d"/>
+ <g font-family="Arial,sans-serif">
+  <text x="35" y="42" fill="#89dfd2" font-size="12" letter-spacing="2">RX RADAR / SYSTEM ARCHITECTURE</text>
+  <g fill="#162e3b" stroke="#3c5c69">
+   <rect x="35" y="75" width="240" height="100" rx="7"/>
+   <rect x="35" y="194" width="240" height="100" rx="7"/>
+   <rect x="35" y="313" width="240" height="100" rx="7"/>
+   <rect x="330" y="75" width="245" height="338" rx="7"/>
+   <rect x="630" y="75" width="210" height="157" rx="7"/>
+   <rect x="630" y="256" width="210" height="157" rx="7"/>
+   <rect x="895" y="75" width="190" height="338" rx="7"/>
+  </g>
+  <g stroke="#70dbce" stroke-width="1.4" fill="none" marker-end="url(#arrow)">
+   <path d="M275 125H330"/><path d="M275 244H330"/><path d="M275 363H330"/>
+   <path d="M575 155H630"/><path d="M575 335H630"/>
+   <path d="M840 155H895"/><path d="M840 335H895"/>
+  </g>
+  <g fill="#e4f0f4" font-size="17" font-weight="600">
+   <text x="53" y="107">Weather archives</text><text x="53" y="226">Drug &amp; plant evidence</text>
+   <text x="53" y="345">Hospital geography</text><text x="350" y="107">Precompute &amp; cache</text>
+   <text x="650" y="107">React workspace</text><text x="650" y="288">Optional FastAPI</text>
+   <text x="914" y="107">Pharmacist review</text>
+  </g>
+  <g fill="#abc5d1" font-size="13">
+   <text x="53" y="135">NHC · WPC · SPC · USGS</text><text x="53" y="155">IEM radar · satellite imagery</text>
+   <text x="53" y="254">FDA shortage postings &amp; labels</text><text x="53" y="274">Manufacturer announcements</text>
+   <text x="53" y="373">HIFLD · Census · CDC SVI</text><text x="53" y="393">FEMA National Risk Index</text>
+   <text x="350" y="144">Time-split LightGBM + SHAP</text><text x="350" y="174">Weather hazard uncertainty</text>
+   <text x="350" y="204">Inventory cascade</text><text x="350" y="234">Allocation policy frontier</text>
+   <text x="350" y="264">Source &amp; model registers</text><text x="350" y="294">JSON + Parquet outputs</text>
+   <text x="350" y="362">Products enter each replay</text><text x="350" y="382">at their issue timestamps</text>
+   <text x="650" y="140">MapLibre + deck.gl</text><text x="650" y="164">Local map &amp; weather assets</text>
+   <text x="650" y="188">Web Worker simulations</text><text x="650" y="212">Cached copilot responses</text>
+   <text x="650" y="321">NumPy storm ensemble</text><text x="650" y="345">SciPy allocation optimizer</text>
+   <text x="650" y="369">Live weather refresh</text><text x="650" y="393">Anthropic streaming tools</text>
+   <text x="914" y="146">Hospital inventory</text><text x="914" y="172">Uncertainty bands</text>
+   <text x="914" y="198">Fair-share order caps</text><text x="914" y="224">CMO briefing PDF</text>
+   <text x="914" y="280">Approve with a reason</text><text x="914" y="306">Local decision log</text>
+   <text x="914" y="364">Aggregate public data</text><text x="914" y="387">Human clinical judgment</text>
+  </g>
+  <path d="M35 441H1085" stroke="#35505f"/>
+  <text x="35" y="470" fill="#8bb1bf" font-size="12">Replay files and browser workers run locally. Online features retain dated fallback data.</text>
+ </g>
+</svg>

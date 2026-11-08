@@ -15,9 +15,12 @@ import PresenterNotes from './presenter/PresenterNotes';
 import { usePresenterKeys } from './presenter/usePresenterKeys';
 import EquityLab from './equity/EquityLab';
 import CopilotDrawer from './copilot/CopilotDrawer';
+import { useLiveScenario } from './sim/live';
+import './workspace.css';
 
 export default function App() {
   useReplayClock();
+  useLiveScenario();
   usePresenterKeys();
   return (
     <div className="relative h-full w-full overflow-hidden bg-ink-950 text-fg">
