@@ -16,14 +16,20 @@ import { usePresenterKeys } from './presenter/usePresenterKeys';
 import EquityLab from './equity/EquityLab';
 import CopilotDrawer from './copilot/CopilotDrawer';
 import { useLiveScenario } from './sim/live';
+import { useActiveScenario, useApp } from './store';
 import './workspace.css';
+import './calm.css';
 
 export default function App() {
   useReplayClock();
   useLiveScenario();
   usePresenterKeys();
+  const lab = useApp((s) => s.scenarioId === 'whatif');
+  const impact = useActiveScenario()?.impact;
+  // The impact strip only takes space once it has something to say; the Storm Lab has its own playback.
+  const quietImpact = !impact || (impact.patientsProtected <= 0 && impact.dollarsSaved <= 0);
   return (
-    <div className="relative h-full w-full overflow-hidden bg-ink-950 text-fg">
+    <div className={`rx-app relative h-full w-full overflow-hidden bg-ink-950 text-fg${lab ? ' lab-mode' : quietImpact ? ' impact-quiet' : ''}`}>
       <MapView />
       <TopBar />
       <LayerLegend />

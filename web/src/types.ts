@@ -209,12 +209,69 @@ export interface ModelFile {
 
 export interface HazardModelFile {
   name: string; // "Plant weather-disruption model (Bayesian logistic)"
+  /** Order of coefficients in `samples` rows: ["intercept","wind","rain","rainRiver","sfha","tornado"]. Transforms in docs/CONTRACTS.md. */
+  featureOrder?: string[];
+  /** Posterior draws (S x K), K = featureOrder.length. The browser engine samples rows for uncertainty. */
+  samples?: number[][];
   features: { feature: string; label: string; priorMean: number; priorSd: number; postMean: number; postSd: number; rationale: string }[];
   nEvents: number;
   nNonEvents: number;
   events: { plantId: string; event: string; date: string; disrupted: boolean; sourceIds?: string[] }[];
   notes: string[];
   provenance: Provenance;
+}
+
+// ---------- what-if physics inputs (presets: geo; terrain: geo; physics params + NHC errors: facts) ----------
+
+/** hurdat_presets.json — historical best tracks the what-if lab can replay, shift and scale. */
+export interface PresetStorm {
+  id: string; // "AL092024"
+  name: string; // "Helene"
+  year: number;
+  note: string; // why it matters, e.g. "Inland flooding of Baxter North Cove"
+  track: TrackPoint[];
+  sourceIds: string[];
+}
+export interface PresetStormsFile {
+  storms: PresetStorm[];
+  sourceIds: string[];
+}
+
+/** terrain.json — coarse elevation + land mask grid covering the Atlantic basin (lon -110..-55, lat 8..50). */
+export interface TerrainFile {
+  west: number;
+  south: number;
+  east: number;
+  north: number;
+  nx: number; // columns (west -> east)
+  ny: number; // rows (north -> south)
+  res: number; // degrees per cell
+  elevB64: string; // base64 Int16Array (little-endian) of elevation in meters, row-major from the north-west corner
+  landB64: string; // base64 Uint8Array, 1 = land, same layout
+  sourceIds: string[];
+  note?: string;
+}
+
+/** model/physics_params.json — every physical constant the what-if engine uses, with a citation. */
+export interface ParamEntry {
+  key: string; // e.g. "kd_alpha"
+  value: number;
+  unit: string;
+  label: string;
+  citation: string; // e.g. "Kaplan & DeMaria (1995), J. Appl. Meteor. 34, 2499–2512"
+  sourceIds: string[];
+  note?: string;
+}
+
+/** model/nhc_errors.json — NHC cone radii (2/3 probability circles) and typical intensity errors by lead time. */
+export interface NhcErrorsFile {
+  season: number;
+  basin: 'AL';
+  leadHours: number[];
+  coneRadiusNm: number[];
+  intensityErrorKt: number[];
+  sourceIds: string[];
+  note?: string;
 }
 
 // ---------- storms/<scenarioId>.json (owner: geo/weather data agent) ----------
@@ -488,11 +545,103 @@ export interface EquityFile {
 
 // ---------- what-if (owner: simulation agent; POST /api/whatif, browser fallback in src/sim) ----------
 
+export type SoilMoisture = 'dry' | 'normal' | 'wet';
+
+/** Every user-adjustable Storm Lab setting (defaults in web/src/sim/lab/params.ts). */
+export interface LabConfig {
+  vmaxKt: number; // over-water intensity target for drawn tracks (1-min sustained, 10 m)
+  intensityScale: number; // multiplies a historical record's intensities (1 = as observed)
+  pcHpa: number | null; // null → wind–pressure relationship
+  rmwKm: number | null; // null → Willoughby et al. (2006) climatology
+  hollandB: number | null; // null → derived from Vmax and ΔP
+  inlandDecay: boolean; // Kaplan & DeMaria (1995)
+  intensifyKtPerDay: number; // max over-water intensity change toward the target
+  shearKt: number; // 850–200 hPa environmental shear
+  shearDirDeg: number; // direction the shear vector points toward (deg clockwise from north)
+  stallHours: number;
+  stallAtFix: number; // index into the track; -1 = no stall
+  soilMoisture: SoilMoisture;
+  orographic: boolean;
+  members: number;
+  trackErrorScale: number; // 1 = NHC average official track error
+  intensityErrorScale: number;
+  sizeSpread: number; // σ of ln(Rmax)
+  seed: number;
+  backupPowerDays: number; // on-site generation autonomy at plants
+  alertThreshold: number; // P(disruption) that triggers a pharmacy alert
+}
+
+/** One track point. Presets carry the observed intensity/structure; drawn points carry only a position. */
+export interface StormFix {
+  lon: number;
+  lat: number;
+  hour?: number; // hours from the first fix (presets); drawn tracks derive time from forward speed
+  vmaxKt?: number;
+  pcHpa?: number;
+  rmwKm?: number;
+  r34Km?: number; // observed mean radius of 34-kt winds (non-zero quadrants)
+  origLon?: number; // position before the user shifted/edited the preset (decides where history was over land)
+  origLat?: number;
+}
+
 export interface WhatIfRequest {
   track: LngLat[]; // drawn by the user, >= 2 points, ordered in time
   category: 1 | 2 | 3 | 4 | 5;
   forwardSpeedKt: number;
   members?: number; // default 1000
+  fixes?: StormFix[]; // per-point intensity/structure (aligned with track) — overrides category
+  lab?: Partial<LabConfig>;
+  startTime?: string; // ISO time of hour 0 (presets)
+}
+
+export type LabFieldId = 'p34' | 'p50' | 'p64' | 'wind' | 'rain' | 'pRain' | 'tornado';
+
+/** Regular lon/lat grid, rows from north to south. */
+export interface LabGrid {
+  west: number;
+  south: number;
+  east: number;
+  north: number;
+  nx: number;
+  ny: number;
+  values: Float32Array;
+}
+
+export interface PlantHazard {
+  plantId: string;
+  windKt: [number, number, number]; // P10/P50/P90 across members of the site's max sustained wind
+  rainIn: [number, number, number]; // basin-adjusted storm-total rain
+  tornado: number; // P(tornado passes within 25 mi)
+  pDisrupt: number;
+  ci: [number, number];
+  dominant: 'wind' | 'flood' | 'tornado' | 'none';
+  outageDays: { p10: number; p50: number; p90: number };
+  peakHour: number; // control-run hour of strongest site hazard
+}
+
+export interface LabSeries {
+  hours: number[];
+  startTime?: string;
+  lon: number[];
+  lat: number[];
+  vmax: Band; // ensemble intensity spread (kt)
+  ctrl: number[]; // control-run intensity (kt) — the deterministic storm
+  pc: number[]; // control central pressure (hPa)
+  rmwKm: number[];
+  land: boolean[];
+  landfalls: { hour: number; lon: number; lat: number; vmaxKt: number }[];
+}
+
+export interface LabDiagnostics {
+  seed: number;
+  gridKm: number;
+  gridCells: number;
+  steps: number;
+  fieldMembers: number;
+  terrain: string;
+  timingsMs: Record<string, number>;
+  params: Record<string, number>;
+  warnings: string[];
 }
 
 export interface WhatIfResult {
@@ -505,6 +654,14 @@ export interface WhatIfResult {
   drugRisk: DrugRisk[];
   hospitalStockouts: HospitalStockouts;
   impact?: Impact;
+  // Storm Lab extras (browser physics engine)
+  conePolys?: PolygonCoords[]; // cone as union of uncertainty circles (may be several pieces)
+  fields?: Partial<Record<LabFieldId, LabGrid>>;
+  rainSnapshots?: { hour: number; values: Float32Array }[]; // control run accumulation, same grid as fields.rain
+  windSnapshots?: { hour: number; values: Float32Array }[];
+  series?: LabSeries;
+  plantHazards?: PlantHazard[];
+  diagnostics?: LabDiagnostics;
 }
 
 // ---------- live (owner: geo/weather data agent; GET /api/live, cached snapshot in data/live_cache.json) ----------

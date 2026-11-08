@@ -10,6 +10,8 @@ import { activeScenario, useApp } from '../store';
 import { buildLayers, type GeoCollection, type Picked } from './layers';
 import { paintMapEffects } from './effects';
 import { frameAt, latest } from './geometry';
+import { stormState } from './storm';
+import { smoothTime } from '../lib/clock';
 import { Prov } from '../ui/Prov';
 import type { LngLat } from '../types';
 import './map.css';
@@ -43,12 +45,13 @@ export default function MapView(){
   useEffect(()=>{
     if(!host.current) return;
     let frame=0,alive=true,last=0;
-    let staticLayers:Layer[]=[],wind:ReturnType<typeof windLayer>=null,flow:ReturnType<typeof networkMotion>=null,windKey='';
+    let staticLayers:Layer[]=[],wind:ReturnType<typeof windLayer>|null=null,flow:ReturnType<typeof networkMotion>=null,windKey='';
     const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const map=new maplibregl.Map({container:host.current,style:STYLE,center:[-83,31],zoom:4.3,
       minZoom:2.1,maxZoom:11,pitch:0,maxPitch:50,attributionControl:false,
       canvasContextAttributes:{antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'},dragRotate:false,touchPitch:false});
     mapRef.current=map;
+    if(import.meta.env.DEV)Object.assign(window,{rxMap:map});
     const deck=new MapboxOverlay({interleaved:true,layers:[],getCursor:()=>useApp.getState().whatif.drawing?'crosshair':'grab'});
     overlay.current=deck;map.addControl(deck);
     const onHover=(item:Picked|null,x:number,y:number)=>{if(!useApp.getState().whatif.drawing)setTip(item?{...item,x,y}:null)};
@@ -56,9 +59,10 @@ export default function MapView(){
       if(!alive||!map.isStyleLoaded())return;
       const s=useApp.getState();
       staticLayers=buildLayers(s,map.getZoom(),counties.current,onHover);
-      const track=latest(s.storms[s.scenarioId]?.storm?.bestTrack,p=>p.t,s.time);
-      const key=[s.scenarioId,track?.t,s.layers.wind,s.whatif.category,s.whatif.track,Math.floor(s.time/86400000)].join('|');
-      if(key!==windKey){windKey=key;wind=windLayer(s);}
+      // Rebuild particles only when the storm's structure changes; position moves per frame below.
+      const st=s.layers.wind?stormState(s,smoothTime()):null;
+      const key=st?[s.scenarioId,Math.round(st.vmax/5),Math.round(st.rmwKm/4),Math.round(st.pressure/4),Math.round(st.lat)].join('|'):'';
+      if(key!==windKey){windKey=key;wind=st?windLayer(st):null;}
       flow=networkMotion(s,map.getZoom());
       deck.setProps({layers:[...staticLayers,wind,flow]});
     };
@@ -87,7 +91,10 @@ export default function MapView(){
       const ctx=canvas.current?.getContext('2d'),s=useApp.getState();
       if(ctx&&s.introDone&&!document.hidden&&now-last>=16){
         const t=reducedMotion?60:motionTime(now);
-        if(wind||flow)deck.setProps({layers:[...staticLayers,wind?.clone({currentTime:t}),flow?.clone({currentTime:t})]});
+        if(wind||flow){
+          const st=wind?stormState(s,smoothTime()):null;
+          deck.setProps({layers:[...staticLayers,wind&&st?wind.clone({currentTime:t,coordinateOrigin:[st.lon,st.lat,0]}):null,flow?.clone({currentTime:t})]});
+        }
         paintMapEffects(ctx,map,s,reducedMotion?1000:now,host.current!.clientWidth,host.current!.clientHeight);last=now;
       }
       frame=requestAnimationFrame(draw);
@@ -131,6 +138,33 @@ export default function MapView(){
     element.addEventListener('pointerdown',down,true);element.addEventListener('pointermove',move,true);element.addEventListener('pointerup',up,true);element.addEventListener('pointercancel',up,true);
     return()=>{element.removeEventListener('pointerdown',down,true);element.removeEventListener('pointermove',move,true);element.removeEventListener('pointerup',up,true);element.removeEventListener('pointercancel',up,true);};
   },[drawing]);
+  // Storm Lab: drag any track point to reshape the storm (presets keep their observed record at that point).
+  useEffect(()=>{
+    const map=mapRef.current;if(!map||scenarioId!=='whatif')return;
+    const el=map.getCanvasContainer();let idx=-1,raf=0,pending:LngLat|null=null;
+    const near=(x:number,y:number)=>{let best=-1,bd=12;useApp.getState().whatif.track.forEach((p,i)=>{const q=map.project(p);const d=Math.hypot(q.x-x,q.y-y);if(d<bd){bd=d;best=i;}});return best;};
+    const local=(e:PointerEvent)=>{const r=el.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top] as const;};
+    const down=(e:PointerEvent)=>{
+      if(useApp.getState().whatif.drawing||e.button!==0)return;
+      const i=near(...local(e));if(i<0)return;
+      e.preventDefault();e.stopImmediatePropagation();idx=i;map.dragPan.disable();setTip(null);
+      try{el.setPointerCapture(e.pointerId);}catch{/* pointer already released */}
+    };
+    const apply=()=>{
+      if(!pending||idx<0)return;
+      const w=useApp.getState().whatif,p=pending,i=idx,track=w.track.slice();track[i]=p;pending=null;
+      useApp.getState().setWhatIf({track,fixes:w.fixes?w.fixes.map((f,k)=>k===i?{...f,lon:p[0],lat:p[1]}:f):null});
+    };
+    const move=(e:PointerEvent)=>{
+      if(idx<0){if(!useApp.getState().whatif.drawing)map.getCanvas().style.cursor=near(...local(e))>=0?'grab':'';return;}
+      const ll=map.unproject([...local(e)]);pending=[ll.lng,ll.lat];
+      raf||=requestAnimationFrame(()=>{raf=0;apply();});
+    };
+    // Flush on release so a quick drag never loses its final position.
+    const up=()=>{if(idx>=0){apply();idx=-1;map.dragPan.enable();map.getCanvas().style.cursor='';}};
+    el.addEventListener('pointerdown',down,true);el.addEventListener('pointermove',move,true);el.addEventListener('pointerup',up,true);el.addEventListener('pointercancel',up,true);
+    return()=>{el.removeEventListener('pointerdown',down,true);el.removeEventListener('pointermove',move,true);el.removeEventListener('pointerup',up,true);el.removeEventListener('pointercancel',up,true);cancelAnimationFrame(raf);map.dragPan.enable();};
+  },[scenarioId]);
   const advisory=latest(storm?.storm?.advisories,a=>a.issued,time);
   const radar=frameAt(storm?.radar?.frames,time,7),satellite=frameAt(storm?.satellite?.frames,time,40);
   const clock=(t:string)=>new Date(t).toLocaleString('en-US',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'UTC'})+' UTC';
@@ -153,9 +187,9 @@ export default function MapView(){
       {drawing&&<div className="drawing-hint"><span className="status-dot"/>Click points or drag to draw a storm track.<button onClick={()=>useApp.getState().setWhatIf({drawing:false})}>Finish drawing</button></div>}
       {highlight&&<div className="highlight-banner"><span>{highlight.label}</span><button onClick={()=>useApp.getState().clearHighlight()} aria-label="Clear highlighted hospitals"><X size={14}/></button></div>}
       {tip&&<div className="map-tooltip" style={{left:Math.min(tip.x+18,(host.current?.clientWidth??800)-240),top:Math.max(62,tip.y-70)}}><b>{tip.name}</b>{tip.detail&&<span>{tip.detail}</span>}<small>{tip.kind==='hospital'?'Click for inventory and actions':tip.kind==='plant'?'Click for manufacturing exposure':'USGS river observation'}</small><Prov kind={tip.provenance}/></div>}
-      <div className="map-bottom-left"><div className="stockout-legend"><span>{equityOpen?`Day ${abmDay} · ${policy==='rxradar'?'Fair allocation':policy}`:'Projected days to stockout'}</span><Prov kind="MODEL"/><div className="legend-swatches"><i/><span>60+</span><i/><span>30</span><i/><span>14</span><i/><span>7</span><i/><span>≤3</span></div></div>
-        <div className="map-data-stamp">{advisory&&shownLayers.storm&&<span>Forecast issued {clock(advisory.issued)}</span>}{radar&&shownLayers.radar&&<span>NEXRAD {clock(radar.t)}</span>}{satellite&&shownLayers.satellite&&<span>Terra daily composite · {new Date(Date.parse(satellite.t)-86400000).toISOString().slice(0,10)}</span>}{shownLayers.wind&&<span>Holland wind · archived pressure / RMW · MODEL</span>}</div>
-      </div>
+      {scenarioId!=='whatif'&&<div className="map-bottom-left"><div className="stockout-legend"><span>{equityOpen?`Day ${abmDay} · ${policy==='rxradar'?'Fair allocation':policy}`:'Projected days to stockout'}</span><Prov kind="MODEL"/><div className="legend-swatches"><i/><span>60+</span><i/><span>30</span><i/><span>14</span><i/><span>7</span><i/><span>≤3</span></div></div>
+        <div className="map-data-stamp">{advisory&&shownLayers.storm?<span>Forecast issued {clock(advisory.issued)}{radar&&shownLayers.radar?` · radar ${clock(radar.t).slice(-9)}`:''}</span>:satellite&&shownLayers.satellite?<span>Terra daily composite · {new Date(Date.parse(satellite.t)-86400000).toISOString().slice(0,10)}</span>:null}</div>
+      </div>}
       <div className="map-attribution"><button onClick={()=>useApp.getState().set({page:'sources'})}>Natural Earth · U.S. Census · NOAA</button><span>Local basemap</span><span>Routes &amp; transit buffers · SIMULATED</span></div>
       {error&&<div className="map-load-note">Map graphics unavailable. Reload this view to retry.</div>}
       {!ready&&<div className="map-load-note">Loading the replay archive…</div>}

@@ -1,7 +1,8 @@
 import type { Map } from 'maplibre-gl';
 import { activeScenario, type AppState } from '../store';
-import { latest } from './geometry';
 import { plantRisk } from './layers';
+import { stormState } from './storm';
+import { smoothTime } from '../lib/clock';
 import { riskCss } from '../lib/colors';
 import type { LngLat } from '../types';
 
@@ -26,15 +27,8 @@ function label(ctx:CanvasRenderingContext2D,text:string,x:number,y:number,color:
   ctx.lineWidth=3;ctx.strokeStyle='#091723d9';ctx.strokeText(text,x,y);ctx.fillStyle=color;ctx.fillText(text,x,y);
 }
 export function stormEye(s:AppState){
-  const weather=s.storms[s.scenarioId],advisory=latest(weather?.storm?.advisories,a=>a.issued,s.time);
-  if(s.scenarioId==='whatif'&&s.whatif.track.length){const p=s.whatif.track[Math.floor(s.whatif.track.length/2)];return {lon:p[0],lat:p[1],vmax:35+s.whatif.category*22,rmw:28};}
-  if(!advisory?.forecast.length || s.time-Date.parse(advisory.issued)>36*3600000)return null;
-  const forecast=advisory.forecast;
-  const a=latest(forecast,x=>x.t,s.time)??forecast[0];
-  const b=forecast.find(x=>Date.parse(x.t)>s.time)??a;
-  const t=Math.max(0,Math.min(1,(s.time-Date.parse(a.t))/Math.max(1,Date.parse(b.t)-Date.parse(a.t))));
-  const best=latest(weather?.storm?.bestTrack,p=>p.t,s.time);
-  return {lon:best?.lon??a.lon+(b.lon-a.lon)*t,lat:best?.lat??a.lat+(b.lat-a.lat)*t,vmax:best?.vmaxKt??a.vmaxKt,rmw:(best?.rmwNm??35)*1.852};
+  const st=stormState(s,smoothTime());
+  return st?{lon:st.lon,lat:st.lat,vmax:st.vmax,rmw:st.rmwKm}:null;
 }
 export function paintMapEffects(ctx:CanvasRenderingContext2D,map:Map,s:AppState,now:number,width:number,height:number){
   ctx.clearRect(0,0,width,height);
@@ -44,11 +38,11 @@ export function paintMapEffects(ctx:CanvasRenderingContext2D,map:Map,s:AppState,
   ctx.save();ctx.textAlign='center';
   for(const [name,lon,lat]of regions){
     const p=point(lon,lat);
-    if(inside(p.x,p.y)&&zoom<7.4)label(ctx,name,p.x,p.y,name.includes('OCEAN')||name.includes('GULF')?'#527382':'#63808b',zoom>5?11:9);
+    if(inside(p.x,p.y)&&zoom<7.4&&zoom>3.6)label(ctx,name,p.x,p.y,name.includes('OCEAN')||name.includes('GULF')?'#45626f':'#53707b',zoom>5?11:9);
   }
   for(const [name,lon,lat]of cities){
     const p=point(lon,lat);
-    if(inside(p.x,p.y)&&zoom>4.2){
+    if(inside(p.x,p.y)&&zoom>4.9){
       ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);ctx.fillStyle='#9badb4';ctx.fill();
       label(ctx,name,p.x,p.y-7,'#a6b9c2',zoom>6?12:10);
     }
@@ -67,7 +61,9 @@ export function paintMapEffects(ctx:CanvasRenderingContext2D,map:Map,s:AppState,
       ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.fillStyle='#0a2029';ctx.fill();ctx.strokeStyle='#c3f6f8';ctx.stroke();ctx.restore();
     }
   }
-  if(s.layers.plants)for(const plant of s.plants){
+  const placed:{x:number;y:number;w:number;h:number}[]=[];
+  const hit=(x:number,y:number,w:number,h:number)=>placed.some(b=>x<b.x+b.w+6&&x+w+6>b.x&&y<b.y+b.h+6&&y+h+6>b.y);
+  if(s.layers.plants)for(const plant of [...s.plants].sort((a,b)=>plantRisk(s,b.id)-plantRisk(s,a.id))){
     const hero=sc?.heroPlantIds.includes(plant.id),selected=s.selectedPlantId===plant.id;
     const p=point(plant.lon,plant.lat);
     if(!inside(p.x,p.y)||(!hero&&!selected))continue;
@@ -75,11 +71,16 @@ export function paintMapEffects(ctx:CanvasRenderingContext2D,map:Map,s:AppState,
     ctx.beginPath();ctx.arc(p.x,p.y,13+Math.sin(now*.002)*2,0,Math.PI*2);ctx.strokeStyle=color;ctx.globalAlpha=.5;ctx.lineWidth=1;ctx.stroke();ctx.globalAlpha=1;
     const text=plant.name.replace(' Healthcare','').replace(' Corporation','');
     ctx.font='600 11px "Inter Variable",sans-serif';const labelWidth=Math.max(154,ctx.measureText(text).width+20);
-    const x=p.x+18,y=p.y-27;
+    // Riskiest plants claim label space first; others shift down to clear it, or stay as rings only.
+    let x=p.x+18,y=p.y-27,tries=0;
+    while(hit(x,y,labelWidth,43)&&tries<3){y+=49;tries++;}
+    if(hit(x,y,labelWidth,43))continue;
+    placed.push({x,y,w:labelWidth,h:43});
+    if(tries){ctx.beginPath();ctx.moveTo(p.x+6,p.y);ctx.lineTo(x,y+21);ctx.strokeStyle='#375462';ctx.lineWidth=1;ctx.stroke();}
     ctx.fillStyle='#081824ed';ctx.strokeStyle='#375462';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(x,y,labelWidth,43,4);ctx.fill();ctx.stroke();
     ctx.fillStyle=color;ctx.fillRect(x,y+5,2,33);
     label(ctx,text,x+9,y+16,'#e5f0f3',11);
-    ctx.font='10px "JetBrains Mono Variable",monospace';ctx.fillStyle='#a9bdc6';ctx.fillText(Math.round(probability*100)+'% disruption · MODEL',x+9,y+32);
+    ctx.font='10px "JetBrains Mono Variable",monospace';ctx.fillStyle='#a9bdc6';ctx.fillText(Math.round(probability*100)+'% chance of disruption',x+9,y+32);
     if(s.shockwaveAt&&now>=s.shockwaveAt&&now-s.shockwaveAt<7000){
       const f=(now-s.shockwaveAt)/7000;ctx.beginPath();ctx.arc(p.x,p.y,10+f*width*.7,0,Math.PI*2);ctx.strokeStyle=`rgba(255,141,84,${(1-f)*.65})`;ctx.lineWidth=2;ctx.stroke();
     }

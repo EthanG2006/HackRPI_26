@@ -1,7 +1,8 @@
-import {useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {Pause,Play,SkipBack,Flag,ChevronRight} from 'lucide-react';
 import {useActiveScenario,useApp,SPEEDS} from '../store';
 import {fmtUtc} from '../lib/format';
+import {smoothTime} from '../lib/clock';
 import {Prov} from '../ui/Prov';
 import {goBeat} from '../presenter/beats';
 export default function Timeline(){
@@ -10,6 +11,15 @@ export default function Timeline(){
  const s=useApp.getState(), start=sc?Date.parse(sc.start):0, end=sc?Date.parse(sc.end):1;
  const replay=!!sc&&['helene','rocky-mount','maria'].includes(sc.id);
  const pct=Math.min(100,Math.max(0,(t-start)/Math.max(1,end-start)*100));
+ const bar=useRef<HTMLInputElement>(null);
+ // While playing, the playhead follows the smooth clock every frame instead of the ~8 Hz store ticks.
+ useEffect(()=>{
+   if(!playing)return;
+   let id=0;
+   const frame=()=>{const el=bar.current;if(el){const p=Math.min(100,Math.max(0,(smoothTime()-start)/Math.max(1,end-start)*100));el.value=String(start+(end-start)*p/100);el.style.background='linear-gradient(to right,#70e2ed '+p+'%, #263d49 '+p+'%)';}id=requestAnimationFrame(frame);};
+   id=requestAnimationFrame(frame);
+   return()=>cancelAnimationFrame(id);
+ },[playing,start,end]);
  function seek(next:number){
    s.setTime(next); s.setPlaying(false);
    if(sc?.alert){const cutoff=Date.parse(sc.alert.t);if(next<cutoff)s.resetAlert();else if(t<cutoff)s.fireAlert();}
@@ -20,7 +30,7 @@ export default function Timeline(){
     <button className="icon-button" aria-label="Rewind replay" disabled={!replay} onClick={()=>seek(start)}><SkipBack size={15}/></button>
     <select title="Replay speed" aria-label="Replay speed" value={speed} onChange={e=>s.setSpeed(Number(e.target.value))}>{SPEEDS.map(n=><option key={n} value={n}>{n}×</option>)}</select></div>
   <div className="scrub-area"><div className="scrub-caption"><span>{replay?'REPLAY CLOCK':sc?.id==='live'?'WEATHER SNAPSHOT':'SIMULATION CLOCK'}</span><b>{replay?fmtUtc(t,true):sc?.id==='live'?fmtUtc(s.live?.fetchedAt??t,true):'Scenario horizon · 90 days'}</b></div>
-   <div className="scrub-track"><div className="scrub-pins">{pins.map((e,i)=><i key={i} title={e.label} style={{left:Math.min(100,Math.max(0,(Date.parse(e.t)-start)/(end-start)*100))+'%'}}/>)}</div><input aria-label="Replay position" disabled={!replay} type="range" min={start} max={end} step={60000} value={start+(end-start)*pct/100} style={{background:'linear-gradient(to right,#70e2ed '+pct+'%, #263d49 '+pct+'%)'}} onChange={e=>seek(+e.target.value)}/></div></div>
+   <div className="scrub-track"><div className="scrub-pins">{pins.map((e,i)=><i key={i} title={e.label} style={{left:Math.min(100,Math.max(0,(Date.parse(e.t)-start)/(end-start)*100))+'%'}}/>)}</div><input ref={bar} aria-label="Replay position" disabled={!replay} type="range" min={start} max={end} step={60000} value={start+(end-start)*pct/100} style={{background:'linear-gradient(to right,#70e2ed '+pct+'%, #263d49 '+pct+'%)'}} onChange={e=>seek(+e.target.value)}/></div></div>
   <div className="timeline-end"><button className="quiet" onClick={()=>setEvents(!events)} disabled={!replay}><Flag size={14}/>Events</button><button className="quiet" onClick={()=>goBeat(beat>=8?1:Math.max(1,beat)+1)}>Next beat<ChevronRight size={15}/></button></div>
   {events&&replay&&<div className="event-list"><div className="section-heading"><h3>Replay events</h3><button onClick={()=>setEvents(false)}>Close</button></div>{sc.events.map((e,i)=><div key={i}><button onClick={()=>{seek(Date.parse(e.t));setEvents(false)}}><small>{fmtUtc(e.t)}</small><strong>{e.label}</strong></button><Prov kind={e.provenance} compact sourceIds={e.sourceIds}/></div>)}</div>}
  </footer>;

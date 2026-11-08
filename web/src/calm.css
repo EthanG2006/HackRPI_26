@@ -1,0 +1,29 @@
+/* Calm layer: context-aware chrome and purposeful motion on top of the workspace styles. */
+
+/* Bottom chrome makes room only when it has something to show; everything above glides with it. */
+.rx-app.impact-quiet { --bottom: 64px; }
+.rx-app.lab-mode { --bottom: 0px; }
+.impact-strip, .timeline { transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease; }
+.rx-app.impact-quiet .impact-strip { transform: translateY(40px); opacity: 0; pointer-events: none; }
+.rx-app.lab-mode .impact-strip, .rx-app.lab-mode .timeline { transform: translateY(150px); opacity: 0; pointer-events: none; }
+.right-rail, .sl-legend, .sl-playback, .map-bottom-left, .map-attribution, .alert-toast, .notes, .stockout-legend {
+  transition: bottom 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Quieter map furniture. */
+.map-data-stamp { opacity: 0.7; }
+.map-attribution { opacity: 0.55; transition: opacity 0.2s; }
+.map-attribution:hover { opacity: 1; }
+
+/* Gentle, consistent hover and press feedback everywhere. */
+.rx-app button { transition-property: background-color, border-color, color, opacity, box-shadow; transition-duration: 0.18s; transition-timing-function: ease; }
+
+/* Panels enter softly instead of popping. */
+@keyframes rx-soft-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.right-rail > * { animation: rx-soft-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.impact-strip strong { transition: color 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .impact-strip, .timeline, .right-rail, .sl-legend, .sl-playback, .map-bottom-left, .alert-toast { transition: none !important; }
+  .right-rail > * { animation: none; }
+}

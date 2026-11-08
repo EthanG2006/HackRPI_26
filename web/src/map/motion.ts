@@ -1,7 +1,8 @@
 import { TripsLayer } from '@deck.gl/geo-layers';
+import { COORDINATE_SYSTEM } from '@deck.gl/core';
 import { activeScenario, type AppState } from '../store';
-import { latest } from './geometry';
 import { supplyFlows, type Flow } from './layers';
+import type { StormState } from './storm';
 import { riskColor } from '../lib/colors';
 import type { LngLat } from '../types';
 
@@ -21,31 +22,27 @@ export function hollandWind(radiusKm:number,rmwKm:number,maxWindKt:number,pressu
   const q=(rmw/r)**b,coriolis=2*7.2921e-5*Math.sin(latitude*Math.PI/180),fr=coriolis*r/2;
   return Math.max(0,Math.sqrt(b*dp/rho*q*Math.exp(-q)+fr*fr)-fr);
 }
-export function windLayer(s:AppState):TripsLayer<ParticlePath>|null {
-  if(!s.layers.wind)return null;
-  const w=s.storms[s.scenarioId];
-  const observed=latest(w?.storm?.bestTrack,p=>p.t,s.time);
-  let lon=observed?.lon,lat=observed?.lat,maxWind=observed?.vmaxKt??0,pressure=observed?.mslpMb??970,rmw=(observed?.rmwNm??35)*1.852;
-  if(s.scenarioId==='whatif'&&s.whatif.track.length){
-    [lon,lat]=s.whatif.track[Math.floor(s.whatif.track.length/2)];maxWind=[0,74,90,105,125,145][s.whatif.category];pressure=1010-maxWind*.45;rmw=40;
-  }
-  if(lon===undefined||lat===undefined||maxWind<20)return null;
-  if(observed&&s.scenarioId!=='whatif'&&s.time-Date.parse(observed.t)>24*3600000)return null;
+/**
+ * Particles circulating in a storm-relative frame (metres from the eye). Moving the storm only changes
+ * `coordinateOrigin`, so the field glides every frame without rebuilding particle data.
+ */
+export function windLayer(st:StormState):TripsLayer<ParticlePath> {
   const paths:ParticlePath[]=[];
   for(let i=0;i<260;i++){
-    const radius=rmw*(.35+Math.sqrt(((i*113)%263)/263)*7.5);
-    const velocity=hollandWind(radius,rmw,maxWind,pressure,lat);
+    const radius=st.rmwKm*(.35+Math.sqrt(((i*113)%263)/263)*7.5);
+    const velocity=hollandWind(radius,st.rmwKm,st.vmax,st.pressure,st.lat);
     const path:ParticlePath['path']=[],times:number[]=[];
     const initial=i*2.3999632297;
     for(let j=0;j<=90;j++){
       const t=j*LOOP/90,angle=initial+t*80*velocity/(radius*1000);
-      path.push([lon+Math.cos(angle)*radius/(111.2*Math.cos(lat*Math.PI/180)),lat+Math.sin(angle)*radius/111.2,0]);
+      path.push([Math.cos(angle)*radius*1000,Math.sin(angle)*radius*1000,0]);
       times.push(t);
     }
-    paths.push({path,times,color:[143,224,237,Math.round(90+Math.min(1,velocity/45)*115)]});
+    paths.push({path,times,color:[168,226,234,Math.round(70+Math.min(1,velocity/45)*105)]});
   }
   return new TripsLayer<ParticlePath>({id:'holland-gpu-wind',data:paths,getPath:p=>p.path,getTimestamps:p=>p.times,getColor:p=>p.color,
-    widthMinPixels:.65,widthMaxPixels:1.05,getWidth:1,trailLength:5,fadeTrail:true,currentTime:0,opacity:.65});
+    coordinateSystem:COORDINATE_SYSTEM.METER_OFFSETS,coordinateOrigin:[st.lon,st.lat,0],
+    widthMinPixels:.65,widthMaxPixels:1.05,getWidth:1,trailLength:5,fadeTrail:true,currentTime:0,opacity:.6});
 }
 export function flowPath(flow:Flow):[number,number,number][] {
   const path:[number,number,number][]=[];
@@ -56,12 +53,17 @@ export function flowPath(flow:Flow):[number,number,number][] {
   }
   return path;
 }
+let flowKey='',flowCache:TripsLayer<ParticlePath>|null=null;
 export function networkMotion(s:AppState,zoom:number):TripsLayer<ParticlePath>|null {
   if(!s.layers.network)return null;
   const sc=activeScenario(s);
   const day=sc?(s.time-Date.parse(sc.day0))/86400000:-30;
+  const flows=supplyFlows(s,zoom);
+  // Rebuild particle paths only when risk or the drain stage visibly changes.
+  const key=flows.length+'|'+flows.map(f=>Math.round(f.risk*20)).join('')+'|'+Math.round(Math.max(-1,Math.min(12,day))*3);
+  if(key===flowKey&&flowCache)return flowCache;
   const paths:ParticlePath[]=[];
-  for(const flow of supplyFlows(s,zoom)){
+  for(const flow of flows){
     // A plant-to-distributor lane drains first. Distributor buffers deplete after four days.
     const remaining=1-flow.risk*Math.max(0,Math.min(1,(day-(flow.stage==='upstream'?0:4))/7));
     const path=flowPath(flow),phase=(flow.id*17)%60;
@@ -71,7 +73,8 @@ export function networkMotion(s:AppState,zoom:number):TripsLayer<ParticlePath>|n
       paths.push({path,times:path.map((_,i)=>start+i*1.5),color});
     }
   }
-  return new TripsLayer<ParticlePath>({id:'moving-shipments',data:paths,getPath:p=>p.path,getTimestamps:p=>p.times,getColor:p=>p.color,
-    getWidth:1.75,widthUnits:'pixels',trailLength:2.3,fadeTrail:true,currentTime:0,opacity:.8});
+  flowKey=key;
+  return flowCache=new TripsLayer<ParticlePath>({id:'moving-shipments',data:paths,getPath:p=>p.path,getTimestamps:p=>p.times,getColor:p=>p.color,
+    getWidth:1.6,widthUnits:'pixels',trailLength:2.3,fadeTrail:true,currentTime:0,opacity:.7});
 }
 export function motionTime(now:number){return (now/1000*5)%LOOP;}

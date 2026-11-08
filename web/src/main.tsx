@@ -8,6 +8,8 @@ import App from './App';
 import { loadAll } from './data/load';
 
 loadAll();
+// Dev-only handle for debugging in the browser console.
+if (import.meta.env.DEV) import('./store').then(({ useApp }) => Object.assign(window, { rx: useApp }));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

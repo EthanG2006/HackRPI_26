@@ -22,7 +22,11 @@ import type {
   StormFile,
   TrendsFile,
   WhatIfResult,
+  LabConfig,
+  LabFieldId,
+  StormFix,
 } from './types';
+import { CATEGORY_VMAX, DEFAULT_LAB } from './sim/lab/params';
 
 export type LayerId =
   | 'storm' // cones + best track + eye spiral
@@ -54,6 +58,15 @@ export interface WhatIfState {
   running: boolean;
   result: WhatIfResult | null;
   error?: string;
+  // ---- Storm Lab ----
+  lab: LabConfig; // physics + ensemble settings
+  fixes: StormFix[] | null; // per-point record from a historical preset (aligned with track)
+  presetId: string | null;
+  startTime?: string; // ISO time of hour 0 (presets)
+  field: LabFieldId; // hazard field drawn on the map
+  hour: number | null; // playback hour; null = storm totals
+  labPlaying: boolean;
+  auto: boolean; // re-run automatically when a setting changes
 }
 
 export interface AppState {
@@ -231,7 +244,8 @@ export const useApp = create<AppState>()((set, get) => ({
   abmDay: 0,
   abmPlaying: false,
 
-  whatif: { drawing: false, track: [], category: 4, forwardSpeedKt: 12, running: false, result: null },
+  whatif: { drawing: false, track: [], category: 4, forwardSpeedKt: 12, running: false, result: null,
+    lab: DEFAULT_LAB, fixes: null, presetId: null, field: 'p64', hour: null, labPlaying: false, auto: true },
 
   api: { online: false, anthropic: false, checkedAt: 0 },
   audit: loadAudit(),
@@ -267,7 +281,14 @@ export const useApp = create<AppState>()((set, get) => ({
     set({ alertFiredAt: now, shockwaveAt: now + 600 });
   },
   resetAlert: () => set({ alertFiredAt: null, shockwaveAt: null }),
-  setWhatIf: (patch) => set((s) => ({ whatif: { ...s.whatif, ...patch } })),
+  setWhatIf: (patch) => set((s) => {
+    const next = { ...s.whatif, ...patch };
+    // Callers that only know "category" (copilot, presenter) set the lab intensity through it.
+    if (patch.category && !patch.lab) next.lab = { ...next.lab, vmaxKt: CATEGORY_VMAX[patch.category] };
+    // A new track without its own fixes is a drawn storm: drop the historical record.
+    if (patch.track && !('fixes' in patch)) { next.fixes = null; next.presetId = null; next.startTime = undefined; }
+    return { whatif: next };
+  }),
   addAudit: (entry) => {
     const full: AuditEntry = { ...entry, id: crypto.randomUUID(), at: new Date().toISOString() };
     const audit = [full, ...get().audit];

@@ -1,0 +1,42 @@
+{
+  "season": 2026,
+  "basin": "AL",
+  "leadHours": [
+    0,
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    96,
+    120
+  ],
+  "coneRadiusNm": [
+    0,
+    25,
+    39,
+    49,
+    62,
+    77,
+    95,
+    134,
+    200
+  ],
+  "intensityErrorKt": [
+    1.3,
+    5.0,
+    7.1,
+    8.5,
+    9.9,
+    10.8,
+    11.6,
+    13.3,
+    14.7
+  ],
+  "sourceIds": [
+    "nhc_cone2026",
+    "nhc_verif_5yr"
+  ],
+  "note": "coneRadiusNm: NHC 2026 Atlantic 2/3-probability track-forecast circle radii (nm), based on 2021-2025 errors; https://www.nhc.noaa.gov/aboutcone.shtml (0 h set to 0). intensityErrorKt: NHC official Atlantic 5-year (2021-2025) mean absolute intensity forecast error, all tropical cyclones, kt; https://www.nhc.noaa.gov/verification/pdfs/OFCL_5-yr_averages.pdf (best-track database as of 5/18/26); 0 h value is 1.3 kt. Track errors in same file (nm): 6.9,22.3,33.6,44.0,55.9,70.5,86.4,124.9,181.0."
+}

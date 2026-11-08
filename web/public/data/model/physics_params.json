@@ -1,0 +1,414 @@
+[
+ {
+  "key": "holland_b_min",
+  "value": 1.0,
+  "unit": "-",
+  "label": "Holland B lower bound",
+  "citation": "Holland, G. J., 1980: An analytic model of the wind and pressure profiles in hurricanes. Mon. Wea. Rev., 108, 1212-1218.",
+  "sourceIds": [
+   "holland1980"
+  ],
+  "note": "Range [1.0, 2.5] attributed to Holland (1980) via secondary source (NHESS 2019 discussion comment); original text not read. Vickery et al. (2000) suggest [0.5, 2.5]. UNVERIFIED against the 1980 paper itself."
+ },
+ {
+  "key": "holland_b_max",
+  "value": 2.5,
+  "unit": "-",
+  "label": "Holland B upper bound",
+  "citation": "Holland, G. J., 1980: An analytic model of the wind and pressure profiles in hurricanes. Mon. Wea. Rev., 108, 1212-1218.",
+  "sourceIds": [
+   "holland1980"
+  ],
+  "note": "See holland_b_min. UNVERIFIED against the 1980 paper itself."
+ },
+ {
+  "key": "rmw_w06_a",
+  "value": 46.4,
+  "unit": "km",
+  "label": "W06 RMW scale",
+  "citation": "Willoughby, H. E., R. W. R. Darling, and M. E. Rahn, 2006: Parametric representation of the primary hurricane vortex. Part II: A new family of sectionally continuous profiles. Mon. Wea. Rev., 134, 1102-1120, Eq. 7a. doi:10.1175/MWR3106.1",
+  "sourceIds": [
+   "willoughby2006"
+  ],
+  "note": "R_max(km)=a*exp(b*Vmax+c*phi); Vmax in m/s, phi = latitude in degrees (north). Verified in paper text Eq. 7a (PDF extraction dropped the phi symbol; form is 46.4 exp(-0.0155 Vmax + 0.0169 phi)). RMSE order 20 km (large scatter)."
+ },
+ {
+  "key": "rmw_w06_b",
+  "value": -0.0155,
+  "unit": "1/(m/s)",
+  "label": "W06 RMW Vmax coefficient",
+  "citation": "Willoughby, H. E., R. W. R. Darling, and M. E. Rahn, 2006: Parametric representation of the primary hurricane vortex. Part II: A new family of sectionally continuous profiles. Mon. Wea. Rev., 134, 1102-1120, Eq. 7a. doi:10.1175/MWR3106.1",
+  "sourceIds": [
+   "willoughby2006"
+  ],
+  "note": "R_max(km)=a*exp(b*Vmax+c*phi); Vmax in m/s, phi = latitude in degrees (north). Verified in paper text Eq. 7a (PDF extraction dropped the phi symbol; form is 46.4 exp(-0.0155 Vmax + 0.0169 phi)). RMSE order 20 km (large scatter)."
+ },
+ {
+  "key": "rmw_w06_c",
+  "value": 0.0169,
+  "unit": "1/deg lat",
+  "label": "W06 RMW latitude coefficient",
+  "citation": "Willoughby, H. E., R. W. R. Darling, and M. E. Rahn, 2006: Parametric representation of the primary hurricane vortex. Part II: A new family of sectionally continuous profiles. Mon. Wea. Rev., 134, 1102-1120, Eq. 7a. doi:10.1175/MWR3106.1",
+  "sourceIds": [
+   "willoughby2006"
+  ],
+  "note": "R_max(km)=a*exp(b*Vmax+c*phi); Vmax in m/s, phi = latitude in degrees (north). Verified in paper text Eq. 7a (PDF extraction dropped the phi symbol; form is 46.4 exp(-0.0155 Vmax + 0.0169 phi)). RMSE order 20 km (large scatter)."
+ },
+ {
+  "key": "kd_alpha",
+  "value": 0.095,
+  "unit": "1/h",
+  "label": "Kaplan-DeMaria decay rate (southern)",
+  "citation": "Kaplan, J., and M. DeMaria, 1995: A simple empirical model for predicting the decay of tropical cyclone winds after landfall. J. Appl. Meteor., 34, 2499-2512. Southern-sample parameters as tabulated in Kaplan, J., and M. DeMaria, 2001: On the decay of tropical cyclone winds after landfall in the New England area. J. Appl. Meteor., 40, 280-286 (Table 2).",
+  "sourceIds": [
+   "kd1995",
+   "kd2001"
+  ],
+  "note": "V(t)=Vb+(R*V0-Vb)*exp(-alpha*t), t hours after landfall, V in kt. Southern (south of 37N) model: R=0.9, alpha=0.095 /h, Vb=26.7 kt (Table 2 of KD01, read from PDF). Northern model: R=0.9, alpha=0.187, Vb=29.6. R=0.9 also confirmed in NHC JHT final report (Kaplan 2007)."
+ },
+ {
+  "key": "kd_r",
+  "value": 0.9,
+  "unit": "-",
+  "label": "Landfall roughness reduction factor R",
+  "citation": "Kaplan, J., and M. DeMaria, 1995: A simple empirical model for predicting the decay of tropical cyclone winds after landfall. J. Appl. Meteor., 34, 2499-2512. Southern-sample parameters as tabulated in Kaplan, J., and M. DeMaria, 2001: On the decay of tropical cyclone winds after landfall in the New England area. J. Appl. Meteor., 40, 280-286 (Table 2).",
+  "sourceIds": [
+   "kd1995",
+   "kd2001"
+  ],
+  "note": "V(t)=Vb+(R*V0-Vb)*exp(-alpha*t), t hours after landfall, V in kt. Southern (south of 37N) model: R=0.9, alpha=0.095 /h, Vb=26.7 kt (Table 2 of KD01, read from PDF). Northern model: R=0.9, alpha=0.187, Vb=29.6. R=0.9 also confirmed in NHC JHT final report (Kaplan 2007)."
+ },
+ {
+  "key": "kd_vb",
+  "value": 26.7,
+  "unit": "kt",
+  "label": "Background wind Vb (southern)",
+  "citation": "Kaplan, J., and M. DeMaria, 1995: A simple empirical model for predicting the decay of tropical cyclone winds after landfall. J. Appl. Meteor., 34, 2499-2512. Southern-sample parameters as tabulated in Kaplan, J., and M. DeMaria, 2001: On the decay of tropical cyclone winds after landfall in the New England area. J. Appl. Meteor., 40, 280-286 (Table 2).",
+  "sourceIds": [
+   "kd1995",
+   "kd2001"
+  ],
+  "note": "V(t)=Vb+(R*V0-Vb)*exp(-alpha*t), t hours after landfall, V in kt. Southern (south of 37N) model: R=0.9, alpha=0.095 /h, Vb=26.7 kt (Table 2 of KD01, read from PDF). Northern model: R=0.9, alpha=0.187, Vb=29.6. R=0.9 also confirmed in NHC JHT final report (Kaplan 2007)."
+ },
+ {
+  "key": "wpr_pairs",
+  "value": 0,
+  "unit": "kt,hPa",
+  "label": "Atlantic wind-pressure pairs (Dvorak)",
+  "citation": "Dvorak, V. F., 1984: Tropical cyclone intensity analysis using satellite data. NOAA Tech. Rep. NESDIS 11. Atlantic CI table as reproduced in NOAA/AOML HRD FAQ H1 and Velden et al. 2006, Bull. Amer. Meteor. Soc., 87, 1195-1210; table values read from Wikipedia 'Dvorak technique' (cites NOAA Dvorak CI chart 2005).",
+  "sourceIds": [
+   "dvorak1984",
+   "velden2006"
+  ],
+  "note": "[[35, 1005], [45, 1000], [55, 994], [65, 987], [77, 979], [90, 970], [102, 960], [115, 948], [127, 935], [140, 921], [155, 906]] = [Vmax_kt, Pc_hPa], CI 2.5-7.5. Values for CI 2.5-5.5 confirmed on NOAA AOML page via search summary; CI 6.0-7.5 from Wikipedia table. Original 1984 report not read: attribution to 1984 vs 1995 table UNVERIFIED."
+ },
+ {
+  "key": "wpr_a",
+  "value": 0.0054,
+  "unit": "hPa/kt^b",
+  "label": "dP = a*Vmax^b coefficient a",
+  "citation": "Dvorak, V. F., 1984: Tropical cyclone intensity analysis using satellite data. NOAA Tech. Rep. NESDIS 11. Atlantic CI table as reproduced in NOAA/AOML HRD FAQ H1 and Velden et al. 2006, Bull. Amer. Meteor. Soc., 87, 1195-1210; table values read from Wikipedia 'Dvorak technique' (cites NOAA Dvorak CI chart 2005). (fit)",
+  "sourceIds": [
+   "dvorak1984"
+  ],
+  "note": "Least-squares fit in log-log space to the 11 Dvorak Atlantic pairs (wpr_pairs), dP=1010-Pc; RMSE 3.3 hPa. Fit by us, not from the paper."
+ },
+ {
+  "key": "wpr_b",
+  "value": 1.9717,
+  "unit": "-",
+  "label": "dP = a*Vmax^b exponent b",
+  "citation": "Dvorak, V. F., 1984: Tropical cyclone intensity analysis using satellite data. NOAA Tech. Rep. NESDIS 11. Atlantic CI table as reproduced in NOAA/AOML HRD FAQ H1 and Velden et al. 2006, Bull. Amer. Meteor. Soc., 87, 1195-1210; table values read from Wikipedia 'Dvorak technique' (cites NOAA Dvorak CI chart 2005). (fit)",
+  "sourceIds": [
+   "dvorak1984"
+  ],
+  "note": "Least-squares fit in log-log space to the 11 Dvorak Atlantic pairs (wpr_pairs), dP=1010-Pc; RMSE 3.3 hPa. Fit by us, not from the paper."
+ },
+ {
+  "key": "sfc_factor_water",
+  "value": 0.9,
+  "unit": "-",
+  "label": "Flight-level(700 hPa)/boundary-layer to 10 m wind reduction, eyewall, over water",
+  "citation": "Franklin, J. L., M. L. Black, and K. Valde, 2003: GPS dropwindsonde wind profiles in hurricanes and their operational implications. Wea. Forecasting, 18, 32-44. NHC: https://www.nhc.noaa.gov/aboutwindprofile.shtml",
+  "sourceIds": [
+   "franklin2003"
+  ],
+  "note": "NHC page: surface/700 hPa ratio is 0.91 in eyewall (0.88 at RMW), 0.78 outer vortex; operational 850 hPa factor 0.80; operational 700 hPa 0.90. Applied to gradient/700 hPa wind. Use 0.78 outside the eyewall (see sfc_factor_water_outer)."
+ },
+ {
+  "key": "sfc_factor_water_outer",
+  "value": 0.78,
+  "unit": "-",
+  "label": "Surface/700 hPa ratio, outer vortex",
+  "citation": "Franklin et al. 2003, Wea. Forecasting, 18, 32-44; NHC aboutwindprofile",
+  "sourceIds": [
+   "franklin2003"
+  ],
+  "note": "From NHC page: R700=0.78 in outer vortex."
+ },
+ {
+  "key": "land_factor",
+  "value": 0.78,
+  "unit": "-",
+  "label": "Sustained 10 m wind over open land relative to marine exposure",
+  "citation": "Powell, M. D., S. H. Houston, and T. A. Reinhold, 1996: Hurricane Andrew landfall in South Florida. Part I. Wea. Forecasting, 11, 304-328 (Eq. 3 friction-velocity roughness correction, u* ratio ~ (z0a/z0b)^0.0706 as quoted in NOAA HRD wind-roughness-correction document).",
+  "sourceIds": [
+   "powell1996"
+  ],
+  "note": "DERIVED by us: u* ratio (0.03/0.0003)^0.0706=1.384 times log-law ln(10/0.03)/ln(10/0.0003)=0.563 gives 0.78; z0=0.03 m open terrain (HRD standard), 0.0003 m marine is our assumption. UNVERIFIED: Eq. 3 exponent taken from secondary summary, not the paper."
+ },
+ {
+  "key": "asym_alpha",
+  "value": 0.55,
+  "unit": "-",
+  "label": "Fraction of translation velocity added to symmetric surface wind",
+  "citation": "Lin, N., and D. Chavas, 2012: On hurricane parametric wind and applications in storm surge modeling. J. Geophys. Res., 117, D09120. doi:10.1029/2011JD017126",
+  "sourceIds": [
+   "lin2012"
+  ],
+  "note": "Reduction factor 0.55 and counter-clockwise rotation 20 deg of the translation vector (per paper abstract page as cited by later papers; paper full text not accessible)."
+ },
+ {
+  "key": "asym_rotation_deg",
+  "value": 20,
+  "unit": "deg",
+  "label": "CCW rotation of translation vector",
+  "citation": "Lin, N., and D. Chavas, 2012: On hurricane parametric wind and applications in storm surge modeling. J. Geophys. Res., 117, D09120. doi:10.1029/2011JD017126",
+  "sourceIds": [
+   "lin2012"
+  ],
+  "note": "See asym_alpha. Positive = counter-clockwise from storm heading (NH)."
+ },
+ {
+  "key": "inflow_deg_water",
+  "value": 22.6,
+  "unit": "deg",
+  "label": "Mean surface inflow angle over water",
+  "citation": "Zhang, J. A., and E. W. Uhlhorn, 2012: Hurricane sea surface inflow angle and an observation-based parametric model. Mon. Wea. Rev., 140, 3587-3605. doi:10.1175/MWR-D-11-00339.1",
+  "sourceIds": [
+   "zhang2012"
+  ],
+  "note": "Mean axisymmetric inflow angle 22.6 +/- 2.2 deg (95% CI) from >1600 GPS sondes (abstract). Range 18-30 deg depending on radius."
+ },
+ {
+  "key": "inflow_deg_land",
+  "value": 35,
+  "unit": "deg",
+  "label": "Surface inflow angle over land",
+  "citation": "Qualitative support: Powell, M. D., 1982: The transition of the Hurricane Frederic boundary-layer wind field from the open Gulf of Mexico to landfall. Mon. Wea. Rev., 110, 1912-1932; Kepert (Hurricane Danny analysis); Hlywiak and Nolan 2022",
+  "sourceIds": [
+   "powell1982"
+  ],
+  "note": "UNVERIFIED: literature confirms inflow angle increases over land due to friction; no definitive number found. 35 deg is a defensible mid value (water value + roughly 10-15 deg)."
+ },
+ {
+  "key": "rc_t0_a",
+  "value": -1.1,
+  "unit": "in/day",
+  "label": "R-CLIPER T0 A",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "SIGN RESTORED: the PDF text layer drops AMS minus glyphs. Signs set so the R-CLIPER profile matches the TRMM climatology it was fit to (Lonfat et al. 2004): the rain maximum contracts toward the eyewall and intensifies with storm strength. With U = 1 + (Vm-35)/33 this gives Tm = 3.2 in/day at rm = 52 km for a 35-kt storm and Tm = 14 in/day at rm = 22 km for 110 kt; the all-positive reading would push rm outward with intensity (77 -> 107 km), which contradicts the climatology. Verify against Table 2 of the paper when possible. Original note: R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_t0_b",
+  "value": 3.96,
+  "unit": "in/day",
+  "label": "R-CLIPER T0 B",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_tm_a",
+  "value": -1.6,
+  "unit": "in/day",
+  "label": "R-CLIPER TM A",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "SIGN RESTORED: the PDF text layer drops AMS minus glyphs. Signs set so the R-CLIPER profile matches the TRMM climatology it was fit to (Lonfat et al. 2004): the rain maximum contracts toward the eyewall and intensifies with storm strength. With U = 1 + (Vm-35)/33 this gives Tm = 3.2 in/day at rm = 52 km for a 35-kt storm and Tm = 14 in/day at rm = 22 km for 110 kt; the all-positive reading would push rm outward with intensity (77 -> 107 km), which contradicts the climatology. Verify against Table 2 of the paper when possible. Original note: R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_tm_b",
+  "value": 4.8,
+  "unit": "in/day",
+  "label": "R-CLIPER TM B",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_rm_a",
+  "value": 64.5,
+  "unit": "km",
+  "label": "R-CLIPER RM A",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_rm_b",
+  "value": -13.0,
+  "unit": "km",
+  "label": "R-CLIPER RM B",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "SIGN RESTORED: the PDF text layer drops AMS minus glyphs. Signs set so the R-CLIPER profile matches the TRMM climatology it was fit to (Lonfat et al. 2004): the rain maximum contracts toward the eyewall and intensifies with storm strength. With U = 1 + (Vm-35)/33 this gives Tm = 3.2 in/day at rm = 52 km for a 35-kt storm and Tm = 14 in/day at rm = 22 km for 110 kt; the all-positive reading would push rm outward with intensity (77 -> 107 km), which contradicts the climatology. Verify against Table 2 of the paper when possible. Original note: R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_re_a",
+  "value": 150,
+  "unit": "km",
+  "label": "R-CLIPER RE A",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_re_b",
+  "value": -16.0,
+  "unit": "km",
+  "label": "R-CLIPER RE B",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "SIGN RESTORED: the PDF text layer drops AMS minus glyphs. Signs set so the R-CLIPER profile matches the TRMM climatology it was fit to (Lonfat et al. 2004): the rain maximum contracts toward the eyewall and intensifies with storm strength. With U = 1 + (Vm-35)/33 this gives Tm = 3.2 in/day at rm = 52 km for a 35-kt storm and Tm = 14 in/day at rm = 22 km for 110 kt; the all-positive reading would push rm outward with intensity (77 -> 107 km), which contradicts the climatology. Verify against Table 2 of the paper when possible. Original note: R(r)=T0+(Tm-T0)*r/rm for r<rm; R(r)=Tm*exp(-(r-rm)/re) for r>=rm. Parameters linear in U: T0=a1+b1*U, Tm=a2+b2*U, rm=a3+b3*U, re=a4+b4*U. Values here are the bias-corrected (operational NHC) rows of Table 2 (a1=1.10, b1=3.96 in/day; a2=1.60, b2=4.80 in/day; a3=64.5, b3=13.0 km; a4=150, b4=16.0 km). Preliminary TRMM-only set (better over water per the paper): a1=2.11,b1=3.63; a2=2.73,b2=4.24; a3=69.1,b3=8.49; a4=215,b4=35.8. Read from paper PDF text; the table top-vs-bottom rows are assigned from the caption (bottom four rows are bias-corrected, used by NHC). NHC practice also doubles R-CLIPER for small amounts per Marchok JHT report."
+ },
+ {
+  "key": "rc_u_def",
+  "value": 0,
+  "unit": "-",
+  "label": "Normalized intensity U for R-CLIPER",
+  "citation": "Tuleya, R. E., M. DeMaria, and R. J. Kuligowski, 2007: Evaluation of GFDL and simple statistical model rainfall forecasts for U.S. landfalling tropical storms. Wea. Forecasting, 22, 56-70, Table 2 and Eqs. 3-5. doi:10.1175/WAF972.1",
+  "sourceIds": [
+   "tuleya2007"
+  ],
+  "note": "U = 1 + (Vm - 35)/33 with Vm in kt (Eq. 5). The alternative reading U = (Vm-35)/33 gives negative central rain rates at 35 kt with these coefficients, so it is rejected. U = 1 + (Vm - 35)/33, Vm = max sustained wind in knots (Eq. 5). UNVERIFIED in the exact form: PDF text extraction lost the operators ('U 1 Vm 3533'); the form 1+(Vm-35)/33 matches my recollection of the operational code, but U=(Vm-35)/33 is the alternative reading. Check Eq. 5 visually in the paper before relying on it."
+ },
+ {
+  "key": "phram_shear_amp",
+  "value": 0.04,
+  "unit": "fraction of azimuthal-mean rain per m/s shear",
+  "label": "PHRaM wavenumber-1 rain asymmetry amplitude per unit shear",
+  "citation": "Lonfat, M., R. Rogers, T. Marchok, and F. D. Marks Jr., 2007: A parametric model for predicting hurricane rainfall. Mon. Wea. Rev., 135, 3086-3097. doi:10.1175/MWR3433.1 (formulation also in Lonfat et al., 27th Conf. Hurricanes Trop. Meteor., 12.5, AMS 2006)",
+  "sourceIds": [
+   "lonfat2007"
+  ],
+  "note": "Formulation (verified): R_tot=R_RCLIPER+R_shear+R_topo; R_shear(r,theta)=sum_{i=1,2}[c_i(r)cos(i*theta)+d_i(r)sin(i*theta)], coefficients from TRMM composites stratified by 850-200 hPa shear (Lonfat 2004). NH maximum downshear-left; shear dominates asymmetry above ~5 m/s. UNVERIFIED value: published c_i, d_i tables not accessible; 0.04 per m/s (i.e. ~0.4 of mean at 10 m/s, capped near 0.5) is our defensible placeholder."
+ },
+ {
+  "key": "tctor_r_min_km",
+  "value": 160,
+  "unit": "km",
+  "label": "TC tornado favored radial band, inner",
+  "citation": "Schultz, L. A., and D. J. Cecil, 2009: Tropical cyclone tornadoes, 1950-2007. Mon. Wea. Rev., 137, 3471-3484. doi:10.1175/2009MWR2896.1; McCaul, E. W., Jr., 1991: Buoyancy and shear characteristics of hurricane-tornado environments. Mon. Wea. Rev., 119, 1954-1978; numbers from Schultz and Cecil 2006 AMS conf. paper 11C.5 (ams.confex.com/ams/pdfpapers/137715.pdf)",
+  "sourceIds": [
+   "schultz2009",
+   "mccaul1991"
+  ],
+  "note": "Novlan-Gray/Gentry significant sector 100-250 mi (160-400 km) and 30-120 deg from motion, as summarized in Schultz & Cecil 2006 conf. paper. McCaul outer-rainband tornadoes ~200-400 km; core tornadoes inside. Secondary source for numbers; Schultz & Cecil 2009 full text not read."
+ },
+ {
+  "key": "tctor_r_max_km",
+  "value": 400,
+  "unit": "km",
+  "label": "TC tornado favored radial band, outer",
+  "citation": "Schultz, L. A., and D. J. Cecil, 2009: Tropical cyclone tornadoes, 1950-2007. Mon. Wea. Rev., 137, 3471-3484. doi:10.1175/2009MWR2896.1; McCaul, E. W., Jr., 1991: Buoyancy and shear characteristics of hurricane-tornado environments. Mon. Wea. Rev., 119, 1954-1978; numbers from Schultz and Cecil 2006 AMS conf. paper 11C.5 (ams.confex.com/ams/pdfpapers/137715.pdf)",
+  "sourceIds": [
+   "schultz2009",
+   "mccaul1991"
+  ],
+  "note": "See tctor_r_min_km."
+ },
+ {
+  "key": "tctor_quadrant_deg",
+  "value": 75,
+  "unit": "deg clockwise from storm heading",
+  "label": "Bearing of peak TC tornado frequency",
+  "citation": "Schultz, L. A., and D. J. Cecil, 2009: Tropical cyclone tornadoes, 1950-2007. Mon. Wea. Rev., 137, 3471-3484. doi:10.1175/2009MWR2896.1; McCaul, E. W., Jr., 1991: Buoyancy and shear characteristics of hurricane-tornado environments. Mon. Wea. Rev., 119, 1954-1978; numbers from Schultz and Cecil 2006 AMS conf. paper 11C.5 (ams.confex.com/ams/pdfpapers/137715.pdf)",
+  "sourceIds": [
+   "schultz2009",
+   "mccaul1991"
+  ],
+  "note": "Midpoint of the 30-120 deg sector from the storm path (right-front quadrant favored; McCaul 1991). Edwards (2010): 68% of reports NE of center relative to north."
+ },
+ {
+  "key": "tctor_peak_hours",
+  "value": 24,
+  "unit": "h after landfall",
+  "label": "Peak of TC tornado frequency",
+  "citation": "Schultz, L. A., and D. J. Cecil, 2009: Tropical cyclone tornadoes, 1950-2007. Mon. Wea. Rev., 137, 3471-3484. doi:10.1175/2009MWR2896.1; McCaul, E. W., Jr., 1991: Buoyancy and shear characteristics of hurricane-tornado environments. Mon. Wea. Rev., 119, 1954-1978; numbers from Schultz and Cecil 2006 AMS conf. paper 11C.5 (ams.confex.com/ams/pdfpapers/137715.pdf)",
+  "sourceIds": [
+   "schultz2009"
+  ],
+  "note": "Schultz & Cecil 2006: maximum signal 12-48 h after landfall in all range bins; inner 300 km peaks within 12 h; outer rainband peaks earlier but extends to 48-72 h. 24 h is a mid-value. UNVERIFIED as a single number."
+ },
+ {
+  "key": "tctor_decay_hours",
+  "value": 72,
+  "unit": "h after landfall",
+  "label": "Time by which TC tornado activity has largely ceased",
+  "citation": "Schultz & Cecil 2006 conf. paper 11C.5",
+  "sourceIds": [
+   "schultz2009"
+  ],
+  "note": "Tornadoes occur out to about 72 h after landfall (rarely up to 5 days). If exponential decay is needed use e-folding ~24-36 h; UNVERIFIED."
+ },
+ {
+  "key": "rain_flood_in",
+  "value": 6,
+  "unit": "in",
+  "label": "Storm-total rainfall above which flash/riverine flooding becomes likely in small steep basins",
+  "citation": "NWS River Forecast Center flash flood guidance concept (1-, 3-, 6-h FFG; steep/urban 1-2 in/h); WPC Excessive Rainfall Outlook is built on exceedance of FFG.",
+  "sourceIds": [
+   "nwsffg"
+  ],
+  "note": "UNVERIFIED: no authoritative single storm-total inch threshold found; FFG is basin- and duration-specific. 6 in is a conservative screening value."
+ },
+ {
+  "key": "rho_air",
+  "value": 1.15,
+  "unit": "kg/m3",
+  "label": "Near-surface air density in tropical cyclone environment",
+  "citation": "Ideal gas law: p=1010 hPa, T=28 C, q~22 g/kg gives 1.153 kg/m3 (ISA standard is 1.225).",
+  "sourceIds": [
+   "idealgas"
+  ],
+  "note": "Computed, not from a paper."
+ },
+ {
+  "key": "p_env_hpa",
+  "value": 1010,
+  "unit": "hPa",
+  "label": "Environmental pressure",
+  "citation": "Specified by project; consistent with Holland (1980) outer-pressure convention for the Atlantic.",
+  "sourceIds": [
+   "holland1980"
+  ],
+  "note": "Project convention; Dvorak pairs in wpr_pairs were fit against 1010."
+ },
+ {
+  "key": "oro_upslope_c",
+  "value": 37,
+  "unit": "mm/h per m/s of ascent",
+  "label": "Orographic rain coefficient (upslope model)",
+  "citation": "Smith, R. B., 1979: The influence of mountains on the atmosphere. Adv. Geophys., 21, 87-230 (upslope model P = E·rho·q_s·(U·grad h)); PHRaM topographic term, Lonfat et al. 2007, Mon. Wea. Rev., 135, 3086-3097.",
+  "sourceIds": [],
+  "note": "Derived, not fitted: c = E·rho·q_s·3600 with precipitation efficiency E = 0.5, air density rho = 1.15 kg/m3 and tropical boundary-layer saturation mixing ratio q_s = 0.018 kg/kg -> 37 mm/h per m/s of forced ascent; capped at 60 mm/h. E is the main uncertainty (0.3-0.9 in the literature); exposed as a lab setting. Terrain slope from a 0.1-degree grid underestimates steep escarpments."
+ }
+]

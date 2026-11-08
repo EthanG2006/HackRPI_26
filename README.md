@@ -63,6 +63,20 @@ The weather hazard model propagates uncertainty from expert-informed coefficient
 
 The cascade projects P10/P50/P90 inventory outcomes. Fair allocation solves a bounded linear program under available-supply, unmet-need caps and vulnerability-weighted coverage floors. The browser implementation solves the equivalent single-resource optimization and runs hospital ordering agents over 14 days. Assumed supply and ordering behavior are held consistent across the policies.
 
+## Storm Lab (what-if)
+
+The What-if mode is a parametric hurricane hazard simulator. It runs in a Web Worker, offline, and re-runs about 0.4–0.9 s after any setting changes (1,000 members).
+
+- **Inputs.** Start from 12 NOAA HURDAT2 best tracks (Helene, Milton, Ian, Ida, Michael, Florence, Maria, Harvey, Irma, Katrina, Andrew, Hugo) or draw a track. Drag points to reshape it, shift it by 50 km, or scale its intensity. Settings: maximum wind, central pressure, radius of maximum wind, Holland B, inland decay, re-intensification rate, stall, vertical shear and its direction, antecedent soil moisture, mountain rain, ensemble size, track/intensity/size error scaling, random seed, plant backup power and the alert threshold.
+- **Physics.** Holland (1980) gradient wind with Coriolis. Where HURDAT2 has 34-kt radii, the profile is fitted to them; otherwise R_max follows Willoughby et al. (2006). Inland decay follows Kaplan & DeMaria (1995), and translation asymmetry follows Lin & Chavas (2012). Rain uses R-CLIPER (Tuleya et al. 2007) with PHRaM shear asymmetry (Lonfat et al. 2007) and an upslope term P = ε·ρ·q_s·(V·∇h) (Smith 1979) on 0.1° terrain. Tornado potential is parametric. Every constant and its citation is in [physics_params.json](web/public/data/model/physics_params.json); unverified values are flagged and shown in the lab's Method tab.
+- **Ensemble.** Members get smooth along- and cross-track errors scaled to the NHC 2026 cone, plus NHC 2021–25 intensity errors and storm-size spread. Map fields: 34/50/64-kt wind probabilities, maximum wind, storm-total rain, flood-rain probability and tornado potential. The cone is drawn as the union of the circles that enclose two-thirds of members.
+- **Plants and supply.** Plant fragility is a Bayesian logistic model with expert priors, run prior-predictive because there are only three documented failures. It uses site wind, basin-adjusted rain, river distance, FEMA flood zone and tornado odds, with lognormal outage durations. Outages feed the national supply cascade and hospital stockout bands.
+- **Checks on Helene 2024 (HURDAT2 replay):**
+  - Minimum pressure: 939 hPa modeled vs. 938 hPa observed.
+  - Inland decay: follows the best track within about 5 kt from 5 h after landfall.
+  - Peak rain: 22.4 in over the Black Mountains. The [NC State Climate Office](https://climate.ncsu.edu/blog/2024/09/rapid-reaction-historic-flooding-follows-helene-in-western-nc/) reports 24.41 in at Mount Mitchell and an official maximum of 30.78 in at Busick, NC, for Sept 25–28. That total includes a predecessor rain event the model leaves out.
+  - Baxter North Cove: flooding is the dominant modeled hazard, with a median outage of about 5–6 weeks. The verified event timeline has no restart date yet, so this is not checked.
+
 ## Rebuild data
 
 `npm run pipeline` rebuilds the catalog, LightGBM metrics, network, scenario snapshots, policy frontier and source register from local inputs. Analysis tables are written to `data/processed/` as Parquet and compact JSON. The app reads `web/public/data/`.
